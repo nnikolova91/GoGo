@@ -1,0 +1,80 @@
+﻿@model GoGo.ViewModels.DestDetailsViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<main class="mt-3">
+
+    <div>
+        @{ var base64 = Convert.ToBase64String(@Model.Image);
+            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+            <img src="@imgSrc" />  }
+
+        <h4>Level:  @Model.Level</h4>
+        <h4>StartDate:  @Model.StartDate</h4>
+        <h4>EndDate:  @Model.EndDate</h4>
+        <h4>EndDateToJoin:  @Model.EndDateToJoin</h4>
+    </div>
+    <h6>---------------------------------------------------------------------------------------------------</h6>
+    <div class="text-center">
+
+        <h3>Name:  @Model.Naame</h3>
+        <h5>Description:  @Model.Description</h5>
+    </div>
+    <h6>---------------------------------------------------------------------------------------------------</h6>
+    <div>
+        <h4>This page was created from: <b>@Model.Creator</b></h4>
+    </div>
+    <h6>---------------------------------------------------------------------------------------------------</h6>
+    <div>
+        <h3>Participants</h3>
+        @foreach(var item in @Model.Participants)
+        {
+
+        <h4>@item.FirstName</h4>
+
+            if(@item.Image != null)
+            {
+        <div>
+            @{ var base65 = Convert.ToBase64String(@item.Image);
+                    var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
+                <img src="@imgSrcc" style="width:40px;height40ph;">}
+        </div>
+            }
+
+         }
+    </div>
+    <h6>---------------------------------------------------------------------------------------------------</h6>
+    <div class="text-center">
+        
+        <form method="post" asp-action="Socialize" asp-controller="Destinations" asp-route-id="@Model.Id" style="color:gray; justify-content:center;">
+            <h6>-----------------------</h6>
+            <label asp-for="Socialization"><b>Socialization</b></label>
+            
+            <div>
+                <h5>Know someone <input type="radio" asp-for="Socialization" value="KnowSomeone" /></h5>
+
+                <h5>Not know anyone <input type="radio" asp-for="Socialization" value="NotKnowAnyone" /></h5>
+                <div class="text-center">
+                    <button type="submit" class="btn chushka-bg-color text-center">Socialize</button>
+                </div>
+            </div>
+            <h6>-----------------------</h6>
+        </form>
+    </div>
+    <form asp-action="HavePart" asp-controller="Destinations" asp-route-id="@Model.Id">
+        <div class="text-center">
+            <button class="btn chushka-bg-color text-center">HavePart</button>
+            <h6>------------------------------------------------------------------------------------------</h6>
+        </div>
+
+    </form>
+    <hr />
+    <form asp-action="All" asp-controller="Destinations">
+        <div class="text-center">
+            <button asp-action="All" asp-controller="Destinations" class="btn chushka-bg-color text-center">Back To All</button>
+            <h6>-------------------------------------------------------------------------------------------</h6>
+        </div>
+
+    </form>
+</main>
