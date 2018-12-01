@@ -13,10 +13,12 @@ namespace GoGo.Services.Contracts
 
         ICollection<DestViewModel> GetAllDestinations();
 
-        DestDetailsViewModel GetDetails(string id);
+        DestDetailsViewModel GetDetails(string id, GoUser user);
 
-        void AddUserToDestination(GoUser user, string id);
+        DestUserViewModel AddUserToDestination(GoUser user, string id);
 
-        ICollection<GoUserViewModel> Socializer(string socialization,string id);
+        void AddSocialization(GoUser user, string id, string socialization);
+
+        ICollection<GoUserViewModel> AllUsersFodSocialization(GoUser user, string id, string socialization);
     }
 }

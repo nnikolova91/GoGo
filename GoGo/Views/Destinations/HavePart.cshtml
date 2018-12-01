@@ -1,0 +1,25 @@
+﻿@model GoGo.ViewModels.DestUserViewModel
+@{
+    ViewData["Title"] = "HavePart";
+}
+
+<main>
+    <h1>Socialize menu</h1>
+    <div class="text-center">
+
+        <form method="post" asp-action="Socialize" asp-controller="Destinations" asp-route-id="@Model.DestinationId"  style="color:gray; justify-content:center;">
+            <h6>-----------------------</h6>
+            <label asp-for="Socialization"><b>Socialization</b></label>
+
+            <div>
+                <h5>Know someone <input type="radio" asp-for="Socialization" value="KnowSomeone" /></h5>
+
+                <h5>Not know anyone <input type="radio" asp-for="Socialization" value="NotKnowAnyone" /></h5>
+                <div class="text-center">
+                    <button type="submit" class="btn chushka-bg-color text-center">Socialize</button>
+                </div>
+            </div>
+            <h6>-----------------------</h6>
+        </form>
+    </div>
+</main>

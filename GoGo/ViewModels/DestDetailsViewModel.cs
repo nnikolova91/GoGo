@@ -12,6 +12,10 @@ namespace GoGo.ViewModels
 
         public byte[] Image { get; set; }
 
+        public GoUserViewModel CurrentUser { get; set; }
+
+        public string CurrentComment { get; set; }
+
         public Level Level { get; set; }
 
         public string Naame { get; set; }
@@ -28,6 +32,10 @@ namespace GoGo.ViewModels
 
         public Socialization Socialization { get; set; }
 
-        public ICollection<GoUserViewModel> Participants { get; set; }
+        public ICollection<CommentViewModel> AllComments { get; set; }
+
+        public ICollection<GoUserViewModel> ParticipantsKnowSomeone { get; set; }
+
+        public ICollection<GoUserViewModel> ParticipantsNotKnowAnyone { get; set; }
     }
 }

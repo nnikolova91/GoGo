@@ -1,0 +1,41 @@
+@model System.Collections.Generic.IEnumerable<GoGo.ViewModels.UsersResultsViewModel>
+@if (Model == null)
+{
+<h1></h1>
+}
+else
+{
+    int counter = 1;
+@foreach (var item in Model)
+    {
+<tr class="row">
+    <th class="col-md-1">@counter</th>
+    <td class="col-md-1">
+        <div>
+            @{ var base65 = Convert.ToBase64String(@item.Participant.Image);
+                        var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
+                <img src="@imgSrcc" style="width:40px;height:40px;">
+
+            }
+            @item.Participant.FirstName
+        </div>
+    </td>
+    @*Successfully = 1,
+    Unsuccessfully = 2*@
+    <td class="col-md-4">
+        <div class="text-center">
+            
+            <label asp-for="@item.StatusUser"><b>StatusUser</b></label>
+            <div>
+                <h5>Successfully <input type="radio" asp-for="@item.StatusUser" value="Successfully" /></h5>
+
+                <h5>Unsuccessfully <input type="radio" asp-for="@item.StatusUser" value="Unsuccessfully" /></h5>
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+        counter += 1;
+    }
+}

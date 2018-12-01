@@ -4,14 +4,16 @@ using GoGo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GoGo.Data.Migrations
 {
     [DbContext(typeof(GoDbContext))]
-    partial class GoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181201071328_addImage")]
+    partial class addImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,8 +96,6 @@ namespace GoGo.Data.Migrations
 
                     b.Property<int>("CountOfHours");
 
-                    b.Property<string>("CreatorId");
-
                     b.Property<string>("Description");
 
                     b.Property<int>("DurationOfDays");
@@ -111,8 +111,6 @@ namespace GoGo.Data.Migrations
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
 
                     b.ToTable("Cources");
                 });
@@ -403,13 +401,6 @@ namespace GoGo.Data.Migrations
                     b.HasOne("GoGo.Models.Destination", "Destination")
                         .WithMany("Comments")
                         .HasForeignKey("DestinationId");
-                });
-
-            modelBuilder.Entity("GoGo.Models.Cource", b =>
-                {
-                    b.HasOne("GoGo.Models.GoUser", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId");
                 });
 
             modelBuilder.Entity("GoGo.Models.CourcesUsers", b =>

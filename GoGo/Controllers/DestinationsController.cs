@@ -1,4 +1,5 @@
 ﻿using GoGo.Models;
+using GoGo.Models.Enums;
 using GoGo.Services.Contracts;
 using GoGo.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace GoGo.Controllers
 {
     public class DestinationsController : Controller
-    {        
+    {
         private IDestinationService destinationService;
         private UserManager<GoUser> _userManager;
 
@@ -33,7 +34,7 @@ namespace GoGo.Controllers
 
             this.destinationService.AddDestination(model, user);
 
-            return View();
+            return Redirect("/Destinations/All");
         }
 
         public IActionResult All()
@@ -43,9 +44,11 @@ namespace GoGo.Controllers
             return View(destinations);
         }
 
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(string socialization, string id) // id(destinationId)
         {
-            var destination = this.destinationService.GetDetails(id);            
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            var destination = this.destinationService.GetDetails(id, user);
 
             ViewData["Message"] = "Register - if you dont or Login if you have an account";
 
@@ -56,9 +59,10 @@ namespace GoGo.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            this.destinationService.AddUserToDestination(user, id);
+            var destUserModel = this.destinationService.AddUserToDestination(user, id);
+            //var socialize = Enum.Parse<Socialization>(socialization);
 
-            return Redirect($"/Destinations/Details/{id}");
+            return View(destUserModel); //id(destinationId)
         }
 
         [HttpPost]
@@ -66,9 +70,11 @@ namespace GoGo.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            this.destinationService.Socializer(socialization, id);
+            this.destinationService.AddSocialization(user, id, socialization);
 
-            return View();
+            //var usersForSocialization = this.destinationService.AllUsersFodSocialization(user, id, socialization);
+
+            return Redirect($"/Destinations/Details/{id}");
         }
     }
 }

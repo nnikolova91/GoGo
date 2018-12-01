@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoGo", "GoGo\GoGo.csproj", "{5D6F7D03-2E56-4043-8F84-93F3A5798346}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoGo", "GoGo\GoGo.csproj", "{5D6F7D03-2E56-4043-8F84-93F3A5798346}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoGo.Models", "GoGo.Models\GoGo.Models.csproj", "{CD5CF5FC-D83B-47F8-94C9-AE52EF239573}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoGo.Models", "GoGo.Models\GoGo.Models.csproj", "{CD5CF5FC-D83B-47F8-94C9-AE52EF239573}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoGo.Data", "GoGo.Data\GoGo.Data.csproj", "{8B8199FD-998C-47BF-9E32-5EFC0BB0E002}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoGo.Data", "GoGo.Data\GoGo.Data.csproj", "{8B8199FD-998C-47BF-9E32-5EFC0BB0E002}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

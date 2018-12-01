@@ -7,6 +7,8 @@ namespace GoGo.ViewModels
 {
     public class GoUserViewModel
     {
+        public string Id { get; set; }
+
         public byte[] Image { get; set; }
 
         public string FirstName { get; set; }

@@ -1,4 +1,6 @@
-﻿@model GoGo.ViewModels.DestDetailsViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@model GoGo.ViewModels.DestDetailsViewModel
+@inject SignInManager<GoUser> SignInManager
 @{
     ViewData["Title"] = "Create";
 }
@@ -8,73 +10,144 @@
     <div>
         @{ var base64 = Convert.ToBase64String(@Model.Image);
             var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-            <img src="@imgSrc" />  }
+            <img src="@imgSrc" /> }
 
         <h4>Level:  @Model.Level</h4>
         <h4>StartDate:  @Model.StartDate</h4>
         <h4>EndDate:  @Model.EndDate</h4>
         <h4>EndDateToJoin:  @Model.EndDateToJoin</h4>
+        <div style="margin-left:800px;">
+            <h4>This page was created from: <b>@Model.Creator</b></h4>
+        </div>
     </div>
-    <h6>---------------------------------------------------------------------------------------------------</h6>
-    <div class="text-center">
+    <h6>------------------------------------------------------------------------------------------</h6>
+    <div style="margin-left:300px; margin-right:300px;">
 
         <h3>Name:  @Model.Naame</h3>
         <h5>Description:  @Model.Description</h5>
     </div>
-    <h6>---------------------------------------------------------------------------------------------------</h6>
     <div>
-        <h4>This page was created from: <b>@Model.Creator</b></h4>
-    </div>
-    <h6>---------------------------------------------------------------------------------------------------</h6>
-    <div>
-        <h3>Participants</h3>
-        @foreach(var item in @Model.Participants)
-        {
-
-        <h4>@item.FirstName</h4>
-
-            if(@item.Image != null)
-            {
-        <div>
-            @{ var base65 = Convert.ToBase64String(@item.Image);
-                    var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
-                <img src="@imgSrcc" style="width:40px;height40ph;">}
+        <h3>
+            @{ var base66 = Convert.ToBase64String(@Model.CurrentUser.Image);
+                var imgSrccc = String.Format("data:image/gif;base64,{0}", base66);
+                <img src="@imgSrccc" style="width:70px;height:70px; border-radius:50%" /> } @Model.CurrentUser.FirstName
+            </h3>
         </div>
+
+        <h6>------------------------------------------------------------------------------------------</h6>
+
+        <h6>------------------------------------------------------------------------------------------</h6>
+        <h4 style="margin-right:800px;">
+            These people also do not know anyone in this group, write to them
+            and found new friends
+        </h4>
+        <div>
+
+            @foreach (var item in @Model.ParticipantsNotKnowAnyone)
+            {
+
+                <h4>@item.FirstName</h4>
+
+                if (@item.Image != null)
+                {
+                    <div>
+                        @{
+
+                            var base65 = Convert.ToBase64String(@item.Image);
+                            var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
+                            <img src="@imgSrcc" style="width:40px;height:40px;">
+
+
+                        }
+                    </div>
+                }
+            }
+        </div>
+        <h4>
+            Other people
+        </h4>
+        <div>
+
+            @foreach (var item in @Model.ParticipantsKnowSomeone)
+            {
+
+                <h4>@item.FirstName</h4>
+
+                if (@item.Image != null)
+                {
+                    <div>
+                        @{ var base65 = Convert.ToBase64String(@item.Image);
+                            var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
+                            <img src="@imgSrcc" style="width:40px;height:40ph;">
+
+                        }
+                    </div>
+                }
             }
 
-         }
-    </div>
-    <h6>---------------------------------------------------------------------------------------------------</h6>
-    <div class="text-center">
-        
-        <form method="post" asp-action="Socialize" asp-controller="Destinations" asp-route-id="@Model.Id" style="color:gray; justify-content:center;">
-            <h6>-----------------------</h6>
-            <label asp-for="Socialization"><b>Socialization</b></label>
-            
-            <div>
-                <h5>Know someone <input type="radio" asp-for="Socialization" value="KnowSomeone" /></h5>
+        </div>
+        <h6>--------------------------------------------------------------------------------------</h6>
 
-                <h5>Not know anyone <input type="radio" asp-for="Socialization" value="NotKnowAnyone" /></h5>
-                <div class="text-center">
-                    <button type="submit" class="btn chushka-bg-color text-center">Socialize</button>
+
+        <div style="margin-left:800px;">
+            <h3>Comments</h3>
+            <form mothod="post" asp-action="AddComment" asp-controller="Comments" asp-route-id="@Model.Id">
+                <div class="form-group ">
+                    <label asp-for="@Model.CurrentComment">Add Comment</label>
+                    <input asp-for="@Model.CurrentComment" class="form-control" />
+                    <span asp-validation-for="@Model.CurrentComment" class="text-danger"></span>
+                    <div>
+                        <button type="submit" class="btn ">Add</button>
+                    </div>
                 </div>
+            </form>
+
+            <h6>------------------------------------------------------------------------------------</h6>
+        </div>
+
+        <div style="margin-left:800px;">
+
+            @foreach (var item in @Model.AllComments)
+            {
+
+                <h4>@item.Comentator.FirstName</h4>
+
+                if (@item.Comentator.Image != null)
+                {
+                    <div>
+                        @{ var base65 = Convert.ToBase64String(@item.Comentator.Image);
+                            var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
+                            <img src="@imgSrcc" style="width:40px;height:40px;"><h4>@item.Content</h4>
+
+                        }
+                    </div>
+                }
+            }
+
+        </div>
+
+        <form method="get" asp-action="Create" asp-controller="Stories" asp-route-id="@Model.Id">
+            <div class="text-center">
+                <button class="btn chushka-bg-color text-center">Create Story</button>
+                <h6>------------------------------------------------------------------------------------------</h6>
             </div>
-            <h6>-----------------------</h6>
+
         </form>
-    </div>
-    <form asp-action="HavePart" asp-controller="Destinations" asp-route-id="@Model.Id">
-        <div class="text-center">
-            <button class="btn chushka-bg-color text-center">HavePart</button>
-            <h6>------------------------------------------------------------------------------------------</h6>
-        </div>
 
-    </form>
-    <hr />
-    <form asp-action="All" asp-controller="Destinations">
-        <div class="text-center">
-            <button asp-action="All" asp-controller="Destinations" class="btn chushka-bg-color text-center">Back To All</button>
-            <h6>-------------------------------------------------------------------------------------------</h6>
-        </div>
+        <form asp-action="HavePart" asp-controller="Destinations" asp-route-id="@Model.Id">
+            <div class="text-center">
+                <button class="btn chushka-bg-color text-center">HavePart</button>
+                <h6>------------------------------------------------------------------------------------------</h6>
+            </div>
 
-    </form>
-</main>
+        </form>
+        <hr />
+        <form asp-action="All" asp-controller="Destinations">
+            <div class="text-center">
+                <button asp-action="All" asp-controller="Destinations" class="btn chushka-bg-color text-center">Back To All</button>
+                <h6>-------------------------------------------------------------------------------------------</h6>
+            </div>
+
+        </form>
+
+    </main>

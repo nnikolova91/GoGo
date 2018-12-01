@@ -17,6 +17,7 @@ namespace GoGo.Models
             this.CreatedDestinations = new List<Destination>();
             this.CreatedStories = new List<Story>();
             this.Comments = new List<Comment>();
+            this.Cources = new List<CourcesUsers>();
         }
 
         public string FirstName { get; set; }
@@ -34,5 +35,6 @@ namespace GoGo.Models
         public ICollection<DestinationsUsers> Destinations { get; set; }
         public ICollection<Story> CreatedStories { get; set; }
         public ICollection<PeopleStories> Stories { get; set; }
+        public ICollection<CourcesUsers> Cources { get; set; }
     }
 }

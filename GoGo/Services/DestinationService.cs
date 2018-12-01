@@ -53,11 +53,20 @@ namespace GoGo.Services
             context.SaveChanges();
         }
 
-        public void AddUserToDestination(GoUser user, string id)
+        public void AddSocialization(GoUser user, string id, string socialization)
+        {
+            this.context.DestinationsUsers
+                .FirstOrDefault(x => x.DestinationId == id && x.ParticipantId == user.Id)
+                .Socialization = Enum.Parse<Socialization>(socialization);
+
+            this.context.SaveChanges();
+        }
+
+        public DestUserViewModel AddUserToDestination(GoUser user, string id)
         {
             var destination = this.context.Destinations.FirstOrDefault(x => x.Id == id);
 
-            var destinationUser = new DestinationsUsers
+            var destUserModel = new DestUserViewModel
             {
                 Destination = destination,
                 DestinationId = destination.Id,
@@ -65,8 +74,38 @@ namespace GoGo.Services
                 ParticipantId = user.Id
             };
 
-            this.context.DestinationsUsers.Add(destinationUser);
-            this.context.SaveChanges();
+            //var destinationUser = new DestinationsUsers
+            //{
+            //    Destination = destination,
+            //    DestinationId = destination.Id,
+            //    Participant = user,
+            //    ParticipantId = user.Id
+            //};
+
+            //this.context.DestinationsUsers.Add(destinationUser);
+            //this.context.SaveChanges();
+
+            return destUserModel;
+        }
+
+        public ICollection<GoUserViewModel> AllUsersFodSocialization(GoUser user, string id, string socialization)
+        {
+            var usersNotKnowAnyone = this.context.DestinationsUsers
+                                            .Where(x => x.DestinationId == id && x.Socialization.ToString() == "NotKnowAnyone")
+                                            .Select(x => new GoUserViewModel
+                                            {
+                                                Id = x.ParticipantId,
+                                                FirstName = x.Participant.FirstName,
+                                                Image = x.Participant.Image
+                                            }).ToList();
+
+            if (socialization == "NotKnowAnyone")
+            {
+                var notIncludeYourself = usersNotKnowAnyone.FirstOrDefault(x => x.Id == user.Id);
+                usersNotKnowAnyone.Remove(notIncludeYourself);
+            }
+
+            return usersNotKnowAnyone;
         }
 
         public ICollection<DestViewModel> GetAllDestinations()
@@ -95,9 +134,41 @@ namespace GoGo.Services
             return destinationsModels;
         }
 
-        public DestDetailsViewModel GetDetails(string id)
+        public DestDetailsViewModel GetDetails(string id, GoUser user)
         {
             var dest = this.context.Destinations.FirstOrDefault(x => x.Id == id);
+            var usersNotKnowAnyone = this.context.DestinationsUsers
+                                            .Where(x => x.DestinationId == id && x.Socialization.ToString() == "NotKnowAnyone"/* && x.ParticipantId != user.Id*/)
+                                            .Select(x => new GoUserViewModel
+                                            {
+                                                Id = x.ParticipantId,
+                                                FirstName = x.Participant.FirstName,
+                                                Image = x.Participant.Image
+                                            }).ToList();
+            var usersKnowSomeone = this.context.DestinationsUsers
+                                            .Where(x => x.DestinationId == id && x.Socialization.ToString() == "KnowSomeone" /*&& x.ParticipantId != user.Id*/)
+                                            .Select(x => new GoUserViewModel
+                                            {
+                                                Id = x.ParticipantId,
+                                                FirstName = x.Participant.FirstName,
+                                                Image = x.Participant.Image
+                                            }).ToList();
+
+            var goUserModel = new GoUserViewModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                Image = user.Image
+            };
+
+            var allComments = this.context.Comments.Where(x => x.DestinationId == id)
+                .Select(x => new CommentViewModel
+                {
+                    Content = x.Content,
+                    ComentatorId = x.ComentatorId,
+                    Comentator = new GoUserViewModel { Image = x.Comentator.Image, FirstName = x.Comentator.FirstName, Id = x.Comentator.Id },
+                    DestinationId = x.DestinationId
+                }).ToList();
 
             var model = new DestDetailsViewModel
             {
@@ -110,11 +181,22 @@ namespace GoGo.Services
                 Description = dest.Description,
                 Image = dest.Image,
                 Creator = this.context.Users.FirstOrDefault(x => x.Id == dest.CreatorId).FirstName,
-                Participants = this.context.DestinationsUsers.Where(x => x.DestinationId == id)
+                CurrentUser = goUserModel,
+                AllComments = allComments,
+                ParticipantsKnowSomeone = usersKnowSomeone
                                     .Select(x => new GoUserViewModel
                                     {
-                                        FirstName = x.Participant.FirstName,
-                                        Image = x.Participant.Image
+                                        Id = x.Id,
+                                        FirstName = x.FirstName,
+                                        Image = x.Image
+                                    })
+                                    .ToList(),
+                ParticipantsNotKnowAnyone = usersNotKnowAnyone
+                                    .Select(x => new GoUserViewModel
+                                    {
+                                        Id = x.Id,
+                                        FirstName = x.FirstName,
+                                        Image = x.Image
                                     })
                                     .ToList()
             };
@@ -122,33 +204,6 @@ namespace GoGo.Services
             return model;
         }
 
-        public ICollection<GoUserViewModel> Socializer(string socialization, string id) //destinationId
-        {
-            var s = Enum.Parse<Socialization>(socialization);
-            var usersNotKnowSomething = new List<GoUserViewModel>();
 
-            if (socialization == "KnowSomeone")
-            {
-                usersNotKnowSomething = this.context.DestinationsUsers
-                                                    .Where(x => x.Socialization != s && x.DestinationId == id)
-                                                    .Select(x => new GoUserViewModel
-                                                    {
-                                                        Image = x.Participant.Image,
-                                                        FirstName = x.Participant.FirstName
-                                                    })
-                                                    .ToList();
-            }
-
-            usersNotKnowSomething = this.context.DestinationsUsers
-                                                   .Where(x => x.Socialization == s && x.DestinationId == id)
-                                                   .Select(x => new GoUserViewModel
-                                                   {
-                                                       Image = x.Participant.Image,
-                                                       FirstName = x.Participant.FirstName
-                                                   })
-                                                   .ToList();
-
-            return usersNotKnowSomething;
-        }
     }
 }

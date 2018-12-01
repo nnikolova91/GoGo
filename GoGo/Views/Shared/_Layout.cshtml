@@ -69,6 +69,15 @@
 
                         </div>
                     </li>
+                    <li class="nav-item dropdown chushka-bg-color">
+                        <a class="nav-link dropdown-toggle chushka-bg-color" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="chushka-bg-color"><b>Cources</b></span>
+                        </a>
+                        <div class="dropdown-menu nav-link-dark" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" asp-controller="Cources" asp-action="All">All Cources</a>
+                            <a class="dropdown-item" asp-controller="Cources" asp-action="Create">Create Cources</a>
+                        </div>
+                    </li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
                 <partial name="_LoginPartial" />

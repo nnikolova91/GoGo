@@ -1,0 +1,88 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model GoGo.ViewModels.CourceViewModel
+@inject UserManager<GoUser> UserManager
+@{
+    ViewData["Title"] = "Create";
+}
+
+<main class="mt-3">
+
+    <div>
+        @{ var base64 = Convert.ToBase64String(@Model.Image);
+            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+            <img src="@imgSrc" /> }
+
+        <h4>Title:  @Model.Title</h4>
+        <h4>StartDate:  @Model.StartDate</h4>
+        <h4>Duration of days:  @Model.DurationOfDays</h4>
+        <h4>Count of hours:  @Model.CountOfHours</h4>
+        <h4>Max seats:  @Model.MaxCountParticipants</h4>
+        <h4>Free Seats:  @Model.FreeSeats</h4>
+        <div style="margin-left:800px;">
+            <h4>
+                This cource was created from: <b>@Model.Creator.FirstName</b> @{ var base66 = Convert.ToBase64String(Model.Creator.Image);
+                    var imgSrccc = String.Format("data:image/gif;base64,{0}", base66);
+                    <img src="@imgSrccc" style="width:40px;height:40px;">
+
+                }
+            </h4>
+        </div>
+    </div>
+    <h6>------------------------------------------------------------------------------------------</h6>
+    <div style="margin-left:300px; margin-right:300px;">
+        <h4>Title:  @Model.Title</h4>
+        <h5>Description:  @Model.Description</h5>
+    </div>
+
+
+    <div>
+        <h6>------------------------------------------------------------------------------------------</h6>
+        Participaants
+        </h4>
+
+        @foreach (var item in @Model.Participants)
+        {
+
+            <h4>@item.FirstName</h4>
+
+            if (@item.Image != null)
+            {
+                <div>
+                    @{ var base65 = Convert.ToBase64String(@item.Image);
+                        var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
+                        <img src="@imgSrcc" style="width:40px;height:40px;">
+
+                    }
+                </div>
+            }
+        }
+
+    </div>
+    <h6>--------------------------------------------------------------------------------------</h6>
+    @if(ViewData["CurrentUser"].ToString() == Model.Creator.Id)
+    {
+    <form asp-action="AddResults" asp-controller="Cources" asp-route-id="@Model.Id">
+        <div class="text-center">
+            <button class="btn chushka-bg-color text-center">Add results</button>
+            <h6>------------------------------------------------------------------------------------------</h6>
+        </div>
+
+    </form>
+    }
+    <form asp-action="SignIn" asp-controller="Cources" asp-route-id="@Model.Id">
+        <div class="text-center">
+            <button class="btn chushka-bg-color text-center">Sign in</button>
+            <h6>------------------------------------------------------------------------------------------</h6>
+        </div>
+
+    </form>
+    <hr />
+    <form asp-action="All" asp-controller="Cources">
+        <div class="text-center">
+            <button asp-action="All" asp-controller="Cources" class="btn chushka-bg-color text-center">Back To All</button>
+            <h6>-------------------------------------------------------------------------------------------</h6>
+        </div>
+
+    </form>
+
+</main>

@@ -29,6 +29,10 @@ namespace GoGo.Data
 
         public DbSet<PeopleStories> PeopleStories { get; set; }
 
+        public DbSet<Cource> Cources { get; set; }
+
+        public DbSet<CourcesUsers> CourcesUsers { get; set; }
+
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    optionsBuilder.UseSqlServer("server=DESKTOP-JVV1OQ7\\SQLEXPRESS;database=GoGo;Integrated Security=true").UseLazyLoadingProxies();
@@ -45,8 +49,21 @@ namespace GoGo.Data
                 .HasMany<Comment>(s => s.Comments)
                 .WithOne(c => c.Destination);
             //.OnDelete(DeleteBehavior.Restrict);
-            
-//-------------------------
+
+            modelBuilder.Entity<CourcesUsers>()
+               .HasKey(x => new { x.CourceId, x.ParticipantId });
+
+            modelBuilder.Entity<CourcesUsers>()
+                .HasOne(bc => bc.Cource)
+                .WithMany(b => b.Participants)
+                .HasForeignKey(bc => bc.CourceId);
+
+            modelBuilder.Entity<CourcesUsers>()
+                .HasOne(bc => bc.Participant)
+                .WithMany(c => c.Cources)
+                .HasForeignKey(bc => bc.ParticipantId);
+
+            //-------------------------
             modelBuilder.Entity<DestinationsUsers>()                
                 .HasKey(x => new { x.DestinationId, x.ParticipantId });
            

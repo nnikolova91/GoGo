@@ -36,9 +36,11 @@ namespace GoGo
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
+            
             services.AddScoped(typeof(IDestinationService), typeof(DestinationService));
-
+            services.AddScoped(typeof(ICommentsService), typeof(CommentsService));
+            services.AddScoped(typeof(IStoriesService), typeof(StoriesService));
+            services.AddScoped(typeof(ICourcesService), typeof(CourcesService));
 
             services.AddDbContext<GoDbContext>(options =>
                 options.UseSqlServer(
@@ -46,7 +48,7 @@ namespace GoGo
 
             services.AddIdentity<GoUser, ApplicationRole>(
                 options => options.Stores.MaxLengthForKeys = 128)
-                .AddEntityFrameworkStores<GoDbContext>()                
+                .AddEntityFrameworkStores<GoDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
@@ -54,8 +56,8 @@ namespace GoGo
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, 
-                                IHostingEnvironment env, 
+        public void Configure(IApplicationBuilder app,
+                                IHostingEnvironment env,
                                 GoDbContext context,
                                 RoleManager<ApplicationRole> roleManager,
                                 UserManager<GoUser> userManager)
@@ -70,7 +72,7 @@ namespace GoGo
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
@@ -82,6 +84,7 @@ namespace GoGo
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+                
             });
 
             DummyData.Initialize(context, userManager, roleManager).Wait(); //seed here
