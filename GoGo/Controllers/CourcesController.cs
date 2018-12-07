@@ -1,12 +1,13 @@
 ﻿using GoGo.Models;
+using GoGo.Models.Enums;
 using GoGo.Services.Contracts;
-using GoGo.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModels;
 
 namespace GoGo.Controllers
 {
@@ -14,11 +15,13 @@ namespace GoGo.Controllers
     {
         private ICourcesService courcesService;
         private UserManager<GoUser> userManager;
+        private SignInManager<GoUser> signInManager;
 
-        public CourcesController(ICourcesService courcesService, UserManager<GoUser> userManager)
+        public CourcesController(ICourcesService courcesService, UserManager<GoUser> userManager, SignInManager<GoUser> signInManager)
         {
             this.courcesService = courcesService;
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         public IActionResult Create()
@@ -40,7 +43,7 @@ namespace GoGo.Controllers
         {
             var cources = this.courcesService.GetAllCources();
 
-            return View(cources);            
+            return View(cources);
         }
 
         public async Task<IActionResult> Details(string id) // id(courceId)
@@ -53,7 +56,7 @@ namespace GoGo.Controllers
 
             return View(cource);
         }
-        
+
         public async Task<IActionResult> SignIn(string id) // id(courceId)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
@@ -68,6 +71,14 @@ namespace GoGo.Controllers
             var participants = this.courcesService.GetAllParticipants(id);
 
             return View(participants);
+        }
+
+        [HttpPost]
+        public IActionResult CreateResult(UsersResultsViewModel model/*string courceId, string participantId, StatusParticitant result*/)//*StatusParticitant statusUser*/ /*UsersResultsViewModel model*/) //courceId
+        {
+            this.courcesService.AddResultToUsersCourses(model);
+            
+            return Redirect($"/Cources/AddResults/{model.CourceId}");
         }
     }
 }

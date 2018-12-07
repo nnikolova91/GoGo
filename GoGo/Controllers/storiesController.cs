@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModels;
 
 namespace GoGo.Controllers
 {
@@ -22,21 +23,34 @@ namespace GoGo.Controllers
         
         public IActionResult Create(string id)
         {
-            return View($"/Stories/Create/{id}");
+            
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStory(string title, string content, string id)// destinationId
+        public async Task<IActionResult> Create(StoryViewModel model /*string title, string content, string id*/, string id)
         {
-            //if (title == null && content==null)
-            //{
-            //    return Redirect($"/Stories/Create/{id}");
-            //}
+            
             var user = await userManager.GetUserAsync(HttpContext.User);
-
-            this.storiesService.AddStory(title, content, id, user);
+            
+            this.storiesService.AddStory(model, id, user);
 
             return Redirect($"/Destinations/Details/{id}");
+        }
+
+        public IActionResult Details(string id) //id(storyId)
+        {
+            var storyModel = this.storiesService.GetDetails(id);
+            return View(storyModel);
+        }
+
+        public async Task<IActionResult> Like(string id) //id(storyId)
+        {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
+            this.storiesService.LikeStory(id, user);
+
+            return Redirect($"/Stories/Details/{id}");
         }
     }
 }

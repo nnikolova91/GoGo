@@ -1,9 +1,10 @@
 ﻿using GoGo.Models;
-using GoGo.ViewModels;
+using GoGo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModels;
 
 namespace GoGo.Services.Contracts
 {
@@ -17,7 +18,7 @@ namespace GoGo.Services.Contracts
 
         DestUserViewModel AddUserToDestination(GoUser user, string id);
 
-        void AddSocialization(GoUser user, string id, string socialization);
+        Task AddSocialization(GoUser user, string id, string socialization);
 
         ICollection<GoUserViewModel> AllUsersFodSocialization(GoUser user, string id, string socialization);
     }

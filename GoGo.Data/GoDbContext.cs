@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using GoGo.Models;
-using GoGo.Models.Photos;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +32,14 @@ namespace GoGo.Data
 
         public DbSet<CourcesUsers> CourcesUsers { get; set; }
 
+        public DbSet<TeamLevelGame> TeamLevelGames { get; set; }
+
+        public DbSet<Game> Games { get; set; }
+
+        public DbSet<Team> Teams { get; set; }
+
+        public DbSet<Level> Levels { get; set; }
+        
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    optionsBuilder.UseSqlServer("server=DESKTOP-JVV1OQ7\\SQLEXPRESS;database=GoGo;Integrated Security=true").UseLazyLoadingProxies();
@@ -62,7 +69,16 @@ namespace GoGo.Data
                 .HasOne(bc => bc.Participant)
                 .WithMany(c => c.Cources)
                 .HasForeignKey(bc => bc.ParticipantId);
+            //-------------------------------------
 
+            modelBuilder.Entity<TeamLevelGame>()
+               .HasKey(x => new { x.TeamId, x.GameId, x.LevelId });
+
+            modelBuilder.Entity<TeamLevelGame>()
+                .HasOne(bc => bc.Game)
+                .WithMany(b => b.Levels)
+                .HasForeignKey(bc => bc.GameId);
+            
             //-------------------------
             modelBuilder.Entity<DestinationsUsers>()                
                 .HasKey(x => new { x.DestinationId, x.ParticipantId });

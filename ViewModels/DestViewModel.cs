@@ -1,10 +1,10 @@
-﻿using GoGo.Models.Enums;
+﻿using GoGo.Models;
+using GoGo.Models.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace GoGo.ViewModels
+namespace ViewModels
 {
     public class DestViewModel
     {
@@ -12,7 +12,7 @@ namespace GoGo.ViewModels
 
         public byte[] Image { get; set; }
 
-        public Level Level { get; set; }
+        public LevelOfDifficulty Level { get; set; }
 
         public string Naame { get; set; }
 

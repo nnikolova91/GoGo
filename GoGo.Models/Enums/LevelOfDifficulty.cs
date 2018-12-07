@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GoGo.Models.Enums
 {
-    public enum Level
+    public enum LevelOfDifficulty
     {
         Easy = 1,
         Advanced = 2

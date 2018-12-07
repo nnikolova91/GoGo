@@ -1,10 +1,9 @@
 ﻿using GoGo.Models.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace GoGo.ViewModels
+namespace ViewModels
 {
     public class UsersResultsViewModel
     {
@@ -13,6 +12,6 @@ namespace GoGo.ViewModels
         public string ParticipantId { get; set; }
         public GoUserViewModel Participant { get; set; }
 
-        public StatusParticitant StatusUser { get; set; }
+        public StatusParticitant Result { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using GoGo.Models;
-using GoGo.ViewModels;
+using ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

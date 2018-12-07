@@ -1,4 +1,4 @@
-﻿@model GoGo.ViewModels.CreateCourceViewModel
+﻿@model ViewModels.CreateCourceViewModel
 @{
     ViewData["Title"] = "Create";
 }
@@ -41,7 +41,7 @@
         <div class="row">
             <div class="form-group  inline col-sm-12  text-center">
                 <label asp-for="Description"><b>Description</b></label>
-                <input asp-for="Description" type="text" class="form-control" placeholder="Description...">
+                <textarea asp-for="Description" type="text" class="form-control" rows="6" cols="50" placeholder="Description..."></textarea>
             </div>
         </div>
         <div class="text-center">

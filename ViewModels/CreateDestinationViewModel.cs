@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace GoGo.ViewModels
+namespace ViewModels
 {
     public class CreateDestinationViewModel
     {
@@ -18,7 +17,7 @@ namespace GoGo.ViewModels
         [BindProperty]
         public IFormFile Image { get; set; }
 
-        public Level Level { get; set; }
+        public LevelOfDifficulty Level { get; set; }
 
         public string Naame { get; set; }
 
@@ -30,6 +29,6 @@ namespace GoGo.ViewModels
 
         public DateTime EndDateToJoin { get; set; }
 
-        
+
     }
 }

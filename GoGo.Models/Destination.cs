@@ -1,5 +1,5 @@
 ﻿using GoGo.Models.Enums;
-using GoGo.Models.Photos;
+using GoGo.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace GoGo.Models
 
         public byte[] Image { get; set; }
 
-        public Level Level { get; set; }
+        public LevelOfDifficulty Level { get; set; }
 
         public string Naame { get; set; }
 

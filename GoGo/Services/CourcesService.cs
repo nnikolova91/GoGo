@@ -1,22 +1,30 @@
 ﻿using GoGo.Data;
+using GoGo.Data.Common;
 using GoGo.Models;
+using GoGo.Models.Enums;
 using GoGo.Services.Contracts;
-using GoGo.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModels;
 
 namespace GoGo.Services
 {
     public class CourcesService : ICourcesService
     {
-        private readonly GoDbContext context;
+        private readonly IRepository<CourcesUsers> courcesUsersRepository;
+        private readonly IRepository<Cource> courcesRepository;
+        private readonly IRepository<GoUser> usersRepository;
 
-        public CourcesService(GoDbContext context)
+        public CourcesService(IRepository<CourcesUsers> courcesUsersRepository, 
+                                IRepository<Cource> courcesRepository, 
+                                IRepository<GoUser> usersRepository)
         {
-            this.context = context;
+            this.courcesUsersRepository = courcesUsersRepository;
+            this.courcesRepository = courcesRepository;
+            this.usersRepository = usersRepository;
         }
 
         public void AddCource(CreateCourceViewModel model, GoUser user)
@@ -46,13 +54,23 @@ namespace GoGo.Services
                 CreatorId = user.Id
             };
 
-            this.context.Cources.Add(cource);
-            this.context.SaveChanges();
+            this.courcesRepository.AddAsync(cource);
+            this.courcesRepository.SaveChangesAsync();
+        }
+
+        public void AddResultToUsersCourses(UsersResultsViewModel model)
+        {
+            var userCouse = this.courcesUsersRepository.All()
+                .FirstOrDefault(x => x.CourceId == model.CourceId && x.ParticipantId == model.ParticipantId);
+
+            userCouse.StatusUser = model.Result;
+
+            this.courcesUsersRepository.SaveChangesAsync();
         }
 
         public void AddUserToCource(string id, GoUser user)
         {
-            var cource = this.context.Cources.FirstOrDefault(x => x.Id == id);
+            var cource = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
 
             var userCource = new CourcesUsers
             {
@@ -62,13 +80,13 @@ namespace GoGo.Services
                 Cource = cource
             };
 
-            this.context.CourcesUsers.Add(userCource);
-            this.context.SaveChanges();
+            this.courcesUsersRepository.AddAsync(userCource);
+            this.courcesUsersRepository.SaveChangesAsync();
         }
 
         public ICollection<CourceViewModel> GetAllCources()
         {
-            var cources = this.context.Cources.ToList();
+            var cources = this.courcesRepository.All().ToList();
 
             var courceModels = new List<CourceViewModel>();
 
@@ -96,7 +114,7 @@ namespace GoGo.Services
 
         public ICollection<UsersResultsViewModel> GetAllParticipants(string id)
         {
-            var usersResult = this.context.CourcesUsers.Where(x => x.CourceId == id)
+            var usersResult = this.courcesUsersRepository.All().Where(x => x.CourceId == id)
                                     .Select(x => new UsersResultsViewModel
                                     {
                                         CourceId = id,
@@ -107,18 +125,23 @@ namespace GoGo.Services
                                             FirstName = x.Participant.FirstName,
                                             Image = x.Participant.Image
                                         },
-                                        StatusUser = x.StatusUser
+                                        Result = x.StatusUser
+                                        //Results = new List<ResultViewModel>
+                                        //{
+                                        //    new ResultViewModel { Id = (int)StatusParticitant.Successfully, ResultName = StatusParticitant.Successfully.ToString() },
+                                        //    new ResultViewModel { Id = (int)StatusParticitant.Unsuccessfully, ResultName = StatusParticitant.Unsuccessfully.ToString() }
+                                        //}.ToList()
                                     })
                                     .ToList();
             return usersResult;
-            
+
         }
 
         public CourceViewModel GetDetails(string id)
         {
-            var cource = context.Cources.FirstOrDefault(x => x.Id == id);
+            var cource = courcesRepository.All().FirstOrDefault(x => x.Id == id);
 
-            var creatorr = this.context.Users.FirstOrDefault(x => x.Id == cource.CreatorId);
+            var creatorr = this.usersRepository.All().FirstOrDefault(x => x.Id == cource.CreatorId);
 
             var creator = new GoUserViewModel
             {
@@ -127,7 +150,7 @@ namespace GoGo.Services
                 Image = creatorr.Image,
             };
 
-            var participents = this.context.CourcesUsers
+            var participents = this.courcesUsersRepository.All()
                                             .Where(x => x.CourceId == id)
                                             .Select(x => new GoUserViewModel
                                             {

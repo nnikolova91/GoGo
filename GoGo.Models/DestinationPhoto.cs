@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GoGo.Models.Photos
+namespace GoGo.Models
 {
     public class DestinationPhoto 
     {

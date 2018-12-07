@@ -1,13 +1,20 @@
-﻿using GoGo.Models.Enums;
+﻿using GoGo.Models;
+using GoGo.Models.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace GoGo.ViewModels
+namespace ViewModels
 {
     public class DestDetailsViewModel
     {
+        public DestDetailsViewModel()
+        {
+            this.AllComments = new List<CommentViewModel>();
+            this.ParticipantsKnowSomeone = new List<GoUserViewModel>();
+            this.ParticipantsNotKnowAnyone = new List<GoUserViewModel>();
+        }
+
         public string Id { get; set; }
 
         public byte[] Image { get; set; }
@@ -16,7 +23,7 @@ namespace GoGo.ViewModels
 
         public string CurrentComment { get; set; }
 
-        public Level Level { get; set; }
+        public LevelOfDifficulty Level { get; set; }
 
         public string Naame { get; set; }
 
@@ -27,12 +34,14 @@ namespace GoGo.ViewModels
         public DateTime EndDate { get; set; }
 
         public DateTime EndDateToJoin { get; set; }
-        
+
         public string Creator { get; set; }
 
         public Socialization Socialization { get; set; }
 
         public ICollection<CommentViewModel> AllComments { get; set; }
+
+        public ICollection<StoryViewModel> Stories { get; set; }
 
         public ICollection<GoUserViewModel> ParticipantsKnowSomeone { get; set; }
 

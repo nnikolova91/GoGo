@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace GoGo.ViewModels
+namespace ViewModels
 {
     public class CommentViewModel
     {
         public string Id { get; set; }
-
         public string Content { get; set; }
-
         public string ComentatorId { get; set; }
         public virtual GoUserViewModel Comentator { get; set; }
-
-        public string DestinationId { get; set; }        
+        public string DestinationId { get; set; }
     }
 }

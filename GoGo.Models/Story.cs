@@ -1,4 +1,4 @@
-﻿using GoGo.Models.Photos;
+﻿using GoGo.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

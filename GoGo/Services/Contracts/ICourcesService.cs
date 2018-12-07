@@ -1,9 +1,9 @@
 ﻿using GoGo.Models;
-using GoGo.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModels;
 
 namespace GoGo.Services.Contracts
 {
@@ -18,5 +18,7 @@ namespace GoGo.Services.Contracts
         void AddUserToCource(string id, GoUser user);
 
         ICollection<UsersResultsViewModel> GetAllParticipants(string id);
+
+        void AddResultToUsersCourses(UsersResultsViewModel model);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using GoGo.Models;
 using GoGo.Services.Contracts;
-using GoGo.ViewModels;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;

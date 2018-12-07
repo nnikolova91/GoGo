@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using GoGo.Models;
 using GoGo.Services.Contracts;
 using GoGo.Services;
+using GoGo.Data.Common;
 
 namespace GoGo
 {
@@ -41,6 +42,7 @@ namespace GoGo
             services.AddScoped(typeof(ICommentsService), typeof(CommentsService));
             services.AddScoped(typeof(IStoriesService), typeof(StoriesService));
             services.AddScoped(typeof(ICourcesService), typeof(CourcesService));
+            services.AddScoped(typeof(IGamesService), typeof(GamesService));
 
             services.AddDbContext<GoDbContext>(options =>
                 options.UseSqlServer(
@@ -53,6 +55,9 @@ namespace GoGo
                 .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            //AplicationServices
+            services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

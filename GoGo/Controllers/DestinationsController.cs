@@ -1,13 +1,13 @@
 ﻿using GoGo.Models;
 using GoGo.Models.Enums;
 using GoGo.Services.Contracts;
-using GoGo.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModels;
 
 namespace GoGo.Controllers
 {
@@ -70,7 +70,7 @@ namespace GoGo.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            this.destinationService.AddSocialization(user, id, socialization);
+            await this.destinationService.AddSocialization(user, id, socialization);
 
             //var usersForSocialization = this.destinationService.AllUsersFodSocialization(user, id, socialization);
 

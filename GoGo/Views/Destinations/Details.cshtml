@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@model GoGo.ViewModels.DestDetailsViewModel
+@model ViewModels.DestDetailsViewModel
 @inject SignInManager<GoUser> SignInManager
 @{
     ViewData["Title"] = "Create";
@@ -122,6 +122,19 @@
                         }
                     </div>
                 }
+            }
+
+        </div>
+        <div style="margin-right:800px;">
+            <h6>----------------------------------------</h6>
+            <h3>Stories</h3>
+            <h6>----------------------------------------</h6>
+            @foreach (var item in @Model.Stories)
+            {
+
+                <h4>@item.Title  </h4> <a asp-action="Details" asp-controller="Stories" asp-route-id="@item.Id">Read mor</a>
+                <h6>Author: @item.Author</h6>
+                <h6>@item.PeopleWhosLikeThis people like this</h6>
             }
 
         </div>
