@@ -1,4 +1,5 @@
-﻿using GoGo.Data;
+﻿using AutoMapper;
+using GoGo.Data;
 using GoGo.Data.Common;
 using GoGo.Models;
 using GoGo.Services.Contracts;
@@ -16,55 +17,47 @@ namespace GoGo.Services
         private readonly IRepository<Destination> destinationsRepository;
         private readonly IRepository<PeopleStories> peopleStoriesRepository;
         private readonly IRepository<GoUser> usersRepository;
+        private readonly IMapper mapper;
 
         public StoriesService(IRepository<Story> storiesRepository,
             IRepository<Destination> destinationsRepository,
             IRepository<PeopleStories> peopleStoriesRepository,
-            IRepository<GoUser> usersRepository)
+            IRepository<GoUser> usersRepository,
+            IMapper mapper)
         {
             this.storiesRepository = storiesRepository;
             this.destinationsRepository = destinationsRepository;
             this.peopleStoriesRepository = peopleStoriesRepository;
             this.usersRepository = usersRepository;
+            this.mapper = mapper;
         }
 
-        public void AddStory(StoryViewModel model, string id, GoUser user) //id(destinationId)
+        public async Task AddStory(CreateStoryViewModel model, string id, GoUser user) //id(destinationId)
         {
             var destination = this.destinationsRepository.All().FirstOrDefault(x => x.Id == id);
-
-            var story = new Story
-            {
-                Title = model.Title,
-                Content = model.Content,
-                Destination = this.destinationsRepository.All().FirstOrDefault(x=>x.Id == id),
-                DestinationId = id,
-                Author = user,
-                AuthorId = user.Id
-            };
-
-            this.storiesRepository.AddAsync(story);
-            this.storiesRepository.SaveChangesAsync();
+            model.AuthorId = user.Id;
+            
+            var story = mapper.Map<Story>(model);
+            story.Author = user;
+            
+            await this.storiesRepository.AddAsync(story);
+            await this.storiesRepository.SaveChangesAsync();
         }
 
         public StoryViewModel GetDetails(string id)
         {
             var story = this.storiesRepository.All().FirstOrDefault(x => x.Id == id);
+            
             story.PeopleWhosLikeThis = this.peopleStoriesRepository.All().Where(x => x.StoryId == id).ToList();
 
-            var model = new StoryViewModel
-            {
-                Id = story.Id,
-                DestinationId = story.DestinationId,
-                Title = story.Title,
-                Content = story.Content,
-                PeopleWhosLikeThis = story.PeopleWhosLikeThis.Count(),
-                Author = this.usersRepository.All().FirstOrDefault(x=>x.Id == story.AuthorId).FirstName,
-                AuthorId = story.AuthorId
-            };
-            return model;
+            var mod = mapper.Map<StoryViewModel>(story);
+
+            mod.Author = this.usersRepository.All().FirstOrDefault(u => u.Id == story.AuthorId).FirstName;
+            
+            return mod;
         }
 
-        public void LikeStory(string id, GoUser user) //id(storyId)
+        public async Task LikeStory(string id, GoUser user) //id(storyId)
         {
             var story = this.storiesRepository.All().FirstOrDefault(x => x.Id == id);
 
@@ -79,8 +72,8 @@ namespace GoGo.Services
 
             story.PeopleWhosLikeThis.Add(userStory);
 
-            this.peopleStoriesRepository.SaveChangesAsync();
-            this.storiesRepository.SaveChangesAsync();
+            await this.peopleStoriesRepository.SaveChangesAsync();
+            await this.storiesRepository.SaveChangesAsync();
         }
     }
 }

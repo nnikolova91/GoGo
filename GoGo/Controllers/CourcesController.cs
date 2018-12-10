@@ -34,7 +34,7 @@ namespace GoGo.Controllers
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            this.courcesService.AddCource(model, user);
+           await this.courcesService.AddCource(model, user);
 
             return Redirect("/Cources/All");
         }
@@ -61,7 +61,7 @@ namespace GoGo.Controllers
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            this.courcesService.AddUserToCource(id, user);
+            await this.courcesService.AddUserToCource(id, user);
 
             return Redirect($"/Cources/Details/{id}");
         }

@@ -17,6 +17,11 @@ using GoGo.Services.Contracts;
 using GoGo.Services;
 using GoGo.Data.Common;
 
+using ViewModels;
+using AutoMapper;
+using Mapping;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 namespace GoGo
 {
     public class Startup
@@ -31,6 +36,10 @@ namespace GoGo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //AutoMapperConfig.RegisterMappings(
+            //    typeof(DestViewModel).Assembly);
+
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -45,14 +54,29 @@ namespace GoGo
             services.AddScoped(typeof(IGamesService), typeof(GamesService));
 
             services.AddDbContext<GoDbContext>(options =>
+            {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection"));
+
+                //options.UseOpenIddict();
+            });
 
             services.AddIdentity<GoUser, ApplicationRole>(
                 options => options.Stores.MaxLengthForKeys = 128)
                 .AddEntityFrameworkStores<GoDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
+
+            services.AddAuthentication().AddCookie();//--------
+
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -81,7 +105,7 @@ namespace GoGo
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            
             app.UseAuthentication();
 
             app.UseMvc(routes =>

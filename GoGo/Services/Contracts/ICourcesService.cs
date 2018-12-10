@@ -9,13 +9,13 @@ namespace GoGo.Services.Contracts
 {
     public interface ICourcesService
     {
-        void AddCource(CreateCourceViewModel model, GoUser user);
+        Task AddCource(CreateCourceViewModel model, GoUser user);
 
         ICollection<CourceViewModel> GetAllCources();
 
         CourceViewModel GetDetails(string id);
 
-        void AddUserToCource(string id, GoUser user);
+        Task AddUserToCource(string id, GoUser user);
 
         ICollection<UsersResultsViewModel> GetAllParticipants(string id);
 

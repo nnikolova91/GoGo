@@ -9,10 +9,10 @@ namespace GoGo.Services.Contracts
 {
     public interface IStoriesService
     {
-        void AddStory(StoryViewModel model, string id, GoUser user);
+        Task AddStory(CreateStoryViewModel model, string id, GoUser user);
 
         StoryViewModel GetDetails(string id);
 
-        void LikeStory(string id, GoUser user);
+        Task LikeStory(string id, GoUser user);
     }
 }

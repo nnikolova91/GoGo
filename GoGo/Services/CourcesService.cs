@@ -1,4 +1,5 @@
-﻿using GoGo.Data;
+﻿using AutoMapper;
+using GoGo.Data;
 using GoGo.Data.Common;
 using GoGo.Models;
 using GoGo.Models.Enums;
@@ -17,17 +18,20 @@ namespace GoGo.Services
         private readonly IRepository<CourcesUsers> courcesUsersRepository;
         private readonly IRepository<Cource> courcesRepository;
         private readonly IRepository<GoUser> usersRepository;
+        private readonly IMapper mapper;
 
         public CourcesService(IRepository<CourcesUsers> courcesUsersRepository, 
                                 IRepository<Cource> courcesRepository, 
-                                IRepository<GoUser> usersRepository)
+                                IRepository<GoUser> usersRepository,
+                                IMapper mapper)
         {
             this.courcesUsersRepository = courcesUsersRepository;
             this.courcesRepository = courcesRepository;
             this.usersRepository = usersRepository;
+            this.mapper = mapper;
         }
 
-        public void AddCource(CreateCourceViewModel model, GoUser user)
+        public async Task AddCource(CreateCourceViewModel model, GoUser user)
         {
             byte[] file = null;
             if (model.Image.Length > 0)
@@ -38,24 +42,14 @@ namespace GoGo.Services
                     file = ms.ToArray();
                 }
             }
-
-            var cource = new Cource
-            {
-                Image = file,
-                Title = model.Title,
-                StartDate = model.StartDate,
-                MaxCountParticipants = model.MaxCountParticipants,
-                DurationOfDays = model.DurationOfDays,
-                CountOfHours = model.CountOfHours,
-                Description = model.Description,
-                Status = model.Status,
-                Category = model.Category,
-                Creator = user,
-                CreatorId = user.Id
-            };
-
-            this.courcesRepository.AddAsync(cource);
-            this.courcesRepository.SaveChangesAsync();
+            
+            var course = mapper.Map<Cource>(model);
+            course.Creator = user;
+            course.CreatorId = user.Id;
+            course.Image = file;
+            
+            await this.courcesRepository.AddAsync(course);
+            await this.courcesRepository.SaveChangesAsync();
         }
 
         public void AddResultToUsersCourses(UsersResultsViewModel model)
@@ -68,7 +62,7 @@ namespace GoGo.Services
             this.courcesUsersRepository.SaveChangesAsync();
         }
 
-        public void AddUserToCource(string id, GoUser user)
+        public async Task AddUserToCource(string id, GoUser user)
         {
             var cource = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
 
@@ -80,61 +74,30 @@ namespace GoGo.Services
                 Cource = cource
             };
 
-            this.courcesUsersRepository.AddAsync(userCource);
-            this.courcesUsersRepository.SaveChangesAsync();
+            await this.courcesUsersRepository.AddAsync(userCource);
+            await this.courcesUsersRepository.SaveChangesAsync();
         }
 
         public ICollection<CourceViewModel> GetAllCources()
         {
             var cources = this.courcesRepository.All().ToList();
-
-            var courceModels = new List<CourceViewModel>();
-
-            foreach (var c in cources)
-            {
-                var model = new CourceViewModel
-                {
-                    Id = c.Id,
-                    Image = c.Image,
-                    Title = c.Title,
-                    StartDate = c.StartDate,
-                    MaxCountParticipants = c.MaxCountParticipants,
-                    DurationOfDays = c.DurationOfDays,
-                    CountOfHours = c.CountOfHours,
-                    Description = c.Description,
-                    Status = c.Status,
-                    Category = c.Category
-                };
-
-                courceModels.Add(model);
-            }
-
+            
+            var courceModels = cources.Select(x => mapper.Map<CourceViewModel>(x)).ToList();
+            
             return courceModels;
         }
 
         public ICollection<UsersResultsViewModel> GetAllParticipants(string id)
         {
-            var usersResult = this.courcesUsersRepository.All().Where(x => x.CourceId == id)
-                                    .Select(x => new UsersResultsViewModel
-                                    {
-                                        CourceId = id,
-                                        ParticipantId = x.ParticipantId,
-                                        Participant = new GoUserViewModel
-                                        {
-                                            Id = x.ParticipantId,
-                                            FirstName = x.Participant.FirstName,
-                                            Image = x.Participant.Image
-                                        },
-                                        Result = x.StatusUser
-                                        //Results = new List<ResultViewModel>
-                                        //{
-                                        //    new ResultViewModel { Id = (int)StatusParticitant.Successfully, ResultName = StatusParticitant.Successfully.ToString() },
-                                        //    new ResultViewModel { Id = (int)StatusParticitant.Unsuccessfully, ResultName = StatusParticitant.Unsuccessfully.ToString() }
-                                        //}.ToList()
-                                    })
-                                    .ToList();
-            return usersResult;
+            var users = this.courcesUsersRepository.All();
 
+            var usersResult = users.Where(x => x.CourceId == id)
+                .Select(x => mapper.Map<UsersResultsViewModel>(x)).ToList();
+
+            usersResult.ForEach(x => x.Participant = mapper.Map<GoUserViewModel>(this.usersRepository.All()
+                .FirstOrDefault(u => u.Id == x.ParticipantId)));
+            
+            return usersResult;
         }
 
         public CourceViewModel GetDetails(string id)
@@ -143,39 +106,16 @@ namespace GoGo.Services
 
             var creatorr = this.usersRepository.All().FirstOrDefault(x => x.Id == cource.CreatorId);
 
-            var creator = new GoUserViewModel
-            {
-                Id = cource.CreatorId,
-                FirstName = creatorr.FirstName,
-                Image = creatorr.Image,
-            };
-
+            var creator = mapper.Map<GoUserViewModel>(creatorr);
+            
             var participents = this.courcesUsersRepository.All()
                                             .Where(x => x.CourceId == id)
-                                            .Select(x => new GoUserViewModel
-                                            {
-                                                Id = x.ParticipantId,
-                                                FirstName = x.Participant.FirstName,
-                                                Image = x.Participant.Image
-                                            }).ToList();
-
-            var model = new CourceViewModel
-            {
-                Id = cource.Id,
-                Image = cource.Image,
-                Title = cource.Title,
-                StartDate = cource.StartDate,
-                MaxCountParticipants = cource.MaxCountParticipants,
-                DurationOfDays = cource.DurationOfDays,
-                CountOfHours = cource.CountOfHours,
-                Description = cource.Description,
-                Status = cource.Status,
-                Category = cource.Category,
-                FreeSeats = cource.MaxCountParticipants - cource.Participants.Count(),
-                Participants = participents,
-                Creator = creator,
-            };
-
+                                            .Select(x => mapper.Map<GoUserViewModel>(x.Participant)).ToList();
+            
+            var model = mapper.Map<CourceViewModel>(cource);
+            model.Participants = participents;
+            model.FreeSeats = model.MaxCountParticipants - model.Participants.Count();
+            
             return model;
         }
     }

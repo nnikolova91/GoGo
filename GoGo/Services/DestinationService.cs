@@ -1,8 +1,10 @@
-﻿using GoGo.Data;
+﻿using AutoMapper;
+using GoGo.Data;
 using GoGo.Data.Common;
 using GoGo.Models;
 using GoGo.Models.Enums;
 using GoGo.Services.Contracts;
+
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -17,24 +19,30 @@ namespace GoGo.Services
     {
         private readonly IRepository<Destination> destRepository;
         private readonly IRepository<DestinationsUsers> destUsersRepository;
+        private readonly IRepository<PeopleStories> peopleStoriesRepository;
         private readonly IRepository<Comment> commentsRepository;
         private readonly IRepository<Story> storiesRepository;
         private readonly IRepository<GoUser> usersRepository;
         private UserManager<GoUser> userManager;
-
+        private readonly IMapper mapper;
+        
         public DestinationService(IRepository<Destination> destRepository,
                                     IRepository<DestinationsUsers> destUsersRepository,
+                                    IRepository<PeopleStories> peopleStoriesRepository,
                                     IRepository<Comment> commentsRepository,
                                     IRepository<Story> storiesRepository,
                                     IRepository<GoUser> usersRepository,
-                                    UserManager<GoUser> userManager)
+                                    UserManager<GoUser> userManager,
+                                    IMapper mapper)
         {
             this.destRepository = destRepository;
             this.destUsersRepository = destUsersRepository;
+            this.peopleStoriesRepository = peopleStoriesRepository;
             this.commentsRepository = commentsRepository;
             this.storiesRepository = storiesRepository;
             this.usersRepository = usersRepository;
             this.userManager = userManager;
+            this.mapper = mapper;
         }
 
         public void AddDestination(CreateDestinationViewModel model, GoUser user)
@@ -49,21 +57,12 @@ namespace GoGo.Services
                 }
             }
 
-            var destination = new Destination
-            {
-                Naame = model.Naame,
-                StartDate = model.StartDate,
-                EndDate = model.EndDate,
-                EndDateToJoin = model.EndDateToJoin,
-                Description = model.Description,
-                Level = model.Level,
-                Image = file,
-                Creator = user,
-                CreatorId = user.Id,
-
-            };
-
-            this.destRepository.AddAsync(destination);
+            var dest = mapper.Map<Destination>(model);
+            dest.Image = file;
+            dest.Creator = user;
+            dest.CreatorId = user.Id;
+            
+            this.destRepository.AddAsync(dest);
             destRepository.SaveChangesAsync();
         }
 
@@ -76,10 +75,10 @@ namespace GoGo.Services
             await this.destUsersRepository.SaveChangesAsync();
         }
 
-        public DestUserViewModel AddUserToDestination(GoUser user, string id)
+        public DestUserViewModel AddUserToDestination(GoUser user, string id) //destinationId
         {
             var destination = this.destRepository.All().FirstOrDefault(x => x.Id == id);
-
+            
             var destUserModel = new DestUserViewModel
             {
                 Destination = destination,
@@ -95,6 +94,7 @@ namespace GoGo.Services
                 Participant = user,
                 ParticipantId = user.Id
             };
+           // var destUsModel = this.Mapp<DestUserViewModel>(destinationUser);
 
             this.destUsersRepository.AddAsync(destinationUser);
             this.destUsersRepository.SaveChangesAsync();
@@ -106,13 +106,8 @@ namespace GoGo.Services
         {
             var usersNotKnowAnyone = this.destUsersRepository.All()
                                             .Where(x => x.DestinationId == id && x.Socialization.ToString() == "NotKnowAnyone")
-                                            .Select(x => new GoUserViewModel
-                                            {
-                                                Id = x.ParticipantId,
-                                                FirstName = x.Participant.FirstName,
-                                                Image = x.Participant.Image
-                                            }).ToList();
-
+                                            .Select(x => mapper.Map<GoUserViewModel>(user)).ToList();
+                                            
             if (socialization == "NotKnowAnyone")
             {
                 var notIncludeYourself = usersNotKnowAnyone.FirstOrDefault(x => x.Id == user.Id);
@@ -124,114 +119,49 @@ namespace GoGo.Services
 
         public ICollection<DestViewModel> GetAllDestinations()
         {
-            var destinations = this.destRepository.All();
-
-            var destinationsModels = new List<DestViewModel>();
-
-            foreach (var dest in destinations)
-            {
-                var model = new DestViewModel
-                {
-                    Id = dest.Id,
-                    StartDate = dest.StartDate,
-                    Level = dest.Level,
-                    Naame = dest.Naame,
-                    EndDate = dest.EndDate,
-                    EndDateToJoin = dest.EndDateToJoin,
-                    Description = dest.Description,
-                    Image = dest.Image
-                };
-
-                destinationsModels.Add(model);
-            }
-
+            var destinationsModels = this.destRepository.All().Select(x => mapper.Map<DestViewModel>(x)).ToList();
+            
             return destinationsModels;
         }
 
-        public DestDetailsViewModel GetDetails(string id, GoUser user)
+        public DestDetailsViewModel GetDetails(string id, string userName) //GoUser user)
         {
+            var user = this.usersRepository.All().FirstOrDefault(x => x.UserName == userName);
+
             var dest = this.destRepository.All().FirstOrDefault(x => x.Id == id);
+
             var usersNotKnowAnyone = this.destUsersRepository.All()
                                             .Where(x => x.DestinationId == id && x.Socialization.ToString() == "NotKnowAnyone"/* && x.ParticipantId != user.Id*/)
-                                            .Select(x => new GoUserViewModel
-                                            {
-                                                Id = x.ParticipantId,
-                                                FirstName = x.Participant.FirstName,
-                                                Image = x.Participant.Image
-                                            }).ToList();
+                                            .Select(x => mapper.Map<GoUserViewModel>(x.Participant)).ToList();
+                                            
             var usersKnowSomeone = this.destUsersRepository.All()
                                             .Where(x => x.DestinationId == id && x.Socialization.ToString() == "KnowSomeone" /*&& x.ParticipantId != user.Id*/)
-                                            .Select(x => new GoUserViewModel
-                                            {
-                                                Id = x.ParticipantId,
-                                                FirstName = x.Participant.FirstName,
-                                                Image = x.Participant.Image
-                                            }).ToList();
-
-            var goUserModel = new GoUserViewModel
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                Image = user.Image
-            };
-
+                                            .Select(x => mapper.Map<GoUserViewModel>(x.Participant)).ToList();
+            
+            var goUserModel = mapper.Map<CurrentUserViewModel>(user);
+            
             var allComments = this.commentsRepository.All().Where(x => x.DestinationId == id)
-                .Select(x => new CommentViewModel
-                {
-                    Content = x.Content,
-                    ComentatorId = x.ComentatorId,
-                    Comentator = new GoUserViewModel { Image = x.Comentator.Image, FirstName = x.Comentator.FirstName, Id = x.Comentator.Id },
-                    DestinationId = x.DestinationId
-                }).ToList();
+                .Select(x => mapper.Map<CommentViewModel>(x)).ToList();
 
+            allComments.ForEach(x => x.Comentator =
+            mapper.Map<GoUserViewModel>(this.usersRepository.All().FirstOrDefault(c => c.Id == x.ComentatorId)));
+            
             var allStories = this.storiesRepository.All().Where(x => x.DestinationId == id)
-                .Select(x => new StoryViewModel
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Content = x.Content,
-                    AuthorId = x.AuthorId,
-                    Author = x.Author.FirstName, //new GoUserViewModel { Id = x.AuthorId, FirstName = x.Author.FirstName, Image = x.Author.Image },
-                    DestinationId = x.DestinationId,
-                    PeopleWhosLikeThis = x.PeopleWhosLikeThis.Count()
-                })
-                .ToList();
+                .Select(x => mapper.Map<StoryViewModel>(x)).ToList();
+            
+            allStories.ForEach(x => x.PeopleWhosLikeThis = this.peopleStoriesRepository.All().Where(s=>s.StoryId == x.Id).Count());
 
-            var model = new DestDetailsViewModel
-            {
-                Id = dest.Id,
-                StartDate = dest.StartDate,
-                Level = dest.Level,
-                Naame = dest.Naame,
-                EndDate = dest.EndDate,
-                EndDateToJoin = dest.EndDateToJoin,
-                Description = dest.Description,
-                Image = dest.Image,
-                Creator = this.usersRepository.All().FirstOrDefault(x => x.Id == dest.CreatorId).FirstName,
-                CurrentUser = goUserModel,
-                AllComments = allComments,
-                Stories = allStories,
-                ParticipantsKnowSomeone = usersKnowSomeone
-                                    .Select(x => new GoUserViewModel
-                                    {
-                                        Id = x.Id,
-                                        FirstName = x.FirstName,
-                                        Image = x.Image
-                                    })
-                                    .ToList(),
-                ParticipantsNotKnowAnyone = usersNotKnowAnyone
-                                    .Select(x => new GoUserViewModel
-                                    {
-                                        Id = x.Id,
-                                        FirstName = x.FirstName,
-                                        Image = x.Image
-                                    })
-                                    .ToList()
-            };
-
+            allStories.ForEach(x => x.Author = this.usersRepository.All().FirstOrDefault(u => u.Id == x.AuthorId).FirstName);
+            
+            var model = mapper.Map<DestDetailsViewModel>(dest);
+            model.Creator = this.usersRepository.All().FirstOrDefault(x => x.Id == dest.CreatorId).FirstName;
+            model.CurrentUser = goUserModel;
+            model.AllComments = allComments;
+            model.Stories = allStories;
+            model.ParticipantsKnowSomeone = usersKnowSomeone;
+            model.ParticipantsNotKnowAnyone = usersNotKnowAnyone;
+            
             return model;
         }
-
-
     }
 }

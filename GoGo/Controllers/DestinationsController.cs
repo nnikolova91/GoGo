@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ViewModels;
 
@@ -46,9 +47,11 @@ namespace GoGo.Controllers
 
         public async Task<IActionResult> Details(string socialization, string id) // id(destinationId)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var us = User.Identity.Name;
+            var user = HttpContext.User;
+            var userr = await _userManager.GetUserAsync(HttpContext.User);
 
-            var destination = this.destinationService.GetDetails(id, user);
+            var destination = this.destinationService.GetDetails(id, us);//user);
 
             ViewData["Message"] = "Register - if you dont or Login if you have an account";
 

@@ -1,12 +1,14 @@
-﻿using GoGo.Models;
+﻿
+using GoGo.Models;
 using GoGo.Models.Enums;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ViewModels
 {
-    public class DestUserViewModel
+    public class DestUserViewModel //: IMapFrom<DestinationsUsers>//, IHaveCustomMappings
     {
         public Socialization Socialization { get; set; }
 
@@ -15,5 +17,10 @@ namespace ViewModels
 
         public string ParticipantId { get; set; }
         public GoUser Participant { get; set; }
+
+        //public void CreateMappings(IMapperConfigurationExpression configuration)
+        //{
+        //    
+        //}
     }
 }

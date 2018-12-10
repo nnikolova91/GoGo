@@ -14,7 +14,7 @@ namespace GoGo.Services.Contracts
 
         ICollection<DestViewModel> GetAllDestinations();
 
-        DestDetailsViewModel GetDetails(string id, GoUser user);
+        DestDetailsViewModel GetDetails(string id, string userName); //GoUser user);
 
         DestUserViewModel AddUserToDestination(GoUser user, string id);
 

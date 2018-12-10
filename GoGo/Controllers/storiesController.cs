@@ -28,12 +28,13 @@ namespace GoGo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(StoryViewModel model /*string title, string content, string id*/, string id)
+        public async Task<IActionResult> Create(CreateStoryViewModel model /*string title, string content, string id*/, string id)
         {
-            
             var user = await userManager.GetUserAsync(HttpContext.User);
-            
-            this.storiesService.AddStory(model, id, user);
+
+            model.DestinationId = id;
+
+            await this.storiesService.AddStory(model, id, user);
 
             return Redirect($"/Destinations/Details/{id}");
         }
@@ -48,7 +49,7 @@ namespace GoGo.Controllers
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            this.storiesService.LikeStory(id, user);
+            await this.storiesService.LikeStory(id, user);
 
             return Redirect($"/Stories/Details/{id}");
         }
