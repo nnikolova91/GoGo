@@ -11,44 +11,63 @@ using System.Text;
 
 namespace ViewModels
 {
-    public class CreateCourceViewModel //: IMapFrom<Cource>//, IHaveCustomMappings
+    public class CreateCourceViewModel
     {
-        //public string Id { get; set; }
         [Required]
         [Display(Name = "Image")]
         [DataType(DataType.Upload)]
         [BindProperty]
         public IFormFile Image { get; set; }
+
+        [Required]
+        [Display(Name = "Title")]
         public string Title { get; set; }
+
+        [Required]
+        [StringLength(700, MinimumLength = 10)]
         public string Description { get; set; }
+
+        [Required]
+        [Range((int)1, int.MaxValue)]
         public int MaxCountParticipants { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        [CompareWithToday(ErrorMessage = "This date is passed enter new date:)")]
         public DateTime StartDate { get; set; }
+
+        [Required]
+        [Range((int)1, int.MaxValue)]
         public int DurationOfDays { get; set; }
+
+        [Required]
+        [Range((int)1, int.MaxValue)]
         public int CountOfHours { get; set; }
+
+
         public GoUserViewModel Creator { get; set; }
+
+        [Required]
         public Status Status { get; set; }
+
+        [Required]
         public Category Category { get; set; }
 
-        //public string Id { get; set; }
-        //public byte[] Image { get; set; }
-        //public string Title { get; set; }
-        //public string Description { get; set; }
-        //public int MaxCountParticipants { get; set; }
-        //public DateTime StartDate { get; set; }
-        //public int DurationOfDays { get; set; }
-        //public int CountOfHours { get; set; }
-        //public string CreatorId { get; set; }
-        //public GoUser Creator { get; set; }
-        //public Status Status { get; set; }
-        //public Category Category { get; set; }
-        //public ICollection<CourcesUsers> Participants { get; set; }
+    }
 
-        //public void CreateMappings(IMapperConfigurationExpression configuration)
-        //{
-        //    //configuration.CreateMap<CreateCourceViewModel,Cource>().ReverseMap()
-        //    //    .ForMember(x => x.Image, x => x.MapFrom(d => d.Image));
-        //}
+    [AttributeUsage(AttributeTargets.Property)]
+    public class CompareWithTodayAttribute : ValidationAttribute
+    {
+        private DateTime Today = DateTime.Now;
 
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if ((DateTime)value <= this.Today)
+            {
+                return new ValidationResult(ErrorMessage);
+            }
 
+            return ValidationResult.Success;
+        }
     }
 }

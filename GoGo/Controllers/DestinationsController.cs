@@ -1,6 +1,7 @@
 ﻿using GoGo.Models;
 using GoGo.Models.Enums;
 using GoGo.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -29,8 +30,13 @@ namespace GoGo.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(CreateDestinationViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.View();
+            }
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             this.destinationService.AddDestination(model, user);

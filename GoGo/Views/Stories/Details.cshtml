@@ -26,10 +26,14 @@
             <button asp-action="Details" asp-controller="Destinations" asp-route-id="@Model.DestinationId" class="btn chushka-bg-color text-center">Go to destination</button>
             <h6>-------------------------------------------------------------------------------------------</h6>
         </div>
-        <div class="text-center">
-        <button asp-action="Like" asp-controller="Stories" asp-route-id="@Model.Id" class="btn chushka-bg-color text-center">Like</button>
-        <h6>-------------------------------------------------------------------------------------------</h6>
-        </div>
+
+        @if (this.User.Identity.IsAuthenticated)
+        {
+            <div class="text-center">
+                <button asp-action="Like" asp-controller="Stories" asp-route-id="@Model.Id" class="btn chushka-bg-color text-center">Like</button>
+                <h6>-------------------------------------------------------------------------------------------</h6>
+            </div>
+        }
     </form>
 
 </main>

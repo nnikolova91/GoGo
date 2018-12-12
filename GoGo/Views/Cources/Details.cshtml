@@ -59,23 +59,34 @@
 
     </div>
     <h6>--------------------------------------------------------------------------------------</h6>
-    @if(ViewData["CurrentUser"].ToString() == Model.Creator.Id)
+
+    @if (this.User.Identity.IsAuthenticated && ViewData["CurrentUser"].ToString() == Model.Creator.Id)
     {
-    <form asp-action="AddResults" asp-controller="Cources" asp-route-id="@Model.Id">
-        <div class="text-center">
-            <button class="btn chushka-bg-color text-center">Add results</button>
-            <h6>------------------------------------------------------------------------------------------</h6>
-        </div>
+        <form asp-action="AddResults" asp-controller="Cources" asp-route-id="@Model.Id">
+            <div class="text-center">
+                <button class="btn chushka-bg-color text-center">Add results</button>
+                <h6>------------------------------------------------------------------------------------------</h6>
+            </div>
 
-    </form>
+        </form>
     }
-    <form asp-action="SignIn" asp-controller="Cources" asp-route-id="@Model.Id">
+    @if (this.User.Identity.IsAuthenticated)
+    {
+        <form asp-action="SignIn" asp-controller="Cources" asp-route-id="@Model.Id">
+            <div class="text-center">
+                <button class="btn chushka-bg-color text-center">Sign in</button>
+                <h6>------------------------------------------------------------------------------------------</h6>
+            </div>
+        </form>
+    }
+    else
+    {
         <div class="text-center">
-            <button class="btn chushka-bg-color text-center">Sign in</button>
-            <h6>------------------------------------------------------------------------------------------</h6>
+            <div class="alert alert-primary" role="alert">
+                <button class="btn chushka-bg-color text-center" onclick="myFunction()">Sign in</button>
+            </div>
         </div>
-
-    </form>
+    }
     <hr />
     <form asp-action="All" asp-controller="Cources">
         <div class="text-center">

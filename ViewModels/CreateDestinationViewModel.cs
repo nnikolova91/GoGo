@@ -19,37 +19,56 @@ namespace ViewModels
         [BindProperty]
         public IFormFile Image { get; set; }
 
+        [Required]
         public LevelOfDifficulty Level { get; set; }
 
+        [Required]
         public string Naame { get; set; }
 
+        [Required]
+        [StringLength(700, MinimumLength = 10)]
         public string Description { get; set; }
 
+        [Required]
+        [StartDateBaforeEndDate("EndDateToJoin", ErrorMessage = "End date to join must by before Start date")]
+        [CompareWithToday(ErrorMessage = "This date is passed enter new date:)")]
         public DateTime StartDate { get; set; }
 
+        [Required]
+        [StartDateBaforeEndDate("StartDate", ErrorMessage = "Start date must by before End date")]
         public DateTime EndDate { get; set; }
 
+        [Required]
         public DateTime EndDateToJoin { get; set; }
-
-        //public void CreateMappings(IMapperConfigurationExpression configuration)
-        //{
-        //    
-        //}
     }
-    //public string Id { get; set; }
-    //public byte[] Image { get; set; }
-    //public LevelOfDifficulty Level { get; set; }
-    //public string Naame { get; set; }
-    //public string Description { get; set; }
-    //public DateTime StartDate { get; set; }
-    //public DateTime EndDate { get; set; }
-    //public DateTime EndDateToJoin { get; set; }
 
-    //public string CreatorId { get; set; }
-    //public GoUser Creator { get; set; }
-    //public ICollection<Acsesoar> Acsesoaries { get; set; }
-    //public ICollection<Comment> Comments { get; set; }
-    //public ICollection<DestinationsUsers> Participants { get; set; }
-    //public ICollection<DestinationPhoto> Photos { get; set; }
-    //public ICollection<Story> Stories { get; set; }
+    [AttributeUsage(AttributeTargets.Property)]
+    public class StartDateBaforeEndDateAttribute : ValidationAttribute
+    {
+        private readonly string startDateProperty;
+
+        public StartDateBaforeEndDateAttribute(string startDateProperty)
+        {
+            this.startDateProperty = startDateProperty;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            ErrorMessage = ErrorMessageString;
+
+            var currentValue = (DateTime)value;
+
+            var property = validationContext.ObjectType.GetProperty(this.startDateProperty);
+
+            if (property == null)
+                throw new ArgumentException("Property with this name not found");
+
+            var comparisonValue = (DateTime)property.GetValue(validationContext.ObjectInstance);
+
+            if (currentValue < comparisonValue)
+                return new ValidationResult(ErrorMessage);
+
+            return ValidationResult.Success;
+        }
+    }
 }

@@ -7,20 +7,23 @@
     <h1 class="text-center">Create Destination</h1>
     <hr class="wiy chushka-bg-color height: 7px" />
     <form class="mx-auto half-width wiy" method="post" asp-controller="Cources" asp-action="Create" enctype="multipart/form-data">
+        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="row">
             <div class="form-group">
                 <label asp-for="Image"></label>
                 <input asp-for="Image" type="file" onchange="readURL(this);" />
                 <img id="blah" src="#" alt="your image" />
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group inline col-sm-6  text-center">
                 <label asp-for="Title"><b>Title</b></label>
                 <input asp-for="Title" type="text" class="form-control" placeholder="Title...">
-
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group inline col-sm-6  text-center">
                 <label asp-for="StartDate"><b>Start Date</b></label>
                 <input asp-for="StartDate" type="date" class="form-control" placeholder="Start Date...">
+                <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
 
         </div>
@@ -28,20 +31,25 @@
             <div class="form-group inline col-sm-6  text-center">
                 <label asp-for="MaxCountParticipants"><b>Max count participants</b></label>
                 <input asp-for="MaxCountParticipants" type="number" class="form-control" placeholder="MaxCountParticipants...">
+                <span asp-validation-for="MaxCountParticipants" class="text-danger"></span>
             </div>
             <div class="form-group inline col-sm-6  text-center">
                 <label asp-for="DurationOfDays"><b>DurationOfDays</b></label>
                 <input asp-for="DurationOfDays" type="number" class="form-control" placeholder="Duration Of Days...">
+                <span asp-validation-for="DurationOfDays" class="text-danger"></span>
             </div>
             <div class="form-group inline col-sm-6  text-center">
                 <label asp-for="CountOfHours"><b>CountOfHours</b></label>
                 <input asp-for="CountOfHours" type="number" class="form-control" placeholder="Count Of Hours...">
+                <span asp-validation-for="CountOfHours" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group  inline col-sm-12  text-center">
                 <label asp-for="Description"><b>Description</b></label>
                 <textarea asp-for="Description" type="text" class="form-control" rows="6" cols="50" placeholder="Description..."></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
         </div>
         <div class="text-center">
@@ -62,7 +70,7 @@
                 <h5>Other <input type="radio" asp-for="Category" value="Other" /></h5>
             </div>
         </div>
-        
+
         <hr class="chushka-bg-color height: 7px" />
         <div class="text-center">
             <button type="submit" class="btn chushka-bg-color text-center">Create Cource</button>

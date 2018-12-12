@@ -32,6 +32,10 @@ namespace GoGo.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateCourceViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.View();
+            }
             var user = await userManager.GetUserAsync(HttpContext.User);
 
            await this.courcesService.AddCource(model, user);
@@ -51,8 +55,11 @@ namespace GoGo.Controllers
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             var cource = this.courcesService.GetDetails(id);
-
-            ViewData["CurrentUser"] = user.Id;
+            if (ViewData["CurrentUser"] != null)
+            {
+                ViewData["CurrentUser"] = user.Id;
+            }
+            
 
             return View(cource);
         }
