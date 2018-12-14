@@ -23,7 +23,7 @@ namespace GoGo.Services
             this.destinationsRepository = destinationsRepository;
         }
 
-        public void AddComment(string comment, string destinationId, GoUser user)
+        public async Task AddComment(string comment, string destinationId, GoUser user)
         {
             var commentt = new Comment
             {
@@ -34,8 +34,8 @@ namespace GoGo.Services
                 Content = comment
             };
 
-            this.commentsRepository.AddAsync(commentt);
-            this.commentsRepository.SaveChangesAsync();
+           await this.commentsRepository.AddAsync(commentt);
+           await this.commentsRepository.SaveChangesAsync();
         }
     }
 }

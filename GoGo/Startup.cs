@@ -87,6 +87,7 @@ namespace GoGo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app,
                                 IHostingEnvironment env,
+                                IServiceProvider serviceProvider,
                                 GoDbContext context,
                                 RoleManager<ApplicationRole> roleManager,
                                 UserManager<GoUser> userManager)
@@ -102,6 +103,8 @@ namespace GoGo
                 app.UseHsts();
             }
 
+            
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
@@ -116,7 +119,7 @@ namespace GoGo
                 
             });
 
-            DummyData.Initialize(context, userManager, roleManager).Wait(); //seed here
+           DummyData.Initialize(context, userManager, roleManager, serviceProvider).Wait(); //seed here
         }
     }
 }

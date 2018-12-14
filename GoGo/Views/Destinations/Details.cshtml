@@ -6,25 +6,173 @@
 }
 
 <main class="mt-3">
+    <div class="container-fluid text-center">
+        <div class="row content">
+            <div class="col-sm-1 sidenav" style="background-color:#3c763d5c;">
+                <p>
+                    <h4>
+                        Other people
+                    </h4>
+                    <div>
 
-    <div>
-        @{ var base64 = Convert.ToBase64String(@Model.Image);
-            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-            <img src="@imgSrc" /> }
+                        @foreach (var item in @Model.ParticipantsKnowSomeone)
+                        {
+                            <hr style="border-style:inset;  border-color:white;">
+                            <div style="text-align:left">
+                                <h4>
+                                    @item.FirstName
 
-        <h4>Level:  @Model.Level</h4>
-        <h4>StartDate:  @Model.StartDate</h4>
-        <h4>EndDate:  @Model.EndDate</h4>
-        <h4>EndDateToJoin:  @Model.EndDateToJoin</h4>
-        <div style="margin-left:800px;">
-            <h4>This page was created from: <b>@Model.Creator</b></h4>
+                                    @if (@item.Image != null)
+                                    {
+
+                                        var base65 = Convert.ToBase64String(@item.Image);
+                                        var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
+                                        <img src="@imgSrcc" style="width:30px;height:30px; border-radius:30px 40px;">
+                                    }
+                                </h4>
+                            </div>
+                        }
+
+                    </div>
+                </p>
+            </div>
+            <div class="col-sm-8 text-left">
+                <div class="row content">
+                    <div class="col-sm-4 ">
+                        <div style="border:double; border-color:white; margin-left:0px;">
+                            @{ var base64 = Convert.ToBase64String(@Model.Image);
+                                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                <img src="@imgSrc" style="width:1000px;height:200px;" /> }
+
+                            <h4>Level:  @Model.Level</h4>
+                            <h4>StartDate:  @Model.StartDate</h4>
+                            <h4>EndDate:  @Model.EndDate</h4>
+                            <h4>EndDateToJoin:  @Model.EndDateToJoin</h4>
+                            <h4>This page was created from: <b>@Model.Creator</b></h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <h3 style="padding-top:5px;">@Model.Naame</h3>
+                        <hr />
+                        <h4 style="padding-top:10px;">@Model.Description</h4>
+                    </div>
+                </div>
+                <div class="row content">
+                    <div class="col-sm-4 ">
+                        <h3>Stories</h3>
+                        <h6>----------------------------------------</h6>
+                        @foreach (var item in @Model.Stories)
+                        {
+
+                            <h4>@item.Title  </h4> <a asp-action="Details" asp-controller="Stories" asp-route-id="@item.Id">Read mor</a>
+                            <h6>Author: @item.Author</h6>
+                            <h6>@item.PeopleWhosLikeThis people like this</h6>
+                        }
+                    </div>
+                    <div class="col-sm-2 ">
+                        @if (this.User.Identity.IsAuthenticated)
+                        {
+                            <form method="get" asp-action="Create" asp-controller="Stories" asp-route-id="@Model.Id">
+                                <div style="padding-bottom:20px; padding-top:200px;">
+                                    <button class="btn">Create Story</button>
+                                </div>
+                            </form>
+                        }
+
+                        @if (this.User.Identity.IsAuthenticated)
+                        {
+                            <form asp-action="HavePart" asp-controller="Destinations" asp-route-id="@Model.Id">
+                                <div style="padding-bottom:20px;">
+                                    <button class="btn text-center">HavePart</button>
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <div>
+                                <div class="alert alert-primary" role="alert">
+                                    <button class="btn  text-center" onclick="myFunction()">HavePart</button>
+                                </div>
+                            </div>
+                        }
+
+                        <form asp-action="All" asp-controller="Destinations">
+                            <div>
+                                <button asp-action="All" asp-controller="Destinations" class="btn  text-center">Back To All</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-sm-6 ">
+                        @if (this.User.Identity.IsAuthenticated)
+                        {
+                            <div>
+
+                                <form mothod="post" asp-action="AddComment" asp-controller="Comments" asp-route-id="@Model.Id">
+                                    <div class="form-group" style="border:groove; background-color:#ccc;">
+                                        <label asp-for="@Model.CurrentComment">Add Comment</label>
+                                        <input asp-for="@Model.CurrentComment" class="form-control" />
+                                        <span asp-validation-for="@Model.CurrentComment" class="text-danger"></span>
+                                        <div style="text-align:end">
+                                            <button type="submit" class="btn ">Add</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        }
+                        @foreach (var item in @Model.AllComments)
+                        {
+                            <div style="border:groove; border-radius:7px 10px; margin-bottom:10px; background-color:#ccc;">
+                                <h4 style="border-bottom-style:groove;">
+                                    @item.Comentator.FirstName
+
+                                    @if (@item.Comentator.Image != null)
+                                    {
+                                        var base65 = Convert.ToBase64String(@item.Comentator.Image);
+                                        var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
+                                        <img src="@imgSrcc" style="width:20px;height:20px; border-radius:30px 40px;">
+                                    }
+                                </h4>
+                                <h4>@item.Content</h4>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-1 sidenav" style="background-color:#3c763d5c;">
+                <p>
+                    <h4>
+                        These people also do not know anyone in this group, write them
+                        and faind new friends
+                    </h4>
+                    <div>
+
+                        @foreach (var item in @Model.ParticipantsNotKnowAnyone)
+                        {
+                            <hr style="border-style:inset; border-color:white">
+                            <div style="text-align:left">
+                                <h4>
+                                    @item.FirstName
+
+                                    @if (@item.Image != null)
+                                    {
+
+                                        var base65 = Convert.ToBase64String(@item.Image);
+                                        var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
+                                        <img src="@imgSrcc" style="width:40px;height:40px; border-radius:30px 40px;">
+                                    }
+                                </h4>
+                            </div>
+                        }
+                    </div>
+                </p>
+            </div>
         </div>
     </div>
+
     <h6>------------------------------------------------------------------------------------------</h6>
     <div style="margin-left:300px; margin-right:300px;">
 
-        <h3>Name:  @Model.Naame</h3>
-        <h5>Description:  @Model.Description</h5>
+
     </div>
     @if (this.User.Identity.IsAuthenticated)
     {
@@ -38,58 +186,7 @@
                 </h3>
             </div>
 
-            <h6>------------------------------------------------------------------------------------------</h6>
 
-            <h6>------------------------------------------------------------------------------------------</h6>
-            <h4 style="margin-right:800px;">
-                These people also do not know anyone in this group, write to them
-                and found new friends
-            </h4>
-            <div>
-
-                @foreach (var item in @Model.ParticipantsNotKnowAnyone)
-                {
-
-                    <h4>@item.FirstName</h4>
-
-                    if (@item.Image != null)
-                    {
-                        <div>
-                            @{
-
-                                var base65 = Convert.ToBase64String(@item.Image);
-                                var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
-                                <img src="@imgSrcc" style="width:40px;height:40px;">
-
-
-                            }
-                        </div>
-                    }
-                }
-            </div>
-            <h4>
-                Other people
-            </h4>
-            <div>
-
-                @foreach (var item in @Model.ParticipantsKnowSomeone)
-                {
-
-                    <h4>@item.FirstName</h4>
-
-                    if (@item.Image != null)
-                    {
-                        <div>
-                            @{ var base65 = Convert.ToBase64String(@item.Image);
-                                var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
-                                <img src="@imgSrcc" style="width:40px;height:40ph;">
-
-                            }
-                        </div>
-                    }
-                }
-
-            </div>
         }
         else
         {
@@ -98,61 +195,15 @@
         }
 
     <h3 style="margin-left:800px;">Comments</h3>
-    @if (this.User.Identity.IsAuthenticated)
-    {
-        <div style="margin-left:800px;">
 
-            <form mothod="post" asp-action="AddComment" asp-controller="Comments" asp-route-id="@Model.Id">
-                <div class="form-group ">
-                    <label asp-for="@Model.CurrentComment">Add Comment</label>
-                    <input asp-for="@Model.CurrentComment" class="form-control" />
-                    <span asp-validation-for="@Model.CurrentComment" class="text-danger"></span>
-                    <div>
-                        <button type="submit" class="btn ">Add</button>
-                    </div>
-                </div>
-            </form>
-
-            <h6>
-                ---    ---------------------------------------------------------------------------------
-            </h6>
-        </div>
-    }
 
 
     <div style="margin-left:800px;">
 
-        @foreach (var item in @Model.AllComments)
-        {
 
-            <h4>@item.Comentator.FirstName</h4>
-
-            if (@item.Comentator.Image != null)
-            {
-                <div>
-                    @{ var base65 = Convert.ToBase64String(@item.Comentator.Image);
-                        var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
-                        <img src="@imgSrcc" style="width:40px;height:40px;"><h4>@item.Content</h4>
-
-                    }
-                </div>
-            }
-        }
 
     </div>
-    <div style="margin-right:800px;">
-        <h6>----------------------------------------</h6>
-        <h3>Stories</h3>
-        <h6>----------------------------------------</h6>
-        @foreach (var item in @Model.Stories)
-        {
 
-            <h4>@item.Title  </h4> <a asp-action="Details" asp-controller="Stories" asp-route-id="@item.Id">Read mor</a>
-            <h6>Author: @item.Author</h6>
-            <h6>@item.PeopleWhosLikeThis people like this</h6>
-        }
-
-    </div>
     @if (this.User.Identity.IsAuthenticated)
     {
         <form method="get" asp-action="Create" asp-controller="Stories" asp-route-id="@Model.Id">

@@ -9,6 +9,6 @@ namespace GoGo.Services.Contracts
 {
     public interface ICommentsService
     {
-        void AddComment(string comment, string destinationId, GoUser user);
+        Task AddComment(string comment, string destinationId, GoUser user);
     }
 }

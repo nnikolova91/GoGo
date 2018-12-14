@@ -1,24 +1,40 @@
 @model System.Collections.Generic.IEnumerable<ViewModels.DestViewModel>
 
-@if (Model == null)
-{
+    @if (Model == null)
+    {
     <h1></h1>
-}
-else
-{
+    }
+    else
+    {
 
     @foreach (var destination in Model)
     {
 
-        var base64 = Convert.ToBase64String(@destination.Image);
-        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+    var base64 = Convert.ToBase64String(@destination.Image);
+    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 
-        <a asp-action="Details" asp-controller="Destinations" asp-route-id="@destination.Id">
-            @*<div class="inline">*@
+    <div class="col-md-3">
+        <div class="thumbnail">
+            <img src="@imgSrc" alt="ASP.NET" style="width:260px; height:20s0px; border-radius:60%" />
+            @*<p style="margin-top:20px;"><strong>@destination.Description</strong></p>*@
+            <p style="margin-top:20px;">@destination.Naame</p>
+            @*<button asp-action="Details" asp-controller="Destinations" asp-route-id="@destination.Id" class="btn" style="color:dimgray;">Details</button>*@
+            <a asp-action="Details" asp-controller="Destinations" asp-route-id="@destination.Id">
+                
+                    <btn class="btn" style="color:dimgray;">Details</btn>
+                    
+            </a>
+        </div>
+    </div>
+
+    @*<a asp-action="Details" asp-controller="Destinations" asp-route-id="@destination.Id">
+        <div class="inline">
+
             <btn>Details</btn>
-            <img src="@imgSrc" />
-            @*</div>*@
-        </a>
+            <img  src="@imgSrc" />
+
+        </div>
+    </a>*@
     }
 
-}
+    }

@@ -1,4 +1,5 @@
 ﻿
+using AngleSharp.Parser.Html;
 using GoGo.Data;
 using GoGo.Data.Common;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
+using System.Net;
 using System.Text;
+using System.Threading;
 
 namespace SendBox
 {
@@ -14,17 +17,19 @@ namespace SendBox
     {
         public static void Main(string[] args)
         {
-            Console.OutputEncoding = Encoding.UTF8;
-            Console.WriteLine($"{typeof(Program).Namespace} ({string.Join(" ", args)}) starts working...");
-            var serviceCollection = new ServiceCollection();
-            ConfigureServices(serviceCollection);
-            IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider(true);
+            var owners = System.IO.File.ReadAllLines(@"..\DataSeed\Destinations.txt");
 
-            using (var serviceScope = serviceProvider.CreateScope())
-            {
-                serviceProvider = serviceScope.ServiceProvider;
-                SandboxCode(serviceProvider);
-            }
+            //Console.OutputEncoding = Encoding.UTF8;
+            //Console.WriteLine($"{typeof(Program).Namespace} ({string.Join(" ", args)}) starts working...");
+            //var serviceCollection = new ServiceCollection();
+            //ConfigureServices(serviceCollection);
+            //IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider(true);
+            //
+            //using (var serviceScope = serviceProvider.CreateScope())
+            //{
+            //    serviceProvider = serviceScope.ServiceProvider;
+            //    SandboxCode(serviceProvider);
+            //}
         }
 
         private static void SandboxCode(IServiceProvider serviceProvider)

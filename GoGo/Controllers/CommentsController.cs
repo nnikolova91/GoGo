@@ -26,7 +26,7 @@ namespace GoGo.Controllers
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            this.commentsService.AddComment(currentComment, id, user);
+            await this.commentsService.AddComment(currentComment, id, user);
 
             return Redirect($"/Destinations/Details/{id}");
         }
