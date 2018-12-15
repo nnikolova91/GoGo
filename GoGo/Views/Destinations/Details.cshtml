@@ -106,7 +106,6 @@
                         @if (this.User.Identity.IsAuthenticated)
                         {
                             <div>
-
                                 <form mothod="post" asp-action="AddComment" asp-controller="Comments" asp-route-id="@Model.Id">
                                     <div class="form-group" style="border:groove; background-color:#ccc;">
                                         <label asp-for="@Model.CurrentComment">Add Comment</label>

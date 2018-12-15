@@ -53,6 +53,7 @@ namespace GoGo
             services.AddScoped(typeof(IStoriesService), typeof(StoriesService));
             services.AddScoped(typeof(ICourcesService), typeof(CourcesService));
             services.AddScoped(typeof(IGamesService), typeof(GamesService));
+            services.AddScoped(typeof(IChatService), typeof(ChatService));
 
             services.AddDbContext<GoDbContext>(options =>
             {

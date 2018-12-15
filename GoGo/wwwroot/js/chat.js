@@ -1,24 +1,33 @@
-﻿"use strict";
+﻿function SendMessage(id) {
+    var inputBoxId = id.concat("inputMessage");
+    var message = document.getElementById(inputBoxId).value
+    connection.invoke("SendMessage", id, message).catch(err => console.error(err.toString()));
+}
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/chatHub")
+    .configureLogging(signalR.LogLevel.Information)
+    .build();
 
-connection.on("ReceiveMessage", function (user, message) {
-    var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var encodedMsg = user + " says " + msg;
-    var li = document.createElement("li");
+connection.on("ReceiveMessage", (user, message) => {
+    const encodedMsg = user + " says " + message;
+    const li = document.createElement("li");
     li.textContent = encodedMsg;
     document.getElementById("messagesList").appendChild(li);
 });
 
-connection.start().catch(function (err) {
-    return console.error(err.toString());
+connection.onclose(async () => {
+    await start();
 });
 
-document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = document.getElementById("userInput").value;
-    var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
-});
+start();
+
+async function start() {
+    try {
+        await connection.start();
+        console.log('connected');
+    } catch (err) {
+        console.log(err);
+        setTimeout(() => start(), 5000);
+    }
+};

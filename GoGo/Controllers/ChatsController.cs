@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GoGo.Hubs;
+using GoGo.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,11 +11,17 @@ namespace GoGo.Controllers
 {
     public class ChatsController : Controller
     {
+        private readonly IChatService chatSerice;
+
+        public ChatsController(IChatService chatSerice)
+        {
+            this.chatSerice = chatSerice;
+        }
+
         [Authorize]
         public IActionResult Chat()
         {
-
-            return View();
+            return View(chatSerice.GetAllChatUsers());
         }
     }
 }

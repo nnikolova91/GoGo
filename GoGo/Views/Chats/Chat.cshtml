@@ -1,27 +1,91 @@
-﻿
-@page
-<div class="container">
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-6">&nbsp;</div>
-        <div class="col-6">
-            User..........<input type="text" id="userInput" />
-            <br />
-            Message...<input type="text" id="messageInput" />
-            <input type="button" id="sendButton" value="Send Message" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <hr />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">&nbsp;</div>
-        <div class="col-6">
-            <ul id="messagesList"></ul>
-        </div>
-    </div>
+﻿@model System.Collections.Generic.IEnumerable<GoGo.Models.Chat.ChatUser>
+
+<div id="header">
+    SignalR Chat Room
 </div>
+<br />
+<br />
+<br />
+
+@foreach(var user in Model)
+{
+<label>@user.Username</label>
+<input id ="@(user.Id + "inputMessage")" type="text" />
+<button onclick="SendMessage('@user.Id')">Send Message</button>
+}
+
 <script src="~/lib/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>
+
+<div class="row">
+    <div class="col-12">
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">&nbsp;</div>
+    <div class="col-6">
+        <ul id="messagesList"></ul>
+    </div>
+</div>
+
+@*<div id="divContainer">
+        <div id="divLogin" class="login">
+            <div>
+                Your Name:<br />
+                <input id="txtNickName" type="text" class="textBox" />
+            </div>
+            <div id="divButton">
+                <input id="btnStartChat" type="button" class="submitButton" value="Start Chat" />
+            </div>
+        </div>
+
+        <div id="divChat" class="chatRoom">
+            <div class="title">
+                Welcome to Chat Room [<span id='spanUser'></span>]
+
+            </div>
+            <div class="content">
+                <div id="divChatWindow" class="chatWindow">
+                </div>
+                <div id="divusers" class="users">
+                </div>
+            </div>
+            <div class="messageBar">
+                <input class="textbox" type="text" id="txtMessage" />
+                <input id="btnSendMsg" type="button" value="Send" class="submitButton" />
+            </div>
+        </div>
+
+        <input id="hdId" type="hidden" />
+        <input id="hdUserName" type="hidden" />
+    </div>*@
+
+
+@*@page
+    <div class="container">
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-6">&nbsp;</div>
+            <div class="col-6">
+                User..........<input type="text" id="userInput" />
+                <br />
+                Message...<input type="text" id="messageInput" />
+                <input type="button" id="sendButton" value="Send Message" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">&nbsp;</div>
+            <div class="col-6">
+                <ul id="messagesList"></ul>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>*@
