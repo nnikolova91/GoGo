@@ -90,6 +90,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">GoGo</a>
+                <a asp-area="" asp-controller="Chats" asp-action="Chat" class="navbar-brand">Chat</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar" @*class="navbar-collapse collapse" *@>
                 <ul class="nav navbar-nav">
@@ -170,6 +171,7 @@
     </div>
 
     <environment include="Development">
+
         @*<script src="~/lib/jquery/dist/jquery.js"></script>
             <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
             <script src="~/js/site.js" asp-append-version="true"></script>
@@ -193,7 +195,12 @@
                 crossorigin="anonymous"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
+
+        @*<script src="~/lib/aspnet/signalr/dist/browser/signalr.min.js"></script>*@
+        <script src="https://cdn.jsdelivr.net/npm/@@aspnet/signalr@1.0.0-rc1-update1/dist/browser/signalr.min.js"></script>
+        <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
 
     @RenderSection("Scripts", required: false)

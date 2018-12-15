@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ViewModels", "ViewModels", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModels", "ViewModels\ViewModels.csproj", "{020BE63B-D93D-4500-828B-C1861813E9B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapping", "Mapping\Mapping.csproj", "{1630AA31-4280-4B56-B796-A0E7A2C17820}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapping", "Mapping\Mapping.csproj", "{1630AA31-4280-4B56-B796-A0E7A2C17820}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

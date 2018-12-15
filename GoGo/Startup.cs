@@ -21,6 +21,7 @@ using ViewModels;
 using AutoMapper;
 using Mapping;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using GoGo.Hubs;
 
 namespace GoGo
 {
@@ -77,11 +78,11 @@ namespace GoGo
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
-
+            services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            //AplicationServices
-            services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,15 +103,13 @@ namespace GoGo
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
-            
             
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
             
             app.UseAuthentication();
-
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -120,6 +119,11 @@ namespace GoGo
             });
 
            DummyData.Initialize(context, userManager, roleManager, serviceProvider).Wait(); //seed here
+           
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chatHub");
+            });
         }
     }
 }
