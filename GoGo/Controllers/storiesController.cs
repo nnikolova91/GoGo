@@ -1,5 +1,6 @@
 ﻿using GoGo.Models;
 using GoGo.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -26,6 +27,7 @@ namespace GoGo.Controllers
             this.userManager = userManager;
         }
         
+        [Authorize]
         public IActionResult Create(string id)
         {
             
@@ -44,6 +46,7 @@ namespace GoGo.Controllers
             return Redirect($"/Destinations/Details/{id}");
         }
 
+        [Authorize]
         public async Task<IActionResult> My()
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
@@ -53,7 +56,7 @@ namespace GoGo.Controllers
             return View(myStories);
         }
 
-        public async Task<IActionResult> All(int? page)
+        public /*async Task<*/IActionResult/*>*/ All(int? page)
         {
             //var user = await userManager.GetUserAsync(HttpContext.User);
             var myStories = this.storiesService.AllStories();
@@ -70,6 +73,7 @@ namespace GoGo.Controllers
             return View(storyModel);
         }
 
+        [Authorize]
         public async Task<IActionResult> Like(string id) //id(storyId)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);

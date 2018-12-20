@@ -20,8 +20,8 @@ namespace GoGo.Services
         private readonly IRepository<GoUser> usersRepository;
         private readonly IMapper mapper;
 
-        public CourcesService(IRepository<CourcesUsers> courcesUsersRepository, 
-                                IRepository<Cource> courcesRepository, 
+        public CourcesService(IRepository<CourcesUsers> courcesUsersRepository,
+                                IRepository<Cource> courcesRepository,
                                 IRepository<GoUser> usersRepository,
                                 IMapper mapper)
         {
@@ -42,12 +42,12 @@ namespace GoGo.Services
                     file = ms.ToArray();
                 }
             }
-            
+
             var course = mapper.Map<Cource>(model);
             course.Creator = user;
             course.CreatorId = user.Id;
             course.Image = file;
-            
+
             await this.courcesRepository.AddAsync(course);
             await this.courcesRepository.SaveChangesAsync();
         }
@@ -64,18 +64,21 @@ namespace GoGo.Services
 
         public async Task AddUserToCource(string id, GoUser user)
         {
-            var cource = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
+            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
 
             var userCource = new CourcesUsers
             {
                 ParticipantId = user.Id,
                 Participant = user,
-                CourceId = cource.Id,
-                Cource = cource
+                CourceId = course.Id,
+                Cource = course
             };
 
-            await this.courcesUsersRepository.AddAsync(userCource);
-            await this.courcesUsersRepository.SaveChangesAsync();
+            if (this.courcesUsersRepository.All().FirstOrDefault(x=>x.ParticipantId == user.Id && x.CourceId == course.Id) == null)
+            {
+                await this.courcesUsersRepository.AddAsync(userCource);
+                await this.courcesUsersRepository.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteCourse(string id)
@@ -135,22 +138,29 @@ namespace GoGo.Services
         public ICollection<CourceViewModel> GetAllCources()
         {
             var cources = this.courcesRepository.All().ToList();
-            
+
             var courceModels = cources.Select(x => mapper.Map<CourceViewModel>(x)).ToList();
-            
+
             return courceModels;
         }
 
-        public ICollection<UsersResultsViewModel> GetAllParticipants(string id)
+        public ICollection<UsersResultsViewModel> GetAllParticipants(string id, GoUser user)
         {
             var users = this.courcesUsersRepository.All();
+
+            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
+
+            if (course.CreatorId != user.Id)
+            {
+                throw new ArgumentException("You not add results!");
+            }
 
             var usersResult = users.Where(x => x.CourceId == id)
                 .Select(x => mapper.Map<UsersResultsViewModel>(x)).ToList();
 
             usersResult.ForEach(x => x.Participant = mapper.Map<GoUserViewModel>(this.usersRepository.All()
                 .FirstOrDefault(u => u.Id == x.ParticipantId)));
-            
+
             return usersResult;
         }
 
@@ -161,15 +171,15 @@ namespace GoGo.Services
             var creatorr = this.usersRepository.All().FirstOrDefault(x => x.Id == cource.CreatorId);
 
             var creator = mapper.Map<GoUserViewModel>(creatorr);
-            
+
             var participents = this.courcesUsersRepository.All()
                                             .Where(x => x.CourceId == id)
                                             .Select(x => mapper.Map<GoUserViewModel>(x.Participant)).ToList();
-            
+
             var model = mapper.Map<CourceViewModel>(cource);
             model.Participants = participents;
             model.FreeSeats = model.MaxCountParticipants - model.Participants.Count();
-            
+
             return model;
         }
 

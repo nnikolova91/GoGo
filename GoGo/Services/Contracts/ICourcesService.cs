@@ -17,7 +17,7 @@ namespace GoGo.Services.Contracts
 
         Task AddUserToCource(string id, GoUser user);
 
-        ICollection<UsersResultsViewModel> GetAllParticipants(string id);
+        ICollection<UsersResultsViewModel> GetAllParticipants(string id, GoUser user);
 
         void AddResultToUsersCourses(UsersResultsViewModel model);
 

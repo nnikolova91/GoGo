@@ -24,11 +24,11 @@ namespace GoGo.Services.Contracts
 
         ICollection<DestViewModel> FindMyDestinations(GoUser user);
 
-        EditDestinationViewModel FindDestination(string id);
+        EditDestinationViewModel FindDestination(string id, GoUser user);
 
         Task EditDestination(EditDestinationViewModel model);
 
-        DestViewModel FindToDeleteDestination(string id);
+        DestViewModel FindToDeleteDestination(string id, GoUser user);
 
         Task DeleteDestinationsUsers(string id);
 

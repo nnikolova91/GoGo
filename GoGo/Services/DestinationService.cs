@@ -4,7 +4,7 @@ using GoGo.Data.Common;
 using GoGo.Models;
 using GoGo.Models.Enums;
 using GoGo.Services.Contracts;
-
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -68,9 +68,15 @@ namespace GoGo.Services
 
         public async Task AddSocialization(GoUser user, string id, string socialization)
         {
-            this.destUsersRepository.All()
-                .FirstOrDefault(x => x.DestinationId == id && x.ParticipantId == user.Id)
-                .Socialization = Enum.Parse<Socialization>(socialization);
+            var dest = this.destUsersRepository.All()
+                .FirstOrDefault(x => x.DestinationId == id && x.ParticipantId == user.Id);
+
+            //if (dest == null)
+            //{
+            //    throw new Exception("You are not in this group.");
+            //}
+
+            dest.Socialization = Enum.Parse<Socialization>(socialization);
 
             await this.destUsersRepository.SaveChangesAsync();
         }
@@ -172,13 +178,22 @@ namespace GoGo.Services
             return destModels;
         }
 
-        public EditDestinationViewModel FindDestination(string id)
+        public EditDestinationViewModel FindDestination(string id, GoUser user)
         {
+           
             var dest = this.destRepository.All().FirstOrDefault(x => x.Id == id);
            
             var destination = mapper.Map<EditDestinationViewModel>(dest);
 
-            return destination;
+            if (dest.CreatorId == user.Id)
+            {
+                return destination;
+            }
+            else
+            {
+                throw new ArgumentException("You can not edit this page");
+            }
+            
         }
 
         public async Task EditDestination(EditDestinationViewModel model)
@@ -206,10 +221,15 @@ namespace GoGo.Services
             await this.destRepository.SaveChangesAsync();
         }
 
-        public DestViewModel FindToDeleteDestination(string id)
+        public DestViewModel FindToDeleteDestination(string id, GoUser user)
         {
             var dest = this.destRepository.All().FirstOrDefault(x => x.Id == id);
 
+            if (dest.CreatorId != user.Id)
+            {
+                throw new ArgumentException("You can not delete this page");
+            }
+            
             var destination = mapper.Map<DestViewModel>(dest);
 
             return destination;

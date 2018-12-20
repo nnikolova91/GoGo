@@ -46,7 +46,7 @@ namespace GoGo.Controllers
             
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            await this.gamesService.AddGameUserLevel(id, user, levelId, image);
+            await this.gamesService.UserAddImageToLevel(id, user, levelId, image);
             //this.
             //string gameId = await this.gamesService.AddGame(model);
             //await this.gamesService.AddLevelsToGame(gameId, model);

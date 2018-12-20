@@ -137,22 +137,25 @@ namespace GoGo.Services
             var game = this.context.Games.FirstOrDefault(x => x.Id == id);
             var levels = this.context.Levels.Where(x => x.GameId == id).ToList();
 
-            var gamesLevelsUsers = levels.Select(x => new GameLevelParticipant
+            if (this.context.LevelsParticipants.FirstOrDefault(x=>x.ParticipantId == user.Id && x.GameId == game.Id) == null)
             {
-                GameId = game.Id,
-                Game = game,
-                ParticipantId = user.Id,
-                LevelId = x.Id,
-                Level = x,
-                IsPassed = false
-            });
+                var gamesLevelsUsers = levels.Select(x => new GameLevelParticipant
+                {
+                    GameId = game.Id,
+                    Game = game,
+                    ParticipantId = user.Id,
+                    LevelId = x.Id,
+                    Level = x,
+                    IsPassed = false
+                });
 
-            await this.context.AddRangeAsync(gamesLevelsUsers);
+                await this.context.AddRangeAsync(gamesLevelsUsers);
 
-            await this.context.SaveChangesAsync();
+                await this.context.SaveChangesAsync();
+            }
         }
 
-        public async Task AddGameUserLevel(string id, GoUser user, string levelId, IFormFile image)
+        public async Task UserAddImageToLevel(string id, GoUser user, string levelId, IFormFile image)
         {
             var levelPartisipant = this.context.LevelsParticipants
                 .FirstOrDefault(x => x.GameId == id && x.ParticipantId == user.Id && x.LevelId == levelId);

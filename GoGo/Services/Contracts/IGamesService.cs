@@ -20,7 +20,7 @@ namespace GoGo.Services.Contracts
 
         Task UserStartGame(string id, GoUser user);
 
-        Task AddGameUserLevel(string id, GoUser user, string levelId, IFormFile image);
+        Task UserAddImageToLevel(string id, GoUser user, string levelId, IFormFile image);
 
 
     }

@@ -47,14 +47,24 @@ namespace GoGo.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(string id)
+        [Authorize]
+        public async Task<IActionResult> Edit(string id)
         {
-            var dest = this.destinationService.FindDestination(id);
-            
-            return View(dest);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            var dest = this.destinationService.FindDestination(id, user);
+            if (dest == null)
+            {
+                throw new ArgumentException("You can not edit this page");
+                //ViewData["MyError"] = "You can not edit this page";
+
+                //return Redirect("/Views/Shared/MyError");  
+            }
+            return View();
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Edit(EditDestinationViewModel model)
         {
             await this.destinationService.EditDestination(model);
@@ -63,14 +73,18 @@ namespace GoGo.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(string id)
+        [Authorize]
+        public async Task<IActionResult> Delete(string id)
         {
-            var dest = this.destinationService.FindToDeleteDestination(id);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            var dest = this.destinationService.FindToDeleteDestination(id, user);
 
             return View(dest);
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Delete(string id, DestViewModel model)
         {
             await this.destinationService.DeleteComments(id);
@@ -116,6 +130,7 @@ namespace GoGo.Controllers
             return View(destination);
         }
 
+        [Authorize]
         public async Task<IActionResult> HavePart(string id)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);

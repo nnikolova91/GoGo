@@ -1,6 +1,7 @@
 ﻿using GoGo.Models;
 using GoGo.Models.Enums;
 using GoGo.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -91,7 +92,8 @@ namespace GoGo.Controllers
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             var cource = this.courcesService.GetDetails(id);
-            if (ViewData["CurrentUser"] /*!=*/ == null)
+
+            if (cource == null)
             {
                 ViewData["CurrentUser"] = user.Id;
             }
@@ -118,9 +120,12 @@ namespace GoGo.Controllers
             return Redirect($"/Cources/Details/{id}");
         }
 
-        public IActionResult AddResults(string id) // id(courceId)
+        [Authorize]
+        public async Task<IActionResult> AddResults(string id) // id(courceId)
         {
-            var participants = this.courcesService.GetAllParticipants(id);
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
+            var participants = this.courcesService.GetAllParticipants(id, user);
 
             return View(participants);
         }

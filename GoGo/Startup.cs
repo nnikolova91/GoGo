@@ -69,7 +69,7 @@ namespace GoGo
                 .AddEntityFrameworkStores<GoDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
-
+            
             services.AddAuthentication().AddCookie();//--------
 
             // Auto Mapper Configurations
