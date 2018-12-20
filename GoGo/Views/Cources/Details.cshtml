@@ -59,6 +59,23 @@
 
     </div>
     <h6>--------------------------------------------------------------------------------------</h6>
+    @if (this.User.Identity.IsAuthenticated)
+    {
+        <form method="get" asp-action="Delete" asp-controller="Cources" asp-route-id="@Model.Id">
+            <div class="text-center" style="padding-bottom:20px; padding-top:200px;">
+                <button class="btn">Delete Course</button>
+            </div>
+        </form>
+    }
+
+    @if (this.User.Identity.IsAuthenticated)
+    {
+        <form method="get" asp-action="Edit" asp-controller="Cources" asp-route-id="@Model.Id">
+            <div class="text-center" style="padding-bottom:20px; padding-top:200px;">
+                <button class="btn">Edit Course</button>
+            </div>
+        </form>
+    }
 
     @if (this.User.Identity.IsAuthenticated && ViewData["CurrentUser"].ToString() == Model.Creator.Id)
     {
@@ -74,7 +91,7 @@
     {
         <form asp-action="SignIn" asp-controller="Cources" asp-route-id="@Model.Id">
             <div class="text-center">
-                <button class="btn chushka-bg-color text-center">Sign in</button>
+                <button class="btn chushka-bg-color text-center">Have Part</button>
                 <h6>------------------------------------------------------------------------------------------</h6>
             </div>
         </form>

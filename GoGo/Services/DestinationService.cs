@@ -163,5 +163,97 @@ namespace GoGo.Services
             
             return model;
         }
+
+        public ICollection<DestViewModel> FindMyDestinations(GoUser user)
+        {
+            var destModels = this.destUsersRepository.All().Where(x => x.ParticipantId == user.Id)
+                .Select(d => mapper.Map<DestViewModel>(d.Destination)).ToList();
+
+            return destModels;
+        }
+
+        public EditDestinationViewModel FindDestination(string id)
+        {
+            var dest = this.destRepository.All().FirstOrDefault(x => x.Id == id);
+           
+            var destination = mapper.Map<EditDestinationViewModel>(dest);
+
+            return destination;
+        }
+
+        public async Task EditDestination(EditDestinationViewModel model)
+        {
+            byte[] file = null;
+            if (model.Image.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    model.Image.CopyTo(ms);
+                    file = ms.ToArray();
+                }
+            }
+
+            var destination = this.destRepository.All().FirstOrDefault(x => x.Id == model.Id);
+
+            destination.Image = file;
+            destination.Level = model.Level;
+            destination.StartDate = model.StartDate;
+            destination.EndDate = model.EndDate;
+            destination.EndDateToJoin = model.EndDateToJoin;
+            destination.Naame = model.Naame;
+            destination.Description = model.Description;
+
+            await this.destRepository.SaveChangesAsync();
+        }
+
+        public DestViewModel FindToDeleteDestination(string id)
+        {
+            var dest = this.destRepository.All().FirstOrDefault(x => x.Id == id);
+
+            var destination = mapper.Map<DestViewModel>(dest);
+
+            return destination;
+        }
+
+        public async Task DeleteDestinationsUsers(string id)
+        {
+            var destUsers = this.destUsersRepository.All().Where(x => x.DestinationId == id).ToList();
+
+            destUsers.ForEach(x => this.destUsersRepository.Delete(x));
+
+            await this.destUsersRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteComments(string id)
+        {
+            var comments = this.commentsRepository.All().Where(x => x.DestinationId == id).ToList();
+
+            comments.ForEach(x => this.commentsRepository.Delete(x));
+
+            await this.commentsRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteFromStories(string id)
+        {
+            var stories = this.storiesRepository.All().Where(x => x.DestinationId == id).ToList();
+
+            //stories.Select(x => x.DestinationId == null && x.Destination == null);
+            foreach (var item in stories)
+            {
+                item.DestinationId = null;
+                item.Destination = null;
+            }
+
+            await this.storiesRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteDestination(string id)
+        {
+            var dest = this.destRepository.All().FirstOrDefault(x => x.Id == id);
+            
+            this.destRepository.Delete(dest);
+
+            await this.destRepository.SaveChangesAsync();
+        }
     }
 }

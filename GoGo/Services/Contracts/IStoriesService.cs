@@ -14,5 +14,9 @@ namespace GoGo.Services.Contracts
         StoryViewModel GetDetails(string id);
 
         Task LikeStory(string id, GoUser user);
+
+        ICollection<StoryViewModel> AllMyStories(GoUser user);
+
+        ICollection<StoryViewModel> AllStories();
     }
 }

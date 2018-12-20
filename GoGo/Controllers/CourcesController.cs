@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ViewModels;
+using X.PagedList;
 
 namespace GoGo.Controllers
 {
@@ -43,11 +44,46 @@ namespace GoGo.Controllers
             return Redirect("/Cources/All");
         }
 
-        public IActionResult All()
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            var dest = this.courcesService.FindCourse(id);
+
+            return View(dest);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditCourseViewModel model)
+        {
+            await this.courcesService.EditCourse(model);
+
+            return Redirect($"/Cources/Details/{model.Id}");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(string id)
+        {
+            var curse = this.courcesService.FindCourseForDelete(id);
+
+            return View(curse);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id, DeleteCourseViewModel model)
+        {
+            await this.courcesService.DeleteCourse(id);
+
+            return Redirect($"/Cources/All");
+        }
+
+        public IActionResult All(int? page)
         {
             var cources = this.courcesService.GetAllCources();
 
-            return View(cources);
+            var nextPage = page ?? 1;
+            var pageViewModels = cources.ToPagedList(nextPage, 1);
+
+            return View(pageViewModels);
         }
 
         public async Task<IActionResult> Details(string id) // id(courceId)
@@ -55,13 +91,22 @@ namespace GoGo.Controllers
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             var cource = this.courcesService.GetDetails(id);
-            if (ViewData["CurrentUser"] != null)
+            if (ViewData["CurrentUser"] /*!=*/ == null)
             {
                 ViewData["CurrentUser"] = user.Id;
             }
             
 
             return View(cource);
+        }
+
+        public async Task<IActionResult> My()
+        {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
+            var cources = this.courcesService.GetMyCources(user.Id);
+
+            return View(cources);
         }
 
         public async Task<IActionResult> SignIn(string id) // id(courceId)

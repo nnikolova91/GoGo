@@ -2,6 +2,7 @@
 using GoGo.Models.Enums;
 using GoGo.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ViewModels;
+using X.PagedList;
 
 namespace GoGo.Controllers
 {
@@ -44,11 +46,60 @@ namespace GoGo.Controllers
             return Redirect("/Destinations/All");
         }
 
-        public IActionResult All()
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            var dest = this.destinationService.FindDestination(id);
+            
+            return View(dest);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditDestinationViewModel model)
+        {
+            await this.destinationService.EditDestination(model);
+
+            return Redirect($"/Destinations/Details/{model.Id}");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(string id)
+        {
+            var dest = this.destinationService.FindToDeleteDestination(id);
+
+            return View(dest);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id, DestViewModel model)
+        {
+            await this.destinationService.DeleteComments(id);
+
+            await this.destinationService.DeleteDestinationsUsers(id);
+
+            await this.destinationService.DeleteFromStories(id);
+
+            await this.destinationService.DeleteDestination(id);
+
+            return Redirect($"/Destinations/All");
+        }
+
+        public async Task<IActionResult> My()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            var destinations = this.destinationService.FindMyDestinations(user);
+
+            return View(destinations);
+        }
+
+        public IActionResult All(int? page)
         {
             var destinations = this.destinationService.GetAllDestinations();
 
-            return View(destinations);
+            var nextPage = page ?? 1;
+            var pageViewModels = destinations.ToPagedList(nextPage, 6);
+            return View(pageViewModels);
         }
 
         public async Task<IActionResult> Details(string socialization, string id) // id(destinationId)
@@ -60,6 +111,7 @@ namespace GoGo.Controllers
             var destination = this.destinationService.GetDetails(id, us);//user);
 
             ViewData["Message"] = "Register - if you dont or Login if you have an account";
+            ViewData["Controller"] = "Destinations";
 
             return View(destination);
         }

@@ -18,6 +18,7 @@ namespace GoGo.Models
             this.CreatedStories = new List<Story>();
             this.Comments = new List<Comment>();
             this.Cources = new List<CourcesUsers>();
+            this.Levels = new List<GameLevelParticipant>();
         }
         //public string Id { get; set; }
         public string FirstName { get; set; }
@@ -30,6 +31,8 @@ namespace GoGo.Models
         
         public byte[] Image { get; set; }
 
+        
+        public ICollection<GameLevelParticipant> Levels { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Destination> CreatedDestinations { get; set; }
         public ICollection<DestinationsUsers> Destinations { get; set; }

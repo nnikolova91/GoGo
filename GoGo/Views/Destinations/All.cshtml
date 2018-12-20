@@ -1,11 +1,19 @@
-﻿
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
 @{
     ViewData["Title"] = "Photo";
 }
 <div class="text-center"><h2>All Destinations</h2><hr /></div>
 @{
-                await Html.RenderPartialAsync("_DestinationsPartial");
+    await Html.RenderPartialAsync("_DestinationsPartial");
 }
+<div style="padding-left:800px; padding-top:200px;">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("All", new { page }))
+</div>
+
+
+
+
 
 @*<h2>Photo</h2>
 

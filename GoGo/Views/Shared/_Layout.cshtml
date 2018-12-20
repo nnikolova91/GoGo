@@ -3,25 +3,39 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>*@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>@ViewData["Title"] - GoGo</title>
 
     <environment include="Development">
         @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
-        <link rel="stylesheet" type="text/css" href="~/css/reset-css.css">
-        <link rel="stylesheet" type="text/css" href="~/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="~/css/style.css">*@
+            <link rel="stylesheet" href="~/css/site.css" />
+            <link rel="stylesheet" type="text/css" href="~/css/reset-css.css">
+            <link rel="stylesheet" type="text/css" href="~/css/bootstrap.min.css">
+            <link rel="stylesheet" type="text/css" href="~/css/style.css">*@
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
     <script>
+        
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        window.onclick = function (e) {
+            if (!e.target.matches('.dropbtn')) {
+                var myDropdown = document.getElementById("myDropdown");
+                if (myDropdown.classList.contains('show')) {
+                    myDropdown.classList.remove('show');
+                }
+            }
+        }
 
         function readURL(input) {
             if (input.files && input.files[0]) {
@@ -45,30 +59,34 @@
     <style>
         .thumbnail {
             margin-top: 30px;
-            height: 280px;
-            width: 310px;
-            /*background-color: #0d330dba;*/
-            color: #333333f5;
-            border-radius: 50%
+            height: 300px;
+            width: 270px;
+            background-color: grey;
+            color: #3333f5;
+            /*border-radius: 50%*/
         }
-        
+
         .navbar {
             margin-bottom: 0;
             border-radius: 0;
         }
+
         .row.content {
             height: 450px
         }
+
         .sidenav {
             padding-top: 20px;
-            background-color:#f1f1f1;
-            height: 300%;*/
+            background-color: #f1f1f1;
+            height: 300%;
         }
+
         footer {
             background-color: #555;
             color: white;
             padding: 15px;
         }
+
         img {
             max-width: 180px;
         }
@@ -131,6 +149,7 @@
                             }
                         </div>
                     </li>
+                    <li><a asp-area="" asp-controller="Stories" asp-action="All">Stories</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
                 <partial name="_LoginPartial" />
@@ -168,7 +187,7 @@
     <footer class="container-fluid text-center">
         <p>&copy; 2018 - GoGo</p>
     </footer>
-    </div>
+    @*</div>*@
 
     <environment include="Development">
 
@@ -183,21 +202,21 @@
 
     </environment>
     <environment exclude="Development">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+        <script src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery"
                 crossorigin="anonymous"
                 integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
         </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
                 crossorigin="anonymous"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
 
-        @*<script src="~/lib/aspnet/signalr/dist/browser/signalr.min.js"></script>*@
-        <script src="https://cdn.jsdelivr.net/npm/@@aspnet/signalr@1.0.0-rc1-update1/dist/browser/signalr.min.js"></script>
+        <script src="~/lib/aspnet/signalr/dist/browser/signalr.min.js"></script>
+        @*<script src="https://cdn.jsdelivr.net/npm/@@aspnet/signalr@1.0.0-rc1-update1/dist/browser/signalr.min.js"></script>*@
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>

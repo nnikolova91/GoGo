@@ -20,5 +20,15 @@ namespace GoGo.Services.Contracts
         ICollection<UsersResultsViewModel> GetAllParticipants(string id);
 
         void AddResultToUsersCourses(UsersResultsViewModel model);
+
+        ICollection<CourceViewModel> GetMyCources(string id);
+
+        EditCourseViewModel FindCourse(string id);
+
+        Task EditCourse(EditCourseViewModel model);
+
+        DeleteCourseViewModel FindCourseForDelete(string id);
+
+        Task DeleteCourse(string id);
     }
 }

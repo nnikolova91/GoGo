@@ -44,6 +44,38 @@ namespace GoGo.Services
             await this.storiesRepository.SaveChangesAsync();
         }
 
+        public ICollection<StoryViewModel> AllMyStories(GoUser user)
+        {
+            var myStories = this.storiesRepository.All().Where(x => x.AuthorId == user.Id)
+               .Select(x => mapper.Map<StoryViewModel>(x)).ToList();
+
+            foreach (var item in myStories)
+            {
+                item.PeopleWhosLikeThis = this.peopleStoriesRepository.All().Where(x => x.StoryId == item.Id).Count();
+                var name = this.usersRepository.All()
+                    .FirstOrDefault(x => x.Id == item.AuthorId);
+                item.Author = name.FirstName + " " + name.LastName;
+            }
+
+            return myStories;
+        }
+
+        public ICollection<StoryViewModel> AllStories()
+        {
+            var allStories = this.storiesRepository.All()
+               .Select(x => mapper.Map<StoryViewModel>(x)).ToList();
+
+            foreach (var item in allStories)
+            {
+                item.PeopleWhosLikeThis = this.peopleStoriesRepository.All().Where(x => x.StoryId == item.Id).Count();
+                var name = this.usersRepository.All()
+                    .FirstOrDefault(x => x.Id == item.AuthorId);
+                item.Author = name.FirstName + " " + name.LastName;
+            }
+
+            return allStories.OrderByDescending(x => x.PeopleWhosLikeThis).ToList();
+        }
+
         public StoryViewModel GetDetails(string id)
         {
             var story = this.storiesRepository.All().FirstOrDefault(x => x.Id == id);

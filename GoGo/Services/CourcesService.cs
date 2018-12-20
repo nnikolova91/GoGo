@@ -78,6 +78,60 @@ namespace GoGo.Services
             await this.courcesUsersRepository.SaveChangesAsync();
         }
 
+        public async Task DeleteCourse(string id)
+        {
+            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
+
+            this.courcesRepository.Delete(course);
+
+            await this.courcesRepository.SaveChangesAsync();
+        }
+
+        public async Task EditCourse(EditCourseViewModel model)
+        {
+            byte[] file = null;
+            if (model.Image.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    model.Image.CopyTo(ms);
+                    file = ms.ToArray();
+                }
+            }
+
+            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == model.Id);
+
+            course.Image = file;
+            course.Title = model.Title;
+            course.Description = model.Description;
+            course.StartDate = model.StartDate;
+            course.MaxCountParticipants = model.MaxCountParticipants;
+            course.DurationOfDays = model.DurationOfDays;
+            course.CountOfHours = model.CountOfHours;
+            course.Category = model.Category;
+            course.Status = model.Status;
+
+            await this.courcesRepository.SaveChangesAsync();
+        }
+
+        public EditCourseViewModel FindCourse(string id)
+        {
+            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
+
+            var courseModel = mapper.Map<EditCourseViewModel>(course);
+
+            return courseModel;
+        }
+
+        public DeleteCourseViewModel FindCourseForDelete(string id)
+        {
+            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
+
+            var courseModel = mapper.Map<DeleteCourseViewModel>(course);
+
+            return courseModel;
+        }
+
         public ICollection<CourceViewModel> GetAllCources()
         {
             var cources = this.courcesRepository.All().ToList();
@@ -117,6 +171,14 @@ namespace GoGo.Services
             model.FreeSeats = model.MaxCountParticipants - model.Participants.Count();
             
             return model;
+        }
+
+        public ICollection<CourceViewModel> GetMyCources(string id)
+        {
+            var courses = this.courcesUsersRepository.All().Where(x => x.ParticipantId == id)
+                .Select(x => mapper.Map<CourceViewModel>(x.Cource)).ToList();
+
+            return courses;
         }
     }
 }

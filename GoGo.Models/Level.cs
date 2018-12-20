@@ -18,5 +18,7 @@ namespace GoGo.Models
         public bool IsPassed { get; set; }
     
         public int Points { get; set; }
+
+        public ICollection<GameLevelParticipant> Participants { get; set; }
     }
 }

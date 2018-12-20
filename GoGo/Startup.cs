@@ -51,6 +51,7 @@ namespace GoGo
             services.AddScoped(typeof(IDestinationService), typeof(DestinationService));
             services.AddScoped(typeof(ICommentsService), typeof(CommentsService));
             services.AddScoped(typeof(IStoriesService), typeof(StoriesService));
+            services.AddScoped(typeof(IUserStoriesService), typeof(UserStoriesService));
             services.AddScoped(typeof(ICourcesService), typeof(CourcesService));
             services.AddScoped(typeof(IGamesService), typeof(GamesService));
             services.AddScoped(typeof(IChatService), typeof(ChatService));

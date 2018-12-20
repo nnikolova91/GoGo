@@ -1,0 +1,39 @@
+@model System.Collections.Generic.IEnumerable<ViewModels.GameViewModel>
+
+@if (Model == null)
+    {
+<h1></h1>
+    }
+    else
+    {
+
+@foreach (var game in Model)
+    {
+
+    var base64 = Convert.ToBase64String(@game.Image);
+    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+<div class="col-md-3">
+    <div class="thumbnail">
+        <img src="@imgSrc" alt="ASP.NET" style="width:260px; height:200px;" />
+        
+        <p style="margin-top:20px;">@game.Name</p>
+        <a asp-action="Details" asp-controller="Games" asp-route-id="@game.Id">
+
+            <btn class="btn" style="color:cornflowerblue;">Details</btn>
+
+        </a>
+    </div>
+</div>
+
+@*<a asp-action="Details" asp-controller="Destinations" asp-route-id="@destination.Id">
+        <div class="inline">
+
+            <btn>Details</btn>
+            <img  src="@imgSrc" />
+
+        </div>
+    </a>*@
+    }
+
+    }

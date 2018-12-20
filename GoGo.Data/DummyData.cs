@@ -1,5 +1,6 @@
 ﻿using GoGo.Data.Seeder;
 using GoGo.Data.Seeder.Comments;
+using GoGo.Data.Seeder.Courses;
 using GoGo.Data.Seeder.Destinations;
 using GoGo.Data.Seeder.Stories;
 using GoGo.Data.Seeder.Users;
@@ -20,12 +21,14 @@ namespace GoGo.Data
                           IServiceProvider serviceProvider)
         {
             context.Database.EnsureCreated();
-            
+            await SeedCourses.Seed(serviceProvider, context);
             await SeedUsers.Seed(serviceProvider, context, userManager, roleManager);
             await SeedDestinations.Seed(serviceProvider, context);
             await SeedDestinationsUsers.Seed(serviceProvider, context);
             await SeedComments.Seed(serviceProvider, context);
             await SeedStories.Seed(serviceProvider, context);
+           
+
             // if (await userManager.FindByNameAsync("a") == null)
             // {
             //     var user = new GoUser

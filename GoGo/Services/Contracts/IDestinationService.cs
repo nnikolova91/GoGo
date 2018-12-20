@@ -21,5 +21,21 @@ namespace GoGo.Services.Contracts
         Task AddSocialization(GoUser user, string id, string socialization);
 
         ICollection<GoUserViewModel> AllUsersFodSocialization(GoUser user, string id, string socialization);
+
+        ICollection<DestViewModel> FindMyDestinations(GoUser user);
+
+        EditDestinationViewModel FindDestination(string id);
+
+        Task EditDestination(EditDestinationViewModel model);
+
+        DestViewModel FindToDeleteDestination(string id);
+
+        Task DeleteDestinationsUsers(string id);
+
+        Task DeleteComments(string id);
+
+        Task DeleteFromStories(string id);
+
+        Task DeleteDestination(string id);
     }
 }

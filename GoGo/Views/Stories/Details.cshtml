@@ -22,10 +22,21 @@
         
     <hr />
     <form>
+        @*@if (ViewData["Controller"] == "Destinations")
+        {*@
+            <div class="text-center">
+                <button asp-action="Details" asp-controller="Destinations" asp-route-id="@Model.DestinationId" class="btn chushka-bg-color text-center">Back</button>
+                <h6>-------------------------------------------------------------------------------------------</h6>
+            </div>
+        @*}
+        else if (ViewData["Controller"] == "Stories")
+        {
         <div class="text-center">
-            <button asp-action="Details" asp-controller="Destinations" asp-route-id="@Model.DestinationId" class="btn chushka-bg-color text-center">Go to destination</button>
+            <button asp-action="My" asp-controller="Stories" asp-route-id="@Model.AuthorId" class="btn chushka-bg-color text-center">Back</button>
             <h6>-------------------------------------------------------------------------------------------</h6>
         </div>
+        }*@
+
 
         @if (this.User.Identity.IsAuthenticated)
         {

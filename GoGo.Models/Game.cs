@@ -8,10 +8,12 @@ namespace GoGo.Models
     {
         public Game()
         {
-            this.Levels = new List<TeamLevelGame>();
+            this.Levels = new List<GameLevelParticipant>();
         }
 
         public string Id { get; set; }
+
+        public byte[] Image { get; set; }
 
         public string Name { get; set; }
 
@@ -21,6 +23,6 @@ namespace GoGo.Models
 
         public Team Team { get; set; }
 
-        public ICollection<TeamLevelGame> Levels { get; set; }
+        public ICollection<GameLevelParticipant> Levels { get; set; }
     }
 }

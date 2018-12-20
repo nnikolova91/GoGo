@@ -20,23 +20,34 @@ namespace Mapping
             CreateMap<DestDetailsViewModel, Destination>().ReverseMap();
             CreateMap<CourceViewModel, Cource>().ReverseMap();
             CreateMap<UsersResultsViewModel, CourcesUsers>().ReverseMap()
-                .ForMember(x => x.Result, x => x.MapFrom(d => d.StatusUser)); ;
+                .ForMember(x => x.Result, x => x.MapFrom(d => d.StatusUser)); 
             
             CreateMap<CreateCourceViewModel, Cource>()
                 .ForMember(d => d.Image, d => d.Ignore())
                 .ForMember(d => d.Creator, d => d.Ignore());
 
             CreateMap<CommentViewModel, Comment>().ReverseMap();
+
+            CreateMap<LevelViewModel, Level>().ReverseMap();
+                //.ForMember(d => d.Image, d => d.Ignore());
+
             CreateMap<CreateDestinationViewModel, Destination>()
                 .ForMember(d => d.Image, d => d.Ignore());
             CreateMap<CreateStoryViewModel, Story>().ReverseMap()
                 //.ForMember(x => x.PeopleWhosLikeThis, x => x.MapFrom(d => d.PeopleWhosLikeThis.Count()))
                 /*.ForMember(x => x.Author, x => x.MapFrom(d => d.Author))*/;
             CreateMap<StoryViewModel, Story>().ReverseMap()
-                .ForMember(x => x.PeopleWhosLikeThis, x => x.MapFrom(d => d.PeopleWhosLikeThis.Count()));
+                .ForMember(x => x.PeopleWhosLikeThis, x => x.MapFrom(d => d.PeopleWhosLikeThis.Count()))
+                .ForMember(x => x.Author, x => x.MapFrom(d => d.Author.FirstName + " " + d.Author.LastName));
 
+            CreateMap<Destination, EditDestinationViewModel>()//.ReverseMap()
+                .ForMember(d => d.Image, d => d.Ignore());
+            
+                CreateMap<Cource, EditCourseViewModel>()//.ReverseMap()
+                .ForMember(d => d.Image, d => d.Ignore());
 
-
+            CreateMap<Cource, DeleteCourseViewModel>();//.ReverseMap()
+                //.ForMember(d => d.Image, d => d.Ignore());
         }
         //private static byte[] ImageToByteArray(CreateDestinationViewModel model)
         //{
