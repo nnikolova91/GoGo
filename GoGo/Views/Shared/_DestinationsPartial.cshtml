@@ -1,40 +1,31 @@
 @model System.Collections.Generic.IEnumerable<ViewModels.DestViewModel>
 
-    @if (Model == null)
-    {
+@if (Model == null)
+{
     <h1></h1>
-    }
-    else
-    {
-
+}
+else
+{
     @foreach (var destination in Model)
     {
+        var base64 = Convert.ToBase64String(@destination.Image);
+        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 
-    var base64 = Convert.ToBase64String(@destination.Image);
-    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-
-    <div class="col-md-3">
-        <div class="thumbnail">
-            <img src="@imgSrc" alt="ASP.NET" style="width:260px; height:200px;" />
-            @*<p style="margin-top:20px;"><strong>@destination.Description</strong></p>*@
-            <p style="margin-top:20px;">@destination.Naame</p>
-            @*<button asp-action="Details" asp-controller="Destinations" asp-route-id="@destination.Id" class="btn" style="color:dimgray;">Details</button>*@
-            <a asp-action="Details" asp-controller="Destinations" asp-route-id="@destination.Id">
-                
-                    <btn class="btn" style="color:cornflowerblue;">Details</btn>
-                    
-            </a>
+        <div class="card-deck">
+            <div class="card">
+                <img class="card-img-top img-fluid" src="@imgSrc" alt="Card image cap">
+                <div class="card-body" style="text-align:left">
+                    <h5 class="card-title">@destination.Naame</h5>
+                    <p class="card-text">@destination.Description</p>
+                    <p style="text-align:left">
+                        <a><b>Level: @destination.Level</b></a>
+                        <a asp-action="Details" asp-controller="Destinations" asp-route-id="@destination.Id">
+                            <btn class="btn" style="padding-left:400px;">Details</btn>
+                        </a>
+                        <a style="padding-left:300px;"><b>Start date: @destination.StartDate</b></a>
+                    </p>
+                </div>
+            </div>
         </div>
-    </div>
-
-    @*<a asp-action="Details" asp-controller="Destinations" asp-route-id="@destination.Id">
-        <div class="inline">
-
-            <btn>Details</btn>
-            <img  src="@imgSrc" />
-
-        </div>
-    </a>*@
     }
-
-    }
+}

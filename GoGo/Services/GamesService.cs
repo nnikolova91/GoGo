@@ -103,6 +103,7 @@ namespace GoGo.Services
                     GameId = x.GameId,
                     LevelId = x.LevelId,
                     ParticipantId = x.ParticipantId,
+                    Participant = x.Participant.FirstName + " " + x.Participant.LastName,
                     CorrespondingImage = x.CorrespondingImage,
                     IsPassed = x.IsPassed
                 }).ToList();
@@ -113,6 +114,7 @@ namespace GoGo.Services
                     GameId = x.GameId,
                     LevelId = x.LevelId,
                     ParticipantId = x.ParticipantId,
+                    Participant = x.Participant.FirstName + " " + x.Participant.LastName,
                     CorrespondingImage = x.CorrespondingImage,
                     IsPassed = x.IsPassed
                 }).ToList();

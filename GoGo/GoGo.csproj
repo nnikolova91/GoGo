@@ -75,7 +75,7 @@
     <Content Update="Views\Games\Details.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\_CourcesPartial.cshtml">
+    <Content Update="Views\Shared\_CoursesPartial.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Shared\_GamesPartial.cshtml">

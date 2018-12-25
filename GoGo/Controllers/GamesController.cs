@@ -40,7 +40,7 @@ namespace GoGo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddImage(string id, string levelId /*LevelViewModel model,IFormFile correspondingImage,*/ ) //gameId
+        public async Task<IActionResult> AddImage(string id, string levelId, IFormFile correspondingImage) //gameId
         {
             var image = HttpContext.Request.Form.Files[0];
             

@@ -82,16 +82,18 @@ namespace GoGo.Controllers
             var cources = this.courcesService.GetAllCources();
 
             var nextPage = page ?? 1;
-            var pageViewModels = cources.ToPagedList(nextPage, 1);
+            var pageViewModels = cources.ToPagedList(nextPage, 2);
 
             return View(pageViewModels);
         }
 
-        public async Task<IActionResult> Details(string id) // id(courceId)
+        public async Task<IActionResult> Details(int? page, string id) // id(courceId)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            var cource = this.courcesService.GetDetails(id);
+            var cource = this.courcesService.GetDetails(page, id);
+
+            //var participentToPaged = this.courcesService.GetParticipentsToPagged()
 
             if (cource == null)
             {

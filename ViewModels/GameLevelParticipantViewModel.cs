@@ -7,7 +7,7 @@ namespace ViewModels
     public class GameLevelParticipantViewModel
     {
         public string ParticipantId { get; set; }
-        //public GoUser Participant { get; set; }
+        public string Participant { get; set; }
 
         public string LevelId { get; set; }
         //public Level Level { get; set; }

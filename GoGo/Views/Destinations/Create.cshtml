@@ -48,10 +48,11 @@
             <div>
                 <h5>Easy <input type="radio" asp-for="Level" value="Easy" /></h5>
 
-                <h5>Advanced <input type="radio" asp-for="Level" value="Advanced" /></h5>                
+                <h5>Advanced <input type="radio" asp-for="Level" value="Advanced" /></h5>
             </div>
-            
+
         </div>
+
         <div class="form-group">
             <label asp-for="@Model.Image"></label>
             <input asp-for="@Model.Image" type="file" onchange="readURL(this);" />
@@ -59,9 +60,9 @@
             <img id="blah" src="#" alt="your image" />
         </div>
 
-        <hr class="chushka-bg-color height: 7px" />
+        <hr class=height: 7px" />
         <div class="text-center">
-            <button type="submit" class="btn chushka-bg-color text-center">Create Destination</button>
+            <button type="submit" @*class="btn chushka-bg-color text-center"*@>Create Destination</button>
         </div>
     </form>
     

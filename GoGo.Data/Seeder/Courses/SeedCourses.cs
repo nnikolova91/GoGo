@@ -89,8 +89,9 @@ namespace GoGo.Data.Seeder.Courses
 
                     var randomStatus = new Random().Next(1, 3);
                     var randomCategory = new Random().Next(1, 5);
+                    var randomMaxCountParticipants = new Random().Next(3, 20);
 
-                    
+
                     var course = new Cource
                     {
                         Title = title,
@@ -101,6 +102,7 @@ namespace GoGo.Data.Seeder.Courses
                         StartDate = startDate,
                         DurationOfDays = random,
                         CountOfHours = random1,
+                        MaxCountParticipants = randomMaxCountParticipants,
                         Status = (Status)randomStatus,
                         Category = (Category)randomCategory
                     };

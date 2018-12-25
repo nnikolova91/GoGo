@@ -1,5 +1,7 @@
-﻿@using Microsoft.AspNetCore.Identity
-@model ViewModels.CourceViewModel
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using Microsoft.AspNetCore.Identity
+@model ViewModels.CourseDetailsViewModel
 @inject UserManager<GoUser> UserManager
 @{
     ViewData["Title"] = "Create";
@@ -7,110 +9,105 @@
 
 <main class="mt-3">
 
-    <div>
-        @{ var base64 = Convert.ToBase64String(@Model.Image);
-            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-            <img src="@imgSrc" /> }
-
-        <h4>Title:  @Model.Title</h4>
-        <h4>StartDate:  @Model.StartDate</h4>
-        <h4>Duration of days:  @Model.DurationOfDays</h4>
-        <h4>Count of hours:  @Model.CountOfHours</h4>
-        <h4>Max seats:  @Model.MaxCountParticipants</h4>
-        <h4>Free Seats:  @Model.FreeSeats</h4>
-        <div style="margin-left:800px;">
-            <h4>
-                This cource was created from: <b>@Model.Creator.FirstName</b> @{ var base66 = Convert.ToBase64String(Model.Creator.Image);
-                    var imgSrccc = String.Format("data:image/gif;base64,{0}", base66);
-                    <img src="@imgSrccc" style="width:40px;height:40px;">
-
-                }
-            </h4>
+    <div class="card-group">
+        <div class="card" style="width: 30rem;">
+            @{ var base60 = Convert.ToBase64String(@Model.Image);
+                var imgSr = String.Format("data:image/gif;base64,{0}", base60); }
+            <img class="card-img-top img-fluid" src="@imgSr" alt="Card image cap">
+            <div class="card-body" style="text-align:left">
+                <p class="card-title">@Model.Title</p>
+                <p class="card-text">@Model.Description</p>
+                <a class="card-text">End date to join: @Model.StartDate</a>
+                <a class="card-text" style="padding-left:70px;">Start date: @Model.DurationOfDays</a>
+                <a class="card-text" style="padding-left:70px;">Count of hours: @Model.CountOfHours</a>
+                <a class="card-text" style="padding-left:70px;">Max count participants: @Model.MaxCountParticipants</a>
+                <a class="card-text" style="padding-left:70px;">Free seats: @Model.FreeSeats</a>
+                <a class="card-text" style="padding-left:70px;">
+                    This cource was created from: <b>@Model.Creator.FirstName</b>
+                    @*@{ var base61 = Convert.ToBase64String(Model.Creator.Image);
+                        var imgSrr = String.Format("data:image/gif;base64,{0}", base61); }
+                    <img src="@imgSrr" style="width:40px;height:20px; border-radius:30px 40px;">*@
+                </a>
+            </div>
         </div>
     </div>
-    <h6>------------------------------------------------------------------------------------------</h6>
-    <div style="margin-left:300px; margin-right:300px;">
-        <h4>Title:  @Model.Title</h4>
-        <h5>Description:  @Model.Description</h5>
-    </div>
 
 
-    <div>
-        <h6>------------------------------------------------------------------------------------------</h6>
-        Participaants
-        </h4>
 
-        @foreach (var item in @Model.Participants)
+    <div class="form-inline" style="justify-content:center; padding-top:20px;">
+        @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == this.User.Identity.Name)
         {
-
-            <h4>@item.FirstName</h4>
-
-            if (@item.Image != null)
-            {
-                <div>
-                    @{ var base65 = Convert.ToBase64String(@item.Image);
-                        var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
-                        <img src="@imgSrcc" style="width:40px;height:40px;">
-
-                    }
+            <form method="get" asp-action="Delete" asp-controller="Cources" asp-route-id="@Model.Id">
+                <div class="text-center " style="padding-bottom:20px; padding-top:200px;">
+                    <button class="class=" btn btn-primary"">Delete Course</button>
                 </div>
-            }
+            </form>
         }
 
+        @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == this.User.Identity.Name)
+        {
+            <form method="get" asp-action="Edit" asp-controller="Cources" asp-route-id="@Model.Id">
+                <div class="text-center" style="padding-bottom:20px; padding-top:200px;">
+                    <button class="btn btn-success">Edit Course</button>
+                </div>
+            </form>
+        }
+
+        @if (this.User.Identity.IsAuthenticated && this.User.Identity.Name == Model.Creator.FirstName)
+        {
+            <form asp-action="AddResults" asp-controller="Cources" asp-route-id="@Model.Id">
+                <div class="text-center">
+                    <button class="btn btn-danger">Add results</button>
+                </div>
+
+            </form>
+        }
+        @if (this.User.Identity.IsAuthenticated)
+        {
+            <form asp-action="SignIn" asp-controller="Cources" asp-route-id="@Model.Id">
+                <div class="text-center">
+                    <button class="btn btn-warning">Have Part</button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="text-center">
+                <div class="alert alert-primary" role="alert">
+                    <button class="btn btn-info" onclick="myFunction()">Sign in</button>
+                </div>
+            </div>
+        }
+        <hr />
+        <form asp-action="All" asp-controller="Cources">
+            <div class="text-center">
+                <button asp-action="All" asp-controller="Cources" class="btn btn-secondary">Back To All</button>
+
+            </div>
+
+        </form>
     </div>
-    <h6>--------------------------------------------------------------------------------------</h6>
-    @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == this.User.Identity.Name)
-    {
-        <form method="get" asp-action="Delete" asp-controller="Cources" asp-route-id="@Model.Id">
-            <div class="text-center" style="padding-bottom:20px; padding-top:200px;">
-                <button class="btn">Delete Course</button>
-            </div>
-        </form>
-    }
 
-    @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == this.User.Identity.Name)
-    {
-        <form method="get" asp-action="Edit" asp-controller="Cources" asp-route-id="@Model.Id">
-            <div class="text-center" style="padding-bottom:20px; padding-top:200px;">
-                <button class="btn">Edit Course</button>
-            </div>
-        </form>
-    }
+    <h4 style="padding-top:70px;">Participants</h4>
 
-    @if (this.User.Identity.IsAuthenticated && this.User.Identity.Name == Model.Creator.FirstName)
-    {
-        <form asp-action="AddResults" asp-controller="Cources" asp-route-id="@Model.Id">
-            <div class="text-center">
-                <button class="btn chushka-bg-color text-center">Add results</button>
-                <h6>------------------------------------------------------------------------------------------</h6>
-            </div>
+    <div class="card-group">
+        @{ foreach (var item in Model.Participants)
+            {
+                var base65 = Convert.ToBase64String(item.Image);
+                var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
 
-        </form>
-    }
-    @if (this.User.Identity.IsAuthenticated)
-    {
-        <form asp-action="SignIn" asp-controller="Cources" asp-route-id="@Model.Id">
-            <div class="text-center">
-                <button class="btn chushka-bg-color text-center">Have Part</button>
-                <h6>------------------------------------------------------------------------------------------</h6>
-            </div>
-        </form>
-    }
-    else
-    {
-        <div class="text-center">
-            <div class="alert alert-primary" role="alert">
-                <button class="btn chushka-bg-color text-center" onclick="myFunction()">Sign in</button>
-            </div>
-        </div>
-    }
-    <hr />
-    <form asp-action="All" asp-controller="Cources">
-        <div class="text-center">
-            <button asp-action="All" asp-controller="Cources" class="btn chushka-bg-color text-center">Back To All</button>
-            <h6>-------------------------------------------------------------------------------------------</h6>
-        </div>
+                <div class="card" style="width: 8rem; height:10rem;">
+                    <img class="card-img-top" src="@imgSrcc" alt="Card image cap">
+                    <div class="card-body">
+                        <a class="card-text">@item.FirstName</a>
+                    </div>
+                </div>
+            } }
+    </div>
+    <div @*style="padding-left:800px; padding-top:200px;"*@>
+        @Html.PagedListPager((IPagedList)Model.Participants, page => Url.Action("Details", new { page }))
+    </div>
 
-    </form>
+
 
 </main>

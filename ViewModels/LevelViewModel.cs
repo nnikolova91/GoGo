@@ -20,11 +20,12 @@ namespace ViewModels
         public int Points { get; set; }
 
         public string GameId { get; set; }
-
-        [Required]
+        
         [Display(Name = " CorrespondingImage")]
         [DataType(DataType.Upload)]
         [BindProperty]
         public IFormFile CorrespondingImage { get; set; }
+
+        //public ICollection< MyProperty { get; set; }
     }
 }

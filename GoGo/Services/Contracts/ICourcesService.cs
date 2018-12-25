@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ViewModels;
+using X.PagedList;
 
 namespace GoGo.Services.Contracts
 {
@@ -13,7 +14,7 @@ namespace GoGo.Services.Contracts
 
         ICollection<CourceViewModel> GetAllCources();
 
-        CourceViewModel GetDetails(string id);
+        CourseDetailsViewModel GetDetails(int? page, string id);
 
         Task AddUserToCource(string id, GoUser user);
 
@@ -30,5 +31,7 @@ namespace GoGo.Services.Contracts
         DeleteCourseViewModel FindCourseForDelete(string id);
 
         Task DeleteCourse(string id);
+
+        //IPagedList GetParticipentsToPagged(int? page, string id);
     }
 }

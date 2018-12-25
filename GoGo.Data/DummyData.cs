@@ -21,8 +21,9 @@ namespace GoGo.Data
                           IServiceProvider serviceProvider)
         {
             context.Database.EnsureCreated();
-            await SeedCourses.Seed(serviceProvider, context);
             await SeedUsers.Seed(serviceProvider, context, userManager, roleManager);
+            await SeedCourses.Seed(serviceProvider, context);
+            await SeedCoursesUsers.Seed(serviceProvider, context);
             await SeedDestinations.Seed(serviceProvider, context);
             await SeedDestinationsUsers.Seed(serviceProvider, context);
             await SeedComments.Seed(serviceProvider, context);

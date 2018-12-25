@@ -19,6 +19,10 @@ namespace Mapping
             CreateMap<CurrentUserViewModel, GoUser>().ReverseMap();
             CreateMap<DestDetailsViewModel, Destination>().ReverseMap();
             CreateMap<CourceViewModel, Cource>().ReverseMap();
+            CreateMap<CourseDetailsViewModel, Cource>().ReverseMap()
+                .ForMember(d => d.Participants, d => d.Ignore());
+
+
             CreateMap<UsersResultsViewModel, CourcesUsers>().ReverseMap()
                 .ForMember(x => x.Result, x => x.MapFrom(d => d.StatusUser)); 
             

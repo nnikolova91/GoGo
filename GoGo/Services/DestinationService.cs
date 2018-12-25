@@ -126,6 +126,11 @@ namespace GoGo.Services
         public ICollection<DestViewModel> GetAllDestinations()
         {
             var destinationsModels = this.destRepository.All().Select(x => mapper.Map<DestViewModel>(x)).ToList();
+            foreach (var item in destinationsModels)
+            {
+                string firstChars = new string(item.Description.Take(270).ToArray());
+                item.Description = firstChars + " ...";
+            }
             
             return destinationsModels;
         }

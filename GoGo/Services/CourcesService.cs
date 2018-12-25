@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ViewModels;
+using X.PagedList;
 
 namespace GoGo.Services
 {
@@ -164,7 +165,7 @@ namespace GoGo.Services
             return usersResult;
         }
 
-        public CourceViewModel GetDetails(string id)
+        public CourseDetailsViewModel GetDetails(int? page, string id)
         {
             var cource = courcesRepository.All().FirstOrDefault(x => x.Id == id);
 
@@ -176,8 +177,11 @@ namespace GoGo.Services
                                             .Where(x => x.CourceId == id)
                                             .Select(x => mapper.Map<GoUserViewModel>(x.Participant)).ToList();
 
-            var model = mapper.Map<CourceViewModel>(cource);
-            model.Participants = participents;
+            var nextPage = page ?? 1;
+            var pageParticipantsViewModels = participents.ToPagedList(nextPage, 8);
+
+            var model = mapper.Map<CourseDetailsViewModel>(cource);
+            model.Participants = pageParticipantsViewModels;
             model.FreeSeats = model.MaxCountParticipants - model.Participants.Count();
 
             return model;
