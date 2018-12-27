@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
 using Microsoft.AspNetCore.Http;
+using GoGo.Models.Enums;
 
 namespace GoGo.Controllers
 {
@@ -47,12 +48,16 @@ namespace GoGo.Controllers
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             await this.gamesService.UserAddImageToLevel(id, user, levelId, image);
-            //this.
-            //string gameId = await this.gamesService.AddGame(model);
-            //await this.gamesService.AddLevelsToGame(gameId, model);
-
-
+            
             return Redirect($"/Games/Details/{id}");
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> AddResult(GameLevelParticipantViewModel model)
+        {
+            await this.gamesService.AddLevelResult(model);
+            
+            return Redirect($"/Games/Details/{model.GameId}");
         }
 
         public async Task<IActionResult> Details(string id) // id(gameId)
@@ -60,11 +65,7 @@ namespace GoGo.Controllers
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             var game = this.gamesService.GetDetails(id);
-
-            //if (ViewData["CurrentUser"] /*!=*/ == null)
-            //{
-            //    ViewData["CurrentUser"] = user.Id;
-            //}
+            
             return View(game);
         }
 
@@ -86,7 +87,6 @@ namespace GoGo.Controllers
             var pageViewModels = games.ToPagedList(nextPage, 1);
 
             return View(pageViewModels);
-
         }
     }
 }

@@ -9,7 +9,6 @@ namespace GoGo.Models
     {
         public Story()
         {
-            //this.Photos = new List<DestinationPhoto>();
             this.PeopleWhosLikeThis = new List<PeopleStories>();
         }
 
@@ -24,9 +23,7 @@ namespace GoGo.Models
         
         public string DestinationId { get; set; }
         public Destination Destination { get; set; }
-
-        //public ICollection<DestinationPhoto> Photos { get; set; }
-
+        
         public ICollection<PeopleStories> PeopleWhosLikeThis { get; set; }
     }
 }

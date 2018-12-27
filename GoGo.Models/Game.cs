@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace GoGo.Models
@@ -8,7 +9,9 @@ namespace GoGo.Models
     {
         public Game()
         {
-            this.Levels = new List<GameLevelParticipant>();
+            this.Levels = new List<Level>();
+
+            this.LevelsParticipants = new List<GameLevelParticipant>();
         }
 
         public string Id { get; set; }
@@ -21,8 +24,8 @@ namespace GoGo.Models
 
         public int MaxPoints { get; set; }
 
-        public Team Team { get; set; }
+        public ICollection<Level> Levels { get; set; }
 
-        public ICollection<GameLevelParticipant> Levels { get; set; }
+        public ICollection<GameLevelParticipant> LevelsParticipants { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GoGo.Models.Enums;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,6 +19,6 @@ namespace GoGo.Models
 
         public byte[] CorrespondingImage { get; set; }
 
-        public bool IsPassed { get; set; }
+        public StatusLevel StatusLevel { get; set; }
     }
 }

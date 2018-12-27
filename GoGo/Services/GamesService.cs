@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using AutoMapper;
+using GoGo.Models.Enums;
 
 namespace GoGo.Services
 {
@@ -36,8 +37,6 @@ namespace GoGo.Services
             this.context.Games.Add(game);
             await this.context.SaveChangesAsync();
             return game.Id;
-            
-            
         }
 
         private static byte[] ImageAsBytes(IFormFile image)
@@ -84,7 +83,8 @@ namespace GoGo.Services
 
         public ICollection<GameViewModel> GetAllGames()
         {
-            var gamesModels = this.context.Games.Select(x=>new GameViewModel{Id = x.Id,Name = x.Name, Image = x.Image}).ToList();
+            var gamesModels = this.context.Games
+                .Select(x => new GameViewModel { Id = x.Id, Name = x.Name, Image = x.Image }).ToList();
 
             return gamesModels;
         }
@@ -94,8 +94,9 @@ namespace GoGo.Services
             var game = context.Games.FirstOrDefault(x => x.Id == id);
 
             var levels = context.Levels.Where(x => x.GameId == id).ToList();
-
-            var levelss = levels.Select(x => mapper.Map<LevelViewModel>(x)).ToList();
+            
+            var levelss = levels.Select(x => mapper.Map<LevelViewModel>(x))
+                .OrderBy(x=>x.NumberInGame).ToList();
 
             var gameParticipantsLevel1 = this.context.LevelsParticipants
                 .Where(l => l.GameId == id && l.LevelId == levels[0].Id).Select(x => new GameLevelParticipantViewModel
@@ -105,7 +106,7 @@ namespace GoGo.Services
                     ParticipantId = x.ParticipantId,
                     Participant = x.Participant.FirstName + " " + x.Participant.LastName,
                     CorrespondingImage = x.CorrespondingImage,
-                    IsPassed = x.IsPassed
+                    StatusLevel = x.StatusLevel
                 }).ToList();
 
             var gameParticipantsLevel2 = this.context.LevelsParticipants
@@ -116,9 +117,20 @@ namespace GoGo.Services
                     ParticipantId = x.ParticipantId,
                     Participant = x.Participant.FirstName + " " + x.Participant.LastName,
                     CorrespondingImage = x.CorrespondingImage,
-                    IsPassed = x.IsPassed
+                    StatusLevel = x.StatusLevel
                 }).ToList();
-            
+
+            var gameParticipantsLevel3 = this.context.LevelsParticipants
+                .Where(l => l.GameId == id && l.LevelId == levels[2].Id).Select(x => new GameLevelParticipantViewModel
+                {
+                    GameId = x.GameId,
+                    LevelId = x.LevelId,
+                    ParticipantId = x.ParticipantId,
+                    Participant = x.Participant.FirstName + " " + x.Participant.LastName,
+                    CorrespondingImage = x.CorrespondingImage,
+                    StatusLevel = x.StatusLevel
+                }).ToList();
+
             var gameModel = new GameDetailsViewModel
             {
                 Id = game.Id,
@@ -126,20 +138,22 @@ namespace GoGo.Services
                 Description = game.Description,
                 Level1 = levelss[0],
                 Level2 = levelss[1],
+                Level3 = levelss[2],
                 GameParticipantsLevel1 = gameParticipantsLevel1,
-                GameParticipantsLevel2 = gameParticipantsLevel2
+                GameParticipantsLevel2 = gameParticipantsLevel2,
+                GameParticipantsLevel3 = gameParticipantsLevel3
             };
 
             return gameModel;
-                //.Select(x => new LevelViewModel { Description = x.Description, Points = x.Points, Image = ImageAsBytes(x.Image), GameId = x.GameId });
+            //.Select(x => new LevelViewModel { Description = x.Description, Points = x.Points, Image = ImageAsBytes(x.Image), GameId = x.GameId });
         }
 
         public async Task UserStartGame(string id, GoUser user)
         {
             var game = this.context.Games.FirstOrDefault(x => x.Id == id);
-            var levels = this.context.Levels.Where(x => x.GameId == id).ToList();
+            var levels = this.context.Levels.Where(x => x.GameId == id).OrderBy(x => x.NumberInGame).ToList();
 
-            if (this.context.LevelsParticipants.FirstOrDefault(x=>x.ParticipantId == user.Id && x.GameId == game.Id) == null)
+            if (this.context.LevelsParticipants.FirstOrDefault(x => x.ParticipantId == user.Id && x.GameId == game.Id) == null)
             {
                 var gamesLevelsUsers = levels.Select(x => new GameLevelParticipant
                 {
@@ -148,7 +162,7 @@ namespace GoGo.Services
                     ParticipantId = user.Id,
                     LevelId = x.Id,
                     Level = x,
-                    IsPassed = false
+                    StatusLevel = (StatusLevel)2
                 });
 
                 await this.context.AddRangeAsync(gamesLevelsUsers);
@@ -168,6 +182,17 @@ namespace GoGo.Services
 
                 await this.context.SaveChangesAsync();
             }
+        }
+
+        public async Task AddLevelResult(GameLevelParticipantViewModel model)
+        {
+            var gameLevelParticipant = this.context.LevelsParticipants
+                .FirstOrDefault(x => x.GameId == model.GameId && x.LevelId == model.LevelId
+                && x.ParticipantId == model.ParticipantId);
+
+            gameLevelParticipant.StatusLevel = model.StatusLevel;
+
+            await this.context.SaveChangesAsync();
         }
     }
 }

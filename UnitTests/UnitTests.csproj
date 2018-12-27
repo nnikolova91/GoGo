@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
+    <PackageReference Include="Moq" Version="4.10.1" />
+    <PackageReference Include="Shouldly" Version="3.0.2" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GoGo.Data.Common\GoGo.Data.Common.csproj" />
+    <ProjectReference Include="..\GoGo.Data\GoGo.Data.csproj" />
+    <ProjectReference Include="..\GoGo.Models\GoGo.Models.csproj" />
+    <ProjectReference Include="..\GoGo\GoGo.csproj" />
+    <ProjectReference Include="..\Mapping\Mapping.csproj" />
+  </ItemGroup>
+
+</Project>

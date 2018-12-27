@@ -25,40 +25,6 @@ namespace GoGo.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Teams",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    CollectedPoints = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teams", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<string>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
@@ -84,18 +50,11 @@ namespace GoGo.Data.Migrations
                     Province = table.Column<string>(nullable: true),
                     PostalCode = table.Column<string>(nullable: true),
                     Country = table.Column<string>(nullable: true),
-                    Image = table.Column<byte[]>(nullable: true),
-                    TeamId = table.Column<string>(nullable: true)
+                    Image = table.Column<byte[]>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_Teams_TeamId",
-                        column: x => x.TeamId,
-                        principalTable: "Teams",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,20 +62,35 @@ namespace GoGo.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
+                    Image = table.Column<byte[]>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    MaxPoints = table.Column<int>(nullable: false),
-                    TeamId = table.Column<string>(nullable: true)
+                    MaxPoints = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Games", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<string>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Games_Teams_TeamId",
-                        column: x => x.TeamId,
-                        principalTable: "Teams",
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -264,7 +238,7 @@ namespace GoGo.Data.Migrations
                     Image = table.Column<byte[]>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     GameId = table.Column<string>(nullable: true),
-                    IsPassed = table.Column<bool>(nullable: false),
+                    NumberInGame = table.Column<int>(nullable: false),
                     Points = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -301,26 +275,6 @@ namespace GoGo.Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Acsesoaries",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    IHaveThis = table.Column<bool>(nullable: false),
-                    DestinationId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Acsesoaries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Acsesoaries_Destinations_DestinationId",
-                        column: x => x.DestinationId,
-                        principalTable: "Destinations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -379,9 +333,9 @@ namespace GoGo.Data.Migrations
                 name: "DestinationsUsers",
                 columns: table => new
                 {
-                    Socialization = table.Column<int>(nullable: false),
                     DestinationId = table.Column<string>(nullable: false),
-                    ParticipantId = table.Column<string>(nullable: false)
+                    ParticipantId = table.Column<string>(nullable: false),
+                    Socialization = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -428,34 +382,34 @@ namespace GoGo.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TeamLevelGames",
+                name: "LevelsParticipants",
                 columns: table => new
                 {
-                    TeamId = table.Column<string>(nullable: false),
+                    ParticipantId = table.Column<string>(nullable: false),
                     LevelId = table.Column<string>(nullable: false),
                     GameId = table.Column<string>(nullable: false),
-                    Image = table.Column<byte[]>(nullable: true),
-                    IsPassed = table.Column<bool>(nullable: false)
+                    CorrespondingImage = table.Column<byte[]>(nullable: true),
+                    StatusLevel = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TeamLevelGames", x => new { x.TeamId, x.GameId, x.LevelId });
+                    table.PrimaryKey("PK_LevelsParticipants", x => new { x.ParticipantId, x.GameId, x.LevelId });
                     table.ForeignKey(
-                        name: "FK_TeamLevelGames_Games_GameId",
+                        name: "FK_LevelsParticipants_Games_GameId",
                         column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TeamLevelGames_Levels_LevelId",
+                        name: "FK_LevelsParticipants_Levels_LevelId",
                         column: x => x.LevelId,
                         principalTable: "Levels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TeamLevelGames_Teams_TeamId",
-                        column: x => x.TeamId,
-                        principalTable: "Teams",
+                        name: "FK_LevelsParticipants_AspNetUsers_ParticipantId",
+                        column: x => x.ParticipantId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -483,11 +437,6 @@ namespace GoGo.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Acsesoaries_DestinationId",
-                table: "Acsesoaries",
-                column: "DestinationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -527,11 +476,6 @@ namespace GoGo.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_TeamId",
-                table: "AspNetUsers",
-                column: "TeamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_ComentatorId",
@@ -574,14 +518,19 @@ namespace GoGo.Data.Migrations
                 column: "ParticipantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Games_TeamId",
-                table: "Games",
-                column: "TeamId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Levels_GameId",
                 table: "Levels",
                 column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LevelsParticipants_GameId",
+                table: "LevelsParticipants",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LevelsParticipants_LevelId",
+                table: "LevelsParticipants",
+                column: "LevelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PeopleStories_UserId",
@@ -597,23 +546,10 @@ namespace GoGo.Data.Migrations
                 name: "IX_Stories_DestinationId",
                 table: "Stories",
                 column: "DestinationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeamLevelGames_GameId",
-                table: "TeamLevelGames",
-                column: "GameId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeamLevelGames_LevelId",
-                table: "TeamLevelGames",
-                column: "LevelId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Acsesoaries");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -642,10 +578,10 @@ namespace GoGo.Data.Migrations
                 name: "DestinationsUsers");
 
             migrationBuilder.DropTable(
-                name: "PeopleStories");
+                name: "LevelsParticipants");
 
             migrationBuilder.DropTable(
-                name: "TeamLevelGames");
+                name: "PeopleStories");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -654,22 +590,19 @@ namespace GoGo.Data.Migrations
                 name: "Cources");
 
             migrationBuilder.DropTable(
-                name: "Stories");
-
-            migrationBuilder.DropTable(
                 name: "Levels");
 
             migrationBuilder.DropTable(
-                name: "Destinations");
+                name: "Stories");
 
             migrationBuilder.DropTable(
                 name: "Games");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Destinations");
 
             migrationBuilder.DropTable(
-                name: "Teams");
+                name: "AspNetUsers");
         }
     }
 }

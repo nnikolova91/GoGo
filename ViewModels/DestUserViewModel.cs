@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ViewModels
 {
-    public class DestUserViewModel //: IMapFrom<DestinationsUsers>//, IHaveCustomMappings
+    public class DestUserViewModel
     {
         public Socialization Socialization { get; set; }
 
@@ -17,10 +17,5 @@ namespace ViewModels
 
         public string ParticipantId { get; set; }
         public GoUser Participant { get; set; }
-
-        //public void CreateMappings(IMapperConfigurationExpression configuration)
-        //{
-        //    
-        //}
     }
 }

@@ -15,7 +15,7 @@
           crossorigin="anonymous"
           integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
 
-
+    <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/4.1.3/bootstrap.min.css" />
     <script src="~/lib/bootstrap/4.1.3/bootstrap.min.js"></script>
 
@@ -90,6 +90,7 @@
             height: 15vw;
             object-fit: cover;
         }
+
         .sidenav {
             padding-top: 20px;
             background-color: #f1f1f1;
@@ -169,8 +170,6 @@
         .dropdown:hover .dropbtn {
             background-color: #3e8e41;
         }
-
-
     </style>
 </head>
 <body>
@@ -227,27 +226,40 @@
 
     <partial name="_CookieConsentPartial" />
 
-    <div class="container-fluid text-center ">
-        @*<div class="col-sm-10 text-left">*@
-        @RenderBody()
-        @*</div>*@
-    </div>
+    @*<div class="container-fluid text-center container">
+            <div class="col-sm-10 text-left">
+            @RenderBody()
+            </div>
+        </div>*@
 
 
-    <hr />
     @*<footer class="container-fluid text-center">
             <p>&copy; 2018 - GoGo</p>
         </footer>*@
-    <footer class="page-footer font-small blue foo">
 
-        <!-- Copyright -->
-        <div class="container-fluid footer-copyright text-center py-3 ">
-            © 2018 Copyright:
-            <a>&copy; 2018 - GoGo</a>
-        </div>
-        <!-- Copyright -->
+    <div id="wrap">
+        <div id="main" class="container-fluid text-center container clear-top">
+            <div class="clear-top">
+                @RenderBody()
+                    </div>
+            </div>
+    </div>
 
+    <footer class="footer">
+        <p>&copy; 2018 - GoGo</p>
     </footer>
+
+
+    @*<footer class="page-footer font-small blue foo">
+
+            <!-- Copyright -->
+            <div class="container-fluid footer-copyright text-center py-3 ">
+                © 2018 Copyright:
+                <a>&copy; 2018 - GoGo</a>
+            </div>
+            <!-- Copyright -->
+
+        </footer>*@
     @*</div>*@
 
     <environment include="Development">

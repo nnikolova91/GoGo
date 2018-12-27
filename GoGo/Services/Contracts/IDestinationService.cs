@@ -10,7 +10,7 @@ namespace GoGo.Services.Contracts
 {
     public interface IDestinationService
     {
-        void AddDestination(CreateDestinationViewModel model, GoUser user);
+        Task AddDestination(CreateDestinationViewModel model, GoUser user);
 
         ICollection<DestViewModel> GetAllDestinations();
 
@@ -24,7 +24,7 @@ namespace GoGo.Services.Contracts
 
         ICollection<DestViewModel> FindMyDestinations(GoUser user);
 
-        EditDestinationViewModel FindDestination(string id, GoUser user);
+        EditDestinationViewModel FindEditDestination(string id, GoUser user);
 
         Task EditDestination(EditDestinationViewModel model);
 

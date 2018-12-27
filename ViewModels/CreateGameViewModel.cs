@@ -4,11 +4,10 @@ using System.Text;
 
 namespace ViewModels
 {
-    public class CreateGameViewModel 
+    public class CreateGameViewModel
     {
         public CreateGameViewModel()
         {
-            //this.Levels = new List<LevelViewModel>();
         }
 
         public string Id { get; set; }
@@ -25,11 +24,7 @@ namespace ViewModels
         public string Level2Id { get; set; }
         public CreateLevelViewModel Level2 { get; set; }
 
+        public string Level3Id { get; set; }
         public CreateLevelViewModel Level3 { get; set; }
-
-        public CreateLevelViewModel Level4 { get; set; }
-
-        public CreateLevelViewModel Level5 { get; set; }
-        //public ICollection<LevelViewModel> Levels { get; set; }
     }
 }

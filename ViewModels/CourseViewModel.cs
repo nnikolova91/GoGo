@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ViewModels
 {
-    public class CourceViewModel //: IMapFrom<Cource>//, IHaveCustomMappings
+    public class CourceViewModel
     {
         public CourceViewModel()
         {
@@ -52,8 +52,6 @@ namespace ViewModels
         public GoUserViewModel Creator { get; set; }
 
         public ICollection<GoUserViewModel> Participants { get; set; }
-
-        
     }
     
 }

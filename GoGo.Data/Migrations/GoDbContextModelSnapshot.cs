@@ -15,27 +15,9 @@ namespace GoGo.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("GoGo.Models.Acsesoar", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("DestinationId");
-
-                    b.Property<bool>("IHaveThis");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DestinationId");
-
-                    b.ToTable("Acsesoaries");
-                });
 
             modelBuilder.Entity("GoGo.Models.ApplicationRole", b =>
                 {
@@ -208,11 +190,7 @@ namespace GoGo.Data.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("TeamId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TeamId");
 
                     b.ToTable("Games");
                 });
@@ -227,7 +205,7 @@ namespace GoGo.Data.Migrations
 
                     b.Property<byte[]>("CorrespondingImage");
 
-                    b.Property<bool>("IsPassed");
+                    b.Property<int>("StatusLevel");
 
                     b.HasKey("ParticipantId", "GameId", "LevelId");
 
@@ -287,8 +265,6 @@ namespace GoGo.Data.Migrations
 
                     b.Property<string>("Street");
 
-                    b.Property<string>("TeamId");
-
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
@@ -304,8 +280,6 @@ namespace GoGo.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("TeamId");
-
                     b.ToTable("AspNetUsers");
                 });
 
@@ -320,7 +294,7 @@ namespace GoGo.Data.Migrations
 
                     b.Property<byte[]>("Image");
 
-                    b.Property<bool>("IsPassed");
+                    b.Property<int>("NumberInGame");
 
                     b.Property<int>("Points");
 
@@ -364,20 +338,6 @@ namespace GoGo.Data.Migrations
                     b.HasIndex("DestinationId");
 
                     b.ToTable("Stories");
-                });
-
-            modelBuilder.Entity("GoGo.Models.Team", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("CollectedPoints");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -470,13 +430,6 @@ namespace GoGo.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("GoGo.Models.Acsesoar", b =>
-                {
-                    b.HasOne("GoGo.Models.Destination", "Destination")
-                        .WithMany("Acsesoaries")
-                        .HasForeignKey("DestinationId");
-                });
-
             modelBuilder.Entity("GoGo.Models.Comment", b =>
                 {
                     b.HasOne("GoGo.Models.GoUser", "Comentator")
@@ -540,17 +493,10 @@ namespace GoGo.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("GoGo.Models.Game", b =>
-                {
-                    b.HasOne("GoGo.Models.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId");
-                });
-
             modelBuilder.Entity("GoGo.Models.GameLevelParticipant", b =>
                 {
                     b.HasOne("GoGo.Models.Game", "Game")
-                        .WithMany("Levels")
+                        .WithMany("LevelsParticipants")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -565,17 +511,10 @@ namespace GoGo.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("GoGo.Models.GoUser", b =>
-                {
-                    b.HasOne("GoGo.Models.Team")
-                        .WithMany("Participants")
-                        .HasForeignKey("TeamId");
-                });
-
             modelBuilder.Entity("GoGo.Models.Level", b =>
                 {
                     b.HasOne("GoGo.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("Levels")
                         .HasForeignKey("GameId");
                 });
 

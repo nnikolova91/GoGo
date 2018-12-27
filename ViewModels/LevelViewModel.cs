@@ -26,6 +26,6 @@ namespace ViewModels
         [BindProperty]
         public IFormFile CorrespondingImage { get; set; }
 
-        //public ICollection< MyProperty { get; set; }
+        public int NumberInGame { get; set; }
     }
 }

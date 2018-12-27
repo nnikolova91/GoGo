@@ -39,9 +39,10 @@ namespace GoGo.Controllers
             {
                 return this.View();
             }
+
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            this.destinationService.AddDestination(model, user);
+            await this.destinationService.AddDestination(model, user);
 
             return Redirect("/Destinations/All");
         }
@@ -52,13 +53,11 @@ namespace GoGo.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var dest = this.destinationService.FindDestination(id, user);
+            var dest = this.destinationService.FindEditDestination(id, user);
+
             if (dest == null)
             {
-                throw new ArgumentException("You can not edit this page");
-                //ViewData["MyError"] = "You can not edit this page";
-
-                //return Redirect("/Views/Shared/MyError");  
+                throw new ArgumentException("You can not edit this page");  
             }
             return View();
         }
@@ -136,7 +135,6 @@ namespace GoGo.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             var destUserModel = this.destinationService.AddUserToDestination(user, id);
-            //var socialize = Enum.Parse<Socialization>(socialization);
 
             return View(destUserModel); //id(destinationId)
         }
@@ -147,9 +145,7 @@ namespace GoGo.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             await this.destinationService.AddSocialization(user, id, socialization);
-
-            //var usersForSocialization = this.destinationService.AllUsersFodSocialization(user, id, socialization);
-
+            
             return Redirect($"/Destinations/Details/{id}");
         }
     }

@@ -30,7 +30,6 @@ namespace GoGo.Controllers
         [Authorize]
         public IActionResult Create(string id)
         {
-            
             return View();
         }
 
@@ -70,6 +69,7 @@ namespace GoGo.Controllers
         public IActionResult Details(string id) //id(storyId)
         {
             var storyModel = this.storiesService.GetDetails(id);
+
             return View(storyModel);
         }
 

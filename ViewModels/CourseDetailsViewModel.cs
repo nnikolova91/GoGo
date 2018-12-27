@@ -11,8 +11,8 @@ namespace ViewModels
     {
         public CourseDetailsViewModel()
         {
-            //this.Participants = new PagedList<GoUserViewModel>();
         }
+
         public string Id { get; set; }
 
         public byte[] Image { get; set; }

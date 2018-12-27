@@ -12,7 +12,7 @@ using ViewModels.Attributes;
 
 namespace ViewModels
 {
-    public class CreateDestinationViewModel //: IMapFrom<Destination>//, IHaveCustomMappings
+    public class CreateDestinationViewModel 
     {
         [Required]
         [Display(Name = "Image")]
@@ -42,34 +42,4 @@ namespace ViewModels
         [Required]
         public DateTime EndDateToJoin { get; set; }
     }
-
-    //[AttributeUsage(AttributeTargets.Property)]
-    //public class StartDateBaforeEndDateAttribute : ValidationAttribute
-    //{
-    //    private readonly string startDateProperty;
-
-    //    public StartDateBaforeEndDateAttribute(string startDateProperty)
-    //    {
-    //        this.startDateProperty = startDateProperty;
-    //    }
-
-    //    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-    //    {
-    //        ErrorMessage = ErrorMessageString;
-
-    //        var currentValue = (DateTime)value;
-
-    //        var property = validationContext.ObjectType.GetProperty(this.startDateProperty);
-
-    //        if (property == null)
-    //            throw new ArgumentException("Property with this name not found");
-
-    //        var comparisonValue = (DateTime)property.GetValue(validationContext.ObjectInstance);
-
-    //        if (currentValue < comparisonValue)
-    //            return new ValidationResult(ErrorMessage);
-
-    //        return ValidationResult.Success;
-    //    }
-    //}
 }

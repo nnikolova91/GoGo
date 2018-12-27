@@ -8,7 +8,6 @@ namespace ViewModels
     public class DeleteCourseViewModel
     {
         public string Id { get; set; }
-
         
         public byte[] Image { get; set; }
         

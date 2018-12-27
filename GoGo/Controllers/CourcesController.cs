@@ -40,7 +40,7 @@ namespace GoGo.Controllers
             }
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-           await this.courcesService.AddCource(model, user);
+            await this.courcesService.AddCource(model, user);
 
             return Redirect("/Cources/All");
         }
@@ -87,19 +87,16 @@ namespace GoGo.Controllers
             return View(pageViewModels);
         }
 
-        public async Task<IActionResult> Details(int? page, string id) // id(courceId)
+        public async Task<IActionResult> Details(int? page, string id)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             var cource = this.courcesService.GetDetails(page, id);
 
-            //var participentToPaged = this.courcesService.GetParticipentsToPagged()
-
             if (cource == null)
             {
                 ViewData["CurrentUser"] = user.Id;
             }
-            
 
             return View(cource);
         }
@@ -136,7 +133,7 @@ namespace GoGo.Controllers
         public IActionResult CreateResult(UsersResultsViewModel model/*string courceId, string participantId, StatusParticitant result*/)//*StatusParticitant statusUser*/ /*UsersResultsViewModel model*/) //courceId
         {
             this.courcesService.AddResultToUsersCourses(model);
-            
+
             return Redirect($"/Cources/AddResults/{model.CourceId}");
         }
     }

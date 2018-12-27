@@ -10,34 +10,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoGo.Data.Migrations
 {
     [DbContext(typeof(GoDbContext))]
-    [Migration("20181219081026_inage")]
-    partial class inage
+    [Migration("20181226131023_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("GoGo.Models.Acsesoar", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("DestinationId");
-
-                    b.Property<bool>("IHaveThis");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DestinationId");
-
-                    b.ToTable("Acsesoaries");
-                });
 
             modelBuilder.Entity("GoGo.Models.ApplicationRole", b =>
                 {
@@ -210,13 +192,30 @@ namespace GoGo.Data.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("TeamId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("TeamId");
-
                     b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("GoGo.Models.GameLevelParticipant", b =>
+                {
+                    b.Property<string>("ParticipantId");
+
+                    b.Property<string>("GameId");
+
+                    b.Property<string>("LevelId");
+
+                    b.Property<byte[]>("CorrespondingImage");
+
+                    b.Property<int>("StatusLevel");
+
+                    b.HasKey("ParticipantId", "GameId", "LevelId");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("LevelId");
+
+                    b.ToTable("LevelsParticipants");
                 });
 
             modelBuilder.Entity("GoGo.Models.GoUser", b =>
@@ -268,8 +267,6 @@ namespace GoGo.Data.Migrations
 
                     b.Property<string>("Street");
 
-                    b.Property<string>("TeamId");
-
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
@@ -285,8 +282,6 @@ namespace GoGo.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("TeamId");
-
                     b.ToTable("AspNetUsers");
                 });
 
@@ -301,7 +296,7 @@ namespace GoGo.Data.Migrations
 
                     b.Property<byte[]>("Image");
 
-                    b.Property<bool>("IsPassed");
+                    b.Property<int>("NumberInGame");
 
                     b.Property<int>("Points");
 
@@ -345,41 +340,6 @@ namespace GoGo.Data.Migrations
                     b.HasIndex("DestinationId");
 
                     b.ToTable("Stories");
-                });
-
-            modelBuilder.Entity("GoGo.Models.Team", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("CollectedPoints");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Teams");
-                });
-
-            modelBuilder.Entity("GoGo.Models.TeamLevelGame", b =>
-                {
-                    b.Property<string>("TeamId");
-
-                    b.Property<string>("GameId");
-
-                    b.Property<string>("LevelId");
-
-                    b.Property<byte[]>("Image");
-
-                    b.Property<bool>("IsPassed");
-
-                    b.HasKey("TeamId", "GameId", "LevelId");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("LevelId");
-
-                    b.ToTable("TeamLevelGames");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -472,13 +432,6 @@ namespace GoGo.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("GoGo.Models.Acsesoar", b =>
-                {
-                    b.HasOne("GoGo.Models.Destination", "Destination")
-                        .WithMany("Acsesoaries")
-                        .HasForeignKey("DestinationId");
-                });
-
             modelBuilder.Entity("GoGo.Models.Comment", b =>
                 {
                     b.HasOne("GoGo.Models.GoUser", "Comentator")
@@ -542,24 +495,28 @@ namespace GoGo.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("GoGo.Models.Game", b =>
+            modelBuilder.Entity("GoGo.Models.GameLevelParticipant", b =>
                 {
-                    b.HasOne("GoGo.Models.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId");
-                });
+                    b.HasOne("GoGo.Models.Game", "Game")
+                        .WithMany("LevelsParticipants")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity("GoGo.Models.GoUser", b =>
-                {
-                    b.HasOne("GoGo.Models.Team")
+                    b.HasOne("GoGo.Models.Level", "Level")
                         .WithMany("Participants")
-                        .HasForeignKey("TeamId");
+                        .HasForeignKey("LevelId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GoGo.Models.GoUser", "Participant")
+                        .WithMany("Levels")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("GoGo.Models.Level", b =>
                 {
                     b.HasOne("GoGo.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("Levels")
                         .HasForeignKey("GameId");
                 });
 
@@ -587,24 +544,6 @@ namespace GoGo.Data.Migrations
                         .WithMany("Stories")
                         .HasForeignKey("DestinationId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("GoGo.Models.TeamLevelGame", b =>
-                {
-                    b.HasOne("GoGo.Models.Game", "Game")
-                        .WithMany("Levels")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("GoGo.Models.Level", "Level")
-                        .WithMany()
-                        .HasForeignKey("LevelId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("GoGo.Models.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

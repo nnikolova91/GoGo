@@ -1,0 +1,38 @@
+@model ViewModels.GameLevelParticipantViewModel
+
+<hr />
+<a>
+    @Model.Participant
+    @if (Model.CorrespondingImage != null)
+    {
+        var base66 = Convert.ToBase64String(Model.CorrespondingImage);
+        var imgSrccc = String.Format("data:image/gif;base64,{0}", base66);
+        <img class="card-img-top img-thumbnail " src="@imgSrccc" />
+    }
+</a>
+@if (User.IsInRole("Admin"))
+{
+    <form method="post" asp-action="AddResult" asp-controller="Games" asp-route-participantId="@Model.ParticipantId" asp-route-gameId="@Model.GameId" asp-route-levelId="@Model.LevelId">
+        <label asp-for="StatusLevel"><b>Status</b></label>
+        <div>
+            <a>SuccessfullyPassed <input type="radio" asp-for="StatusLevel" value="SuccessfullyPassed" /></a>
+
+            <a>NotPassed <input type="radio" asp-for="StatusLevel" value="NotPassed" /></a>
+        </div>
+        <button type="submit">Add result</button>
+    </form>
+}
+else
+{
+    if (Model.StatusLevel.ToString() == "NotPassed")
+    {
+        <h6 style="color:palevioletred">@Model.StatusLevel</h6>
+    }
+    else
+    {
+        <h4 style="color:green">@Model.StatusLevel</h4>
+    }
+}
+<hr />
+
+

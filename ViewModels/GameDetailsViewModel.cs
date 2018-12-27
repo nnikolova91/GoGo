@@ -12,6 +12,8 @@ namespace ViewModels
             this.GameParticipantsLevel1 = new List<GameLevelParticipantViewModel>();
 
             this.GameParticipantsLevel2 = new List<GameLevelParticipantViewModel>();
+
+            this.GameParticipantsLevel3 = new List<GameLevelParticipantViewModel>();
         }
 
         public string Id { get; set; }
@@ -28,9 +30,13 @@ namespace ViewModels
         public string Level2Id { get; set; }
         public LevelViewModel Level2 { get; set; }
 
-        
+        public string Level3Id { get; set; }
+        public LevelViewModel Level3 { get; set; }
+
         public ICollection<GameLevelParticipantViewModel> GameParticipantsLevel1 { get; set; }
 
         public ICollection<GameLevelParticipantViewModel> GameParticipantsLevel2 { get; set; }
+
+        public ICollection<GameLevelParticipantViewModel> GameParticipantsLevel3 { get; set; }
     }
 }

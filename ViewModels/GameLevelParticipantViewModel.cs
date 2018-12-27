@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoGo.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,6 +18,6 @@ namespace ViewModels
 
         public byte[] CorrespondingImage { get; set; }
 
-        public bool IsPassed { get; set; }
+        public StatusLevel StatusLevel { get; set; }
     }
 }

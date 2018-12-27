@@ -12,7 +12,6 @@ namespace GoGo.Models
     {
         public Destination()
         {
-            this.Acsesoaries = new List<Acsesoar>();
             this.Comments = new List<Comment>();
             this.Participants = new List<DestinationsUsers>();
             this.Photos = new List<DestinationPhoto>();
@@ -37,9 +36,7 @@ namespace GoGo.Models
 
         public string CreatorId { get; set; }
         public GoUser Creator { get; set; }
-
-        public ICollection<Acsesoar> Acsesoaries { get; set; }
-
+        
         public ICollection<Comment> Comments { get; set; }
 
         public ICollection<DestinationsUsers> Participants { get; set; }

@@ -22,6 +22,6 @@ namespace GoGo.Services.Contracts
 
         Task UserAddImageToLevel(string id, GoUser user, string levelId, IFormFile image);
 
-
+        Task AddLevelResult(GameLevelParticipantViewModel model);
     }
 }

@@ -7,7 +7,6 @@ namespace GoGo.Models
 {
     public class DestinationsUsers
     {
-        //public string Id { get; set; }
         public Socialization Socialization { get; set; }
 
         public string DestinationId { get; set; }

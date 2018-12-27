@@ -13,7 +13,6 @@ namespace GoGo.Controllers
     {
         public IActionResult Index()
         {
-
             return View();
         }
 

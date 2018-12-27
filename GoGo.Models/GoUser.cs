@@ -20,7 +20,7 @@ namespace GoGo.Models
             this.Cources = new List<CourcesUsers>();
             this.Levels = new List<GameLevelParticipant>();
         }
-        //public string Id { get; set; }
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Street { get; set; }

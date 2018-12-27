@@ -43,8 +43,7 @@ namespace ViewModels
         [Required]
         [Range((int)1, int.MaxValue)]
         public int CountOfHours { get; set; }
-
-
+        
         public GoUserViewModel Creator { get; set; }
 
         [Required]
@@ -52,7 +51,6 @@ namespace ViewModels
 
         [Required]
         public Category Category { get; set; }
-
     }
 
     [AttributeUsage(AttributeTargets.Property)]
