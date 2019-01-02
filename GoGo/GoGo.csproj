@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GoGo.Data\GoGo.Data.csproj" />
     <ProjectReference Include="..\GoGo.Models\GoGo.Models.csproj" />
+    <ProjectReference Include="..\GoGo.Services\GoGo.Services.csproj" />
     <ProjectReference Include="..\Mapping\Mapping.csproj" />
     <ProjectReference Include="..\ViewModels\ViewModels.csproj" />
   </ItemGroup>
