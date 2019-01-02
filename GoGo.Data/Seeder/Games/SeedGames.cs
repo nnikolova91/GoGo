@@ -68,11 +68,17 @@ namespace GoGo.Data.Seeder.Games
 
                     var creator = context.Users.OrderBy(x => Guid.NewGuid()).First();
 
-                    var random = new Random().Next(1, 10);
+                    var randomLevel1 = new Random().Next(1, 10);
+                    var randomLevel2 = new Random().Next(3, 10);
+                    var randomLevel3 = new Random().Next(5, 10);
+
+                    var creatorId = context.UserRoles.FirstOrDefault(x => x.RoleId == context.Roles.FirstOrDefault(r => r.Name == "Admin").Id).UserId;
 
                     var game = new Game
                     {
                         Name = title,
+                        CreatorId = creatorId,
+                        Creator = context.Users.FirstOrDefault(x => x.Id == creatorId),
                         Description = gameDescription,
                         Image = File.ReadAllBytes(GamesImagesPath + "3" + ".jpg"),
                     };
@@ -85,7 +91,7 @@ namespace GoGo.Data.Seeder.Games
                     {
                         Image = File.ReadAllBytes(GamesImagesPath + "1" + ".jpg"),
                         Description = level1Text,
-                        Points = random,
+                        Points = randomLevel1,
                         NumberInGame = 1,
                         Game = game,
                         GameId = game.Id
@@ -95,7 +101,7 @@ namespace GoGo.Data.Seeder.Games
                     {
                         Image = File.ReadAllBytes(GamesImagesPath + "2" + ".jpg"),
                         Description = level2Text,
-                        Points = random,
+                        Points = randomLevel2,
                         NumberInGame = 2,
                         Game = game,
                         GameId = game.Id
@@ -105,7 +111,7 @@ namespace GoGo.Data.Seeder.Games
                     {
                         Image = File.ReadAllBytes(GamesImagesPath + "3" + ".jpg"),
                         Description = level3Text,
-                        Points = random,
+                        Points = randomLevel3,
                         NumberInGame = 3,
                         Game = game,
                         GameId = game.Id

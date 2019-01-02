@@ -182,6 +182,8 @@ namespace GoGo.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("CreatorId");
+
                     b.Property<string>("Description");
 
                     b.Property<byte[]>("Image");
@@ -191,6 +193,8 @@ namespace GoGo.Data.Migrations
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
 
                     b.ToTable("Games");
                 });
@@ -256,6 +260,8 @@ namespace GoGo.Data.Migrations
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<int>("Points");
 
                     b.Property<string>("PostalCode");
 
@@ -491,6 +497,13 @@ namespace GoGo.Data.Migrations
                         .WithMany("Destinations")
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GoGo.Models.Game", b =>
+                {
+                    b.HasOne("GoGo.Models.GoUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId");
                 });
 
             modelBuilder.Entity("GoGo.Models.GameLevelParticipant", b =>

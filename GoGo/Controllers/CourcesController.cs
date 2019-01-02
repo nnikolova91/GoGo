@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using ViewModels;
 using X.PagedList;
 
+
 namespace GoGo.Controllers
 {
     public class CourcesController : Controller
@@ -56,7 +57,9 @@ namespace GoGo.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditCourseViewModel model)
         {
-            await this.courcesService.EditCourse(model);
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            
+            await this.courcesService.EditCourse(model, user);
 
             return Redirect($"/Cources/Details/{model.Id}");
         }
@@ -72,7 +75,9 @@ namespace GoGo.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id, DeleteCourseViewModel model)
         {
-            await this.courcesService.DeleteCourse(id);
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
+            await this.courcesService.DeleteCourse(id, user);
 
             return Redirect($"/Cources/All");
         }
@@ -130,9 +135,11 @@ namespace GoGo.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateResult(UsersResultsViewModel model/*string courceId, string participantId, StatusParticitant result*/)//*StatusParticitant statusUser*/ /*UsersResultsViewModel model*/) //courceId
+        public async Task<IActionResult> CreateResult(UsersResultsViewModel model)
         {
-            this.courcesService.AddResultToUsersCourses(model);
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
+            await this.courcesService.AddResultToUsersCourses(model, user);
 
             return Redirect($"/Cources/AddResults/{model.CourceId}");
         }

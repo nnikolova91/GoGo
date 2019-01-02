@@ -26,6 +26,11 @@ namespace GoGo.Data
             return this.dbSet.AddAsync(entity);
         }
 
+        public Task AddRangeAsync(List<TEntity> entitis)
+        {
+            return this.dbSet.AddRangeAsync(entitis);
+        }
+
         public IQueryable<TEntity> All()
         {
             return this.dbSet;

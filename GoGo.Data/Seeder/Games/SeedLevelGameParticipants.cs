@@ -27,7 +27,7 @@ namespace GoGo.Data.Seeder.Games
 
                     var levelsGame = context.Levels.Where(x => x.GameId == game.Id).ToList();
 
-                    foreach (var level in levelsGame)
+                    foreach (var level in levelsGame.OrderBy(x=>x.NumberInGame))
                     {
                         for (int k = 0; k < countParticipans; k++)
                         {

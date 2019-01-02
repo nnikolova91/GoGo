@@ -53,22 +53,34 @@
             </form>
         }
 
-        @if (this.User.Identity.IsAuthenticated && this.User.Identity.Name == Model.Creator.FirstName)
-        {
+        @*@if (this.User.Identity.IsAuthenticated && this.User.Identity.Name == Model.Creator.FirstName)
+        {*@
             <form asp-action="AddResults" asp-controller="Cources" asp-route-id="@Model.Id">
                 <div class="text-center">
                     <button class="btn btn-danger">Add results</button>
                 </div>
 
             </form>
-        }
+        @*}*@
         @if (this.User.Identity.IsAuthenticated)
         {
-            <form asp-action="SignIn" asp-controller="Cources" asp-route-id="@Model.Id">
+            if (Model.FreeSeats > 0)
+            {
+                <form asp-action="SignIn" asp-controller="Cources" asp-route-id="@Model.Id">
+                    <div class="text-center">
+                        <button class="btn btn-warning">Have Part</button>
+                    </div>
+                </form>
+            }
+            else
+            {
                 <div class="text-center">
-                    <button class="btn btn-warning">Have Part</button>
+                    <div class="alert alert-primary" role="alert">
+                        <button class="btn btn-info" onclick="myFunction1()">Have Part</button>
+                    </div>
                 </div>
-            </form>
+            }
+
         }
         else
         {

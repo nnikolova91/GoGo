@@ -10,9 +10,9 @@ namespace GoGo.Services.Contracts
 {
     public interface IGamesService
     {
-        Task<string> AddGame(CreateGameViewModel model);
+        Task<string> AddGame(CreateGameViewModel model, GoUser user);
 
-        Task AddLevelsToGame(string gameId, CreateGameViewModel model);
+        //Task AddLevelsToGame(string gameId, CreateGameViewModel model);
 
         ICollection<GameViewModel> GetAllGames();
 
@@ -22,6 +22,6 @@ namespace GoGo.Services.Contracts
 
         Task UserAddImageToLevel(string id, GoUser user, string levelId, IFormFile image);
 
-        Task AddLevelResult(GameLevelParticipantViewModel model);
+        Task AddLevelResult(GameLevelParticipantViewModel model, GoUser user);
     }
 }

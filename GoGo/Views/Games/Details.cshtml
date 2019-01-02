@@ -10,7 +10,7 @@
     <div class="card" @*style="width: 18rem;" *@>
         <div class="card-body">
             <h5 class="card-title">@Model.Name</h5>
-            <h6 class="card-subtitle mb-2 text-muted">@Model.Name</h6>
+            <h6 class="card-subtitle mb-2 text-muted">@Model.Creator</h6>
             <p class="card-text">@Model.Description</p>
         </div>
     </div>
@@ -41,7 +41,7 @@
                         <label asp-for="@Model.Level1.CorrespondingImage"></label>
                         <input asp-for="@Model.Level1.CorrespondingImage" type="file" onchange="readURL(this);" />
                         <span asp-validation-for="@Model.Level1.CorrespondingImage" class="text-danger"></span>
-                        <img class="card-img-top img-thumbnail " id="blah" src="#" alt="your image" />
+                        <img class="card-img-top img-thumbnail " id="blah" src="~/images/imagePlaceholder.png" alt="your image" />
                     </div>
                     <button type="submit">AddImage</button>
                 </form>
@@ -80,20 +80,20 @@
             </div>
 
             <div class="card-body" enctype="multipart/form-data">
-                <form method="post" asp-action="AddImage" asp-controller="Games" asp-route-id="@Model.Id" asp-route-levelId="@Model.Level1.Id" enctype="multipart/form-data">
+                <form method="post" asp-action="AddImage" asp-controller="Games" asp-route-id="@Model.Id" asp-route-levelId="@Model.Level2.Id" enctype="multipart/form-data">
                     <div class="form-group card-img-top img-thumbnail">
                         <label asp-for="@Model.Level2.CorrespondingImage"></label>
                         <input asp-for="@Model.Level2.CorrespondingImage" type="file" onchange="readURL(this);" />
                         <span asp-validation-for="@Model.Level2.CorrespondingImage" class="text-danger"></span>
-                        <img class="card-img-top img-thumbnail " id="blah" src="#" alt="your image" />
+                        <img class="card-img-top img-thumbnail " id="blah" src="~/images/imagePlaceholder.png" alt="your image" />
                     </div>
                     <button type="submit">AddImage</button>
                 </form>
 
             </div>
 
-            <div class="dropdown" style="float:left;">
-                <button class="dropbtn">All images</button>
+            <div class="dropdown"  style="float:left;">
+                <button class="dropbtn" >All images</button>
                 <div class="dropdown-content" style="left:0;">
                     @if (Model.GameParticipantsLevel2.Count() > 0)
                     {
@@ -122,12 +122,12 @@
                 <p class="card-text">@Model.Level3.Description</p>
             </div>
             <div class="card-body" enctype="multipart/form-data">
-                <form method="post" asp-action="AddImage" asp-controller="Games" asp-route-id="@Model.Id" asp-route-levelId="@Model.Level1.Id" enctype="multipart/form-data">
+                <form method="post" asp-action="AddImage" asp-controller="Games" asp-route-id="@Model.Id" asp-route-levelId="@Model.Level3.Id" enctype="multipart/form-data">
                     <div class="form-group card-img-top img-thumbnail">
                         <label asp-for="@Model.Level3.CorrespondingImage"></label>
                         <input asp-for="@Model.Level3.CorrespondingImage" type="file" onchange="readURL(this);" />
                         <span asp-validation-for="@Model.Level3.CorrespondingImage" class="text-danger"></span>
-                        <img class="card-img-top img-thumbnail " id="blah" src="#" alt="your image" />
+                        <img class="card-img-top img-thumbnail " id="blah" src="~/images/imagePlaceholder.png" alt="your image" />
                     </div>
                     <button type="submit">AddImage</button>
                 </form>

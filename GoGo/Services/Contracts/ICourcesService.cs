@@ -20,17 +20,17 @@ namespace GoGo.Services.Contracts
 
         ICollection<UsersResultsViewModel> GetAllParticipants(string id, GoUser user);
 
-        void AddResultToUsersCourses(UsersResultsViewModel model);
+        Task AddResultToUsersCourses(UsersResultsViewModel model, GoUser user);
 
         ICollection<CourceViewModel> GetMyCources(string id);
 
         EditCourseViewModel FindCourse(string id);
 
-        Task EditCourse(EditCourseViewModel model);
+        Task EditCourse(EditCourseViewModel model, GoUser user);
 
         DeleteCourseViewModel FindCourseForDelete(string id);
 
-        Task DeleteCourse(string id);
+        Task DeleteCourse(string id, GoUser user);
 
         //IPagedList GetParticipentsToPagged(int? page, string id);
     }

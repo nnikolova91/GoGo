@@ -25,6 +25,7 @@ namespace GoGo.Models
         public string LastName { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
+        public int Points { get; set; }
         public string Province { get; set; }
         public string PostalCode { get; set; }
         public string Country { get; set; }

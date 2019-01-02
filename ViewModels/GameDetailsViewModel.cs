@@ -23,7 +23,9 @@ namespace ViewModels
         public string Description { get; set; }
 
         public string GameId { get; set; }
-        
+
+        public string Creator { get; set; }
+
         public string Level1Id { get; set; }
         public LevelViewModel Level1 { get; set; }
 

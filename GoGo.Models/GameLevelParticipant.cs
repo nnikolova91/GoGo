@@ -16,7 +16,7 @@ namespace GoGo.Models
 
         public string GameId { get; set; }
         public Game Game { get; set; }
-
+        
         public byte[] CorrespondingImage { get; set; }
 
         public StatusLevel StatusLevel { get; set; }

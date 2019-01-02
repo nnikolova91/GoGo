@@ -10,32 +10,83 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using AutoMapper;
 using GoGo.Models.Enums;
+using GoGo.Data.Common;
 
 namespace GoGo.Services
 {
     public class GamesService : IGamesService
     {
-        private readonly GoDbContext context;
         private readonly IMapper mapper;
+        private readonly IRepository<Game> gamesRepository;
+        private readonly IRepository<Level> levelsRepository;
+        private readonly IRepository<GameLevelParticipant> levelsParticipantRepository;
+        private readonly IRepository<GoUser> usersRepository;
 
-        public GamesService(GoDbContext context, IMapper mapper)
+        public GamesService(IRepository<Game> gamesRepository,
+                                IRepository<Level> levelsRepository,
+                                IRepository<GameLevelParticipant> levelsParticipantRepository,
+                                IRepository<GoUser> usersRepository,
+                                IMapper mapper)
         {
-            this.context = context;
+            this.gamesRepository = gamesRepository;
+            this.levelsRepository = levelsRepository;
+            this.levelsParticipantRepository = levelsParticipantRepository;
+            this.usersRepository = usersRepository;
             this.mapper = mapper;
         }
 
-        public async Task<string> AddGame(CreateGameViewModel model)
+        public async Task<string> AddGame(CreateGameViewModel model, GoUser user)
         {
-            byte[] file = ImageAsBytes(model.Level1.Image);
+
+            byte[] imageLevel1 = ImageAsBytes(model.Level1.Image);
+            byte[] imageLevel2 = ImageAsBytes(model.Level2.Image);
+            byte[] imageLevel3 = ImageAsBytes(model.Level3.Image);
 
             var game = new Game
             {
                 Name = model.Name,
-                Description = model.Description
+                Description = model.Description,
+                Image = imageLevel3,
+                CreatorId = user.Id
             };
 
-            this.context.Games.Add(game);
-            await this.context.SaveChangesAsync();
+            await this.gamesRepository.AddAsync(game);
+            await this.gamesRepository.SaveChangesAsync();
+
+            var level1 = new Level
+            {
+                Image = imageLevel1,
+                Description = model.Level1.Description,
+                NumberInGame = model.Level1.NumberInGame,
+                GameId = game.Id,
+                Game = game,
+                Points = model.Level1.Points
+            };
+            var level2 = new Level
+            {
+                Image = imageLevel2,
+                Description = model.Level2.Description,
+                NumberInGame = model.Level2.NumberInGame,
+                GameId = game.Id,
+                Game = game,
+                Points = model.Level2.Points
+            };
+            var level3 = new Level
+            {
+                Image = imageLevel3,
+                Description = model.Level3.Description,
+                NumberInGame = model.Level3.NumberInGame,
+                GameId = game.Id,
+                Game = game,
+                Points = model.Level3.Points
+            };
+
+            await this.levelsRepository.AddAsync(level1);
+            await this.levelsRepository.AddAsync(level2);
+            await this.levelsRepository.AddAsync(level3);
+
+            await this.levelsRepository.SaveChangesAsync();
+
             return game.Id;
         }
 
@@ -54,36 +105,9 @@ namespace GoGo.Services
             return file;
         }
 
-        public async Task AddLevelsToGame(string gameId, CreateGameViewModel model)
-        {
-            var game = this.context.Games.FirstOrDefault(x => x.Id == gameId);
-
-            var level1 = new Level
-            {
-                Description = model.Level1.Description,
-                Points = model.Level1.Points,
-                GameId = game.Id,
-                Image = ImageAsBytes(model.Level1.Image)
-            };
-
-            this.context.Levels.Add(level1);
-
-            this.context.Levels.Add(new Level
-            {
-                Description = model.Level2.Description,
-                Points = model.Level2.Points,
-                GameId = game.Id,
-                Image = ImageAsBytes(model.Level2.Image)
-            });
-
-            game.Image = level1.Image;
-
-            await this.context.SaveChangesAsync();
-        }
-
         public ICollection<GameViewModel> GetAllGames()
         {
-            var gamesModels = this.context.Games
+            var gamesModels = this.gamesRepository.All()
                 .Select(x => new GameViewModel { Id = x.Id, Name = x.Name, Image = x.Image }).ToList();
 
             return gamesModels;
@@ -91,15 +115,20 @@ namespace GoGo.Services
 
         public GameDetailsViewModel GetDetails(string id)
         {
-            var game = context.Games.FirstOrDefault(x => x.Id == id);
+            var game = this.gamesRepository.All().FirstOrDefault(x => x.Id == id);
 
-            var levels = context.Levels.Where(x => x.GameId == id).ToList();
-            
+            if (game == null)
+            {
+                throw new ArgumentException("Game do not exist!");
+            }
+
+            var levels = levelsRepository.All().Where(x => x.GameId == id).OrderBy(x => x.NumberInGame).ToList();
+
             var levelss = levels.Select(x => mapper.Map<LevelViewModel>(x))
-                .OrderBy(x=>x.NumberInGame).ToList();
+                .OrderBy(x => x.NumberInGame).ToList();
 
-            var gameParticipantsLevel1 = this.context.LevelsParticipants
-                .Where(l => l.GameId == id && l.LevelId == levels[0].Id).Select(x => new GameLevelParticipantViewModel
+            var gameParticipantsLevel1 = this.levelsParticipantRepository.All()
+                .Where(l => l.GameId == id && l.LevelId == levels[0].Id && l.StatusLevel == StatusLevel.NotPassed).Select(x => new GameLevelParticipantViewModel
                 {
                     GameId = x.GameId,
                     LevelId = x.LevelId,
@@ -109,8 +138,8 @@ namespace GoGo.Services
                     StatusLevel = x.StatusLevel
                 }).ToList();
 
-            var gameParticipantsLevel2 = this.context.LevelsParticipants
-                .Where(l => l.GameId == id && l.LevelId == levels[1].Id).Select(x => new GameLevelParticipantViewModel
+            var gameParticipantsLevel2 = this.levelsParticipantRepository.All()
+                .Where(l => l.GameId == id && l.LevelId == levels[1].Id && l.StatusLevel == StatusLevel.NotPassed).Select(x => new GameLevelParticipantViewModel
                 {
                     GameId = x.GameId,
                     LevelId = x.LevelId,
@@ -120,8 +149,8 @@ namespace GoGo.Services
                     StatusLevel = x.StatusLevel
                 }).ToList();
 
-            var gameParticipantsLevel3 = this.context.LevelsParticipants
-                .Where(l => l.GameId == id && l.LevelId == levels[2].Id).Select(x => new GameLevelParticipantViewModel
+            var gameParticipantsLevel3 = this.levelsParticipantRepository.All()
+                .Where(l => l.GameId == id && l.LevelId == levels[2].Id && l.StatusLevel == StatusLevel.NotPassed).Select(x => new GameLevelParticipantViewModel
                 {
                     GameId = x.GameId,
                     LevelId = x.LevelId,
@@ -136,6 +165,7 @@ namespace GoGo.Services
                 Id = game.Id,
                 Name = game.Name,
                 Description = game.Description,
+                Creator = this.usersRepository.All().FirstOrDefault(x => x.Id == game.CreatorId).FirstName,
                 Level1 = levelss[0],
                 Level2 = levelss[1],
                 Level3 = levelss[2],
@@ -150,10 +180,15 @@ namespace GoGo.Services
 
         public async Task UserStartGame(string id, GoUser user)
         {
-            var game = this.context.Games.FirstOrDefault(x => x.Id == id);
-            var levels = this.context.Levels.Where(x => x.GameId == id).OrderBy(x => x.NumberInGame).ToList();
+            var game = this.gamesRepository.All().FirstOrDefault(x => x.Id == id);
+            var levels = this.levelsRepository.All().Where(x => x.GameId == id).OrderBy(x => x.NumberInGame).ToList();
 
-            if (this.context.LevelsParticipants.FirstOrDefault(x => x.ParticipantId == user.Id && x.GameId == game.Id) == null)
+            if (game == null)
+            {
+                throw new ArgumentException("Game do not exist!");
+            }
+
+            else if (this.levelsParticipantRepository.All().FirstOrDefault(x => x.ParticipantId == user.Id && x.GameId == game.Id) == null)
             {
                 var gamesLevelsUsers = levels.Select(x => new GameLevelParticipant
                 {
@@ -163,36 +198,54 @@ namespace GoGo.Services
                     LevelId = x.Id,
                     Level = x,
                     StatusLevel = (StatusLevel)2
-                });
+                }).ToList();
 
-                await this.context.AddRangeAsync(gamesLevelsUsers);
+                await this.levelsParticipantRepository.AddRangeAsync(gamesLevelsUsers);
 
-                await this.context.SaveChangesAsync();
+                await this.levelsParticipantRepository.SaveChangesAsync();
             }
         }
 
         public async Task UserAddImageToLevel(string id, GoUser user, string levelId, IFormFile image)
         {
-            var levelPartisipant = this.context.LevelsParticipants
+            var levelPartisipant = this.levelsParticipantRepository.All()
                 .FirstOrDefault(x => x.GameId == id && x.ParticipantId == user.Id && x.LevelId == levelId);
+
+            if (levelPartisipant != null && levelPartisipant.StatusLevel == StatusLevel.SuccessfullyPassed)
+            {
+                throw new ArgumentException("You are auready pass successfully this level!");
+            }
 
             if (levelPartisipant != null)
             {
                 levelPartisipant.CorrespondingImage = ImageAsBytes(image);
 
-                await this.context.SaveChangesAsync();
+                await this.levelsParticipantRepository.SaveChangesAsync();
             }
         }
 
-        public async Task AddLevelResult(GameLevelParticipantViewModel model)
+        public async Task AddLevelResult(GameLevelParticipantViewModel model, GoUser user)
         {
-            var gameLevelParticipant = this.context.LevelsParticipants
+            var gameLevelParticipant = this.levelsParticipantRepository.All()
                 .FirstOrDefault(x => x.GameId == model.GameId && x.LevelId == model.LevelId
                 && x.ParticipantId == model.ParticipantId);
 
             gameLevelParticipant.StatusLevel = model.StatusLevel;
 
-            await this.context.SaveChangesAsync();
+            if (model.StatusLevel == StatusLevel.SuccessfullyPassed)
+            {
+                var participant = this.usersRepository.All().FirstOrDefault(x => x.Id == model.ParticipantId);
+
+                var level = this.levelsRepository.All().FirstOrDefault(l => l.Id == model.LevelId);
+
+                participant.Points += level.Points;
+
+                await this.usersRepository.SaveChangesAsync();
+
+                //this.levelsParticipantRepository.Delete(gameLevelParticipant);
+            }
+
+            await this.levelsParticipantRepository.SaveChangesAsync();
         }
     }
 }

@@ -13,6 +13,8 @@ namespace GoGo.Data.Common
 
         Task AddAsync(TEntity entity);
 
+        Task AddRangeAsync(List<TEntity> entitis);
+
         void Update(TEntity entity);
 
         void Delete(TEntity entity);

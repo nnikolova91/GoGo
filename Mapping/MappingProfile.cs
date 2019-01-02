@@ -46,6 +46,8 @@ namespace Mapping
 
             CreateMap<Destination, EditDestinationViewModel>()//.ReverseMap()
                 .ForMember(d => d.Image, d => d.Ignore());
+
+            CreateMap<Destination, DestUserViewModel>().ReverseMap();
             
                 CreateMap<Cource, EditCourseViewModel>()//.ReverseMap()
                 .ForMember(d => d.Image, d => d.Ignore());

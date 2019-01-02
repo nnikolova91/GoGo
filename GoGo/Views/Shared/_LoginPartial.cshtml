@@ -1,4 +1,5 @@
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http;
 
 @inject SignInManager<GoUser> SignInManager
 @inject UserManager<GoUser> UserManager
@@ -7,10 +8,12 @@
 {
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-brand">
         <ul class="navbar-nav navbar-right">
-
+            @{var user = await UserManager.GetUserAsync(this.User);}
             @*<a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-brand">Logout</a>*@
             <li class=" nav-item active nav-item ">
                 <a>@User.Identity.Name.ToString()</a>
+                @{ if (user != null) {<a>Points: @user.Points</a> }}
+                
             </li>
             <li class=" nav-item active nav-item dropdown">
                 <a class="nav-link dropdown-toggle  navbar-brand" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -30,9 +33,9 @@
         </ul>
     </form>
     @*<p style="margin-top:20px;"><a style="color:aliceblue; " asp-controller="Destinations" asp-action="My"><b>My Destinations</b></a></p>
-    <p style="margin-top:20px;"><a style="color:aliceblue" asp-controller="Cources" asp-action="My">My Courses</a></p>
-    <p style="margin-top:20px;"><a style="color:aliceblue" asp-controller="Games" asp-action="My">My Games</a></p>
-    <p style="margin-top:20px;"><a style="color:aliceblue" asp-controller="Stories" asp-action="My">My Stories</a></p>*@
+        <p style="margin-top:20px;"><a style="color:aliceblue" asp-controller="Cources" asp-action="My">My Courses</a></p>
+        <p style="margin-top:20px;"><a style="color:aliceblue" asp-controller="Games" asp-action="My">My Games</a></p>
+        <p style="margin-top:20px;"><a style="color:aliceblue" asp-controller="Stories" asp-action="My">My Stories</a></p>*@
 
 }
 else

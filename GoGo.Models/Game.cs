@@ -24,6 +24,9 @@ namespace GoGo.Models
 
         public int MaxPoints { get; set; }
 
+        public string CreatorId { get; set; }
+        public GoUser Creator { get; set; }
+
         public ICollection<Level> Levels { get; set; }
 
         public ICollection<GameLevelParticipant> LevelsParticipants { get; set; }

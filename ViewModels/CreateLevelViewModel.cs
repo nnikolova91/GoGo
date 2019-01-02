@@ -19,6 +19,8 @@ namespace ViewModels
         
         public int Points { get; set; }
 
+        public int NumberInGame { get; set; }
+
         public string GameId { get; set; }
         
     }

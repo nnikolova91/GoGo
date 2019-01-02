@@ -49,6 +49,7 @@ namespace ViewModels
 
         public Category Category { get; set; }
 
+        public string CreatorId { get; set; }
         public GoUserViewModel Creator { get; set; }
 
         public ICollection<GoUserViewModel> Participants { get; set; }

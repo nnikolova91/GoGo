@@ -83,6 +83,9 @@ namespace GoGo.Areas.Identity.Pages.Account
             [MaxLength(50)]
             public string Street { get; set; }
 
+            [Range((int)0, (int)int.MaxValue)]
+            public int Points { get; set; }
+
             [DataType(DataType.Text)]
             [MaxLength(50)]
             public string City { get; set; }
@@ -130,6 +133,7 @@ namespace GoGo.Areas.Identity.Pages.Account
                     LastName = Input.LastName,
                     Street = Input.Street,
                     City = Input.City,
+                    Points = 0,
                     Province = Input.Province,
                     PostalCode = Input.PostalCode,
                     Country = Input.Country,

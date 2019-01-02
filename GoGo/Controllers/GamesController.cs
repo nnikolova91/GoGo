@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using X.PagedList;
 using Microsoft.AspNetCore.Http;
 using GoGo.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GoGo.Controllers
 {
@@ -34,8 +35,10 @@ namespace GoGo.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateGameViewModel model)
         {
-            string gameId = await this.gamesService.AddGame(model);
-            await this.gamesService.AddLevelsToGame(gameId, model);
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
+            string gameId = await this.gamesService.AddGame(model, user);
+            //await this.gamesService.AddLevelsToGame(gameId, model);
             
             return Redirect($"/Games/All");
         }
@@ -52,10 +55,13 @@ namespace GoGo.Controllers
             return Redirect($"/Games/Details/{id}");
         }
         
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddResult(GameLevelParticipantViewModel model)
         {
-            await this.gamesService.AddLevelResult(model);
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
+            await this.gamesService.AddLevelResult(model, user);
             
             return Redirect($"/Games/Details/{model.GameId}");
         }

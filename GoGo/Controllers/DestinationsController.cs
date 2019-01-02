@@ -86,6 +86,8 @@ namespace GoGo.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(string id, DestViewModel model)
         {
+            //await this.destinationService.DeleteCommentsUsers(id);
+
             await this.destinationService.DeleteComments(id);
 
             await this.destinationService.DeleteDestinationsUsers(id);
@@ -117,11 +119,9 @@ namespace GoGo.Controllers
 
         public async Task<IActionResult> Details(string socialization, string id) // id(destinationId)
         {
-            var us = User.Identity.Name;
-            var user = HttpContext.User;
-            var userr = await _userManager.GetUserAsync(HttpContext.User);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var destination = this.destinationService.GetDetails(id, us);//user);
+            var destination = this.destinationService.GetDetails(id, user);//user);
 
             ViewData["Message"] = "Register - if you dont or Login if you have an account";
             ViewData["Controller"] = "Destinations";
@@ -134,8 +134,8 @@ namespace GoGo.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var destUserModel = this.destinationService.AddUserToDestination(user, id);
-
+            var destUserModel = await this.destinationService.AddUserToDestination(user, id);
+            
             return View(destUserModel); //id(destinationId)
         }
 

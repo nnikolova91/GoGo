@@ -47,15 +47,7 @@ namespace GoGo.Services
 
         public async Task AddDestination(CreateDestinationViewModel model, GoUser user)
         {
-            byte[] file = null;
-            if (model.Image.Length > 0)
-            {
-                using (var ms = new MemoryStream())
-                {
-                    model.Image.CopyTo(ms);
-                    file = ms.ToArray();
-                }
-            }
+            byte[] file = NewMethod(model.Image);
 
             var dest = mapper.Map<Destination>(model);
             dest.Image = file;
@@ -63,7 +55,22 @@ namespace GoGo.Services
             dest.CreatorId = user.Id;
 
             await this.destRepository.AddAsync(dest);
-            await destRepository.SaveChangesAsync();
+            await this.destRepository.SaveChangesAsync();
+        }
+
+        private static byte[] NewMethod(IFormFile image)
+        {
+            byte[] file = null;
+            if (image.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    image.CopyTo(ms);
+                    file = ms.ToArray();
+                }
+            }
+
+            return file;
         }
 
         public async Task AddSocialization(GoUser user, string id, string socialization)
@@ -81,10 +88,13 @@ namespace GoGo.Services
             await this.destUsersRepository.SaveChangesAsync();
         }
 
-        public DestUserViewModel AddUserToDestination(GoUser user, string id) //destinationId
+        public async Task<DestUserViewModel> AddUserToDestination(GoUser user, string id) //destinationId
         {
             var destination = this.destRepository.All().FirstOrDefault(x => x.Id == id);
-
+            if (destination == null)
+            {
+                throw new ArgumentException("Destination not found.");
+            }
             var destUserModel = new DestUserViewModel
             {
                 Destination = destination,
@@ -100,28 +110,34 @@ namespace GoGo.Services
                 Participant = user,
                 ParticipantId = user.Id
             };
-            // var destUsModel = this.Mapp<DestUserViewModel>(destinationUser);
 
-            this.destUsersRepository.AddAsync(destinationUser);
-            this.destUsersRepository.SaveChangesAsync();
+            if (this.destUsersRepository.All().FirstOrDefault(x => x.DestinationId == destinationUser.DestinationId &&
+                    x.ParticipantId == destinationUser.ParticipantId) != null)
+            {
+                throw new ArgumentException("You are in this group.");
+            }
+            // var destUsModel = mapper.Map<DestUserViewModel>(destinationUser);
+
+            await this.destUsersRepository.AddAsync(destinationUser);
+            await this.destUsersRepository.SaveChangesAsync();
 
             return destUserModel;
         }
 
-        public ICollection<GoUserViewModel> AllUsersFodSocialization(GoUser user, string id, string socialization)
-        {
-            var usersNotKnowAnyone = this.destUsersRepository.All()
-                                            .Where(x => x.DestinationId == id && x.Socialization.ToString() == "NotKnowAnyone")
-                                            .Select(x => mapper.Map<GoUserViewModel>(user)).ToList();
+        //public ICollection<GoUserViewModel> AllUsersFodSocialization(GoUser user, string id, string socialization)
+        //{
+        //    var usersNotKnowAnyone = this.destUsersRepository.All()
+        //                                    .Where(x => x.DestinationId == id && x.Socialization.ToString() == "NotKnowAnyone")
+        //                                    .Select(x => mapper.Map<GoUserViewModel>(user)).ToList();
 
-            if (socialization == "NotKnowAnyone")
-            {
-                var notIncludeYourself = usersNotKnowAnyone.FirstOrDefault(x => x.Id == user.Id);
-                usersNotKnowAnyone.Remove(notIncludeYourself);
-            }
+        //    //if (socialization == "NotKnowAnyone")
+        //    //{
+        //    //    var notIncludeYourself = usersNotKnowAnyone.FirstOrDefault(x => x.Id == user.Id);
+        //    //    usersNotKnowAnyone.Remove(notIncludeYourself);
+        //    //}
 
-            return usersNotKnowAnyone;
-        }
+        //    return usersNotKnowAnyone;
+        //}
 
         public ICollection<DestViewModel> GetAllDestinations()
         {
@@ -135,11 +151,16 @@ namespace GoGo.Services
             return destinationsModels;
         }
 
-        public DestDetailsViewModel GetDetails(string id, string userName) //GoUser user)
+        public DestDetailsViewModel GetDetails(string id, GoUser user) //GoUser user)
         {
-            var user = this.usersRepository.All().FirstOrDefault(x => x.UserName == userName);
+            //var user = this.usersRepository.All().FirstOrDefault(x => x.Id == userr.Id);
 
             var dest = this.destRepository.All().FirstOrDefault(x => x.Id == id);
+
+            if (dest == null)
+            {
+                throw new ArgumentException("Destination not exist");
+            }
 
             var usersNotKnowAnyone = this.destUsersRepository.All()
                                             .Where(x => x.DestinationId == id &&
@@ -217,15 +238,19 @@ namespace GoGo.Services
 
             var destination = this.destRepository.All().FirstOrDefault(x => x.Id == model.Id);
 
-            destination.Image = file;
-            destination.Level = model.Level;
-            destination.StartDate = model.StartDate;
-            destination.EndDate = model.EndDate;
-            destination.EndDateToJoin = model.EndDateToJoin;
-            destination.Naame = model.Naame;
-            destination.Description = model.Description;
+            if (destination != null)
+            {
+                destination.Image = file;
+                destination.Level = model.Level;
+                destination.StartDate = model.StartDate;
+                destination.EndDate = model.EndDate;
+                destination.EndDateToJoin = model.EndDateToJoin;
+                destination.Naame = model.Naame;
+                destination.Description = model.Description;
 
-            await this.destRepository.SaveChangesAsync();
+                await this.destRepository.SaveChangesAsync();
+            }
+
         }
 
         public DestViewModel FindToDeleteDestination(string id, GoUser user)

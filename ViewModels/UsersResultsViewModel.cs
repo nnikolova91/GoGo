@@ -8,6 +8,7 @@ namespace ViewModels
     public class UsersResultsViewModel
     {
         public string CourceId { get; set; }
+        public CourceViewModel Course { get; set; }
 
         public string ParticipantId { get; set; }
         public GoUserViewModel Participant { get; set; }

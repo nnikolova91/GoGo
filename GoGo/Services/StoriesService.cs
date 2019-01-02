@@ -35,6 +35,11 @@ namespace GoGo.Services
         public async Task AddStory(CreateStoryViewModel model, string id, GoUser user) //id(destinationId)
         {
             var destination = this.destinationsRepository.All().FirstOrDefault(x => x.Id == id);
+            if (destination == null)
+            {
+                throw new ArgumentException("Destination not exist!");
+            }
+
             model.AuthorId = user.Id;
             
             var story = mapper.Map<Story>(model);
@@ -79,6 +84,11 @@ namespace GoGo.Services
         public StoryViewModel GetDetails(string id)
         {
             var story = this.storiesRepository.All().FirstOrDefault(x => x.Id == id);
+
+            if (story == null)
+            {
+                throw new ArgumentException("Story not exist!");
+            }
             
             story.PeopleWhosLikeThis = this.peopleStoriesRepository.All().Where(x => x.StoryId == id).ToList();
 
@@ -93,6 +103,10 @@ namespace GoGo.Services
         {
             var story = this.storiesRepository.All().FirstOrDefault(x => x.Id == id);
 
+            if (story == null)
+            {
+                throw new ArgumentException("Story not exist!");
+            }
             var userStory = new PeopleStories
             {
                 Story = story,
@@ -104,8 +118,14 @@ namespace GoGo.Services
 
             story.PeopleWhosLikeThis.Add(userStory);
 
-            await this.peopleStoriesRepository.SaveChangesAsync();
-            await this.storiesRepository.SaveChangesAsync();
+            if (peopleStoriesRepository.All().FirstOrDefault(x=>x.StoryId == userStory.StoryId && x.UserId == userStory.UserId) == null)
+            {
+                await this.peopleStoriesRepository.AddAsync(userStory);
+
+                await this.peopleStoriesRepository.SaveChangesAsync();
+                await this.storiesRepository.SaveChangesAsync();
+            }
         }
+
     }
 }
