@@ -1,4 +1,4 @@
-@model System.Collections.Generic.IEnumerable<ViewModels.CourceViewModel>
+@model System.Collections.Generic.IEnumerable<ViewModels.CourseViewModel>
 
 @if (Model == null)
 {
@@ -7,21 +7,21 @@
 else
 {
     <div class="card-deck">
-        @foreach (var cource in Model)
+        @foreach (var course in Model)
         {
-            var base64 = Convert.ToBase64String(cource.Image);
+            var base64 = Convert.ToBase64String(course.Image);
             var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
             <div class="card" style="width: 30rem;">
                 <img class="card-img-top img-thumbnail " src="@imgSrc">
                 <div class="card-body">
-                    <h5 class="card-title">@cource.Title</h5>
-                    <p class="card-text">Start date: @cource.StartDate</p>
+                    <h5 class="card-title">@course.Title</h5>
+                    <p class="card-text">Start date: @course.StartDate</p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Max count participants: @cource.MaxCountParticipants</li>
-                    <li class="list-group-item">Status: @cource.Status</li>
+                    <li class="list-group-item">Max count participants: @course.MaxCountParticipants</li>
+                    <li class="list-group-item">Status: @course.Status</li>
                     <li class="list-group-item">
-                        <a asp-action="Details" asp-controller="Cources" asp-route-id="@cource.Id">
+                        <a asp-action="Details" asp-controller="Courses" asp-route-id="@course.Id">
                             <btn class="btn" style="padding-left:400px;">Details</btn>
                         </a>
                     </li>

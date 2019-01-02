@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoGo.Data.Migrations
 {
     [DbContext(typeof(GoDbContext))]
-    [Migration("20181231055356_points")]
-    partial class points
+    [Migration("20190102181809_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -69,7 +69,7 @@ namespace GoGo.Data.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("GoGo.Models.Cource", b =>
+            modelBuilder.Entity("GoGo.Models.Course", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -98,22 +98,22 @@ namespace GoGo.Data.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("Cources");
+                    b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("GoGo.Models.CourcesUsers", b =>
+            modelBuilder.Entity("GoGo.Models.CoursesUsers", b =>
                 {
-                    b.Property<string>("CourceId");
+                    b.Property<string>("CourseId");
 
                     b.Property<string>("ParticipantId");
 
                     b.Property<int>("StatusUser");
 
-                    b.HasKey("CourceId", "ParticipantId");
+                    b.HasKey("CourseId", "ParticipantId");
 
                     b.HasIndex("ParticipantId");
 
-                    b.ToTable("CourcesUsers");
+                    b.ToTable("CoursesUsers");
                 });
 
             modelBuilder.Entity("GoGo.Models.Destination", b =>
@@ -449,22 +449,22 @@ namespace GoGo.Data.Migrations
                         .HasForeignKey("DestinationId");
                 });
 
-            modelBuilder.Entity("GoGo.Models.Cource", b =>
+            modelBuilder.Entity("GoGo.Models.Course", b =>
                 {
                     b.HasOne("GoGo.Models.GoUser", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId");
                 });
 
-            modelBuilder.Entity("GoGo.Models.CourcesUsers", b =>
+            modelBuilder.Entity("GoGo.Models.CoursesUsers", b =>
                 {
-                    b.HasOne("GoGo.Models.Cource", "Cource")
+                    b.HasOne("GoGo.Models.Course", "Course")
                         .WithMany("Participants")
-                        .HasForeignKey("CourceId")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("GoGo.Models.GoUser", "Participant")
-                        .WithMany("Cources")
+                        .WithMany("Courses")
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

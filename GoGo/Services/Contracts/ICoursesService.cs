@@ -8,21 +8,21 @@ using X.PagedList;
 
 namespace GoGo.Services.Contracts
 {
-    public interface ICourcesService
+    public interface ICoursesService
     {
-        Task AddCource(CreateCourceViewModel model, GoUser user);
+        Task AddCourse(CreateCourseViewModel model, GoUser user);
 
-        ICollection<CourceViewModel> GetAllCources();
+        ICollection<CourseViewModel> GetAllCourses();
 
         CourseDetailsViewModel GetDetails(int? page, string id);
 
-        Task AddUserToCource(string id, GoUser user);
+        Task AddUserToCourse(string id, GoUser user);
 
         ICollection<UsersResultsViewModel> GetAllParticipants(string id, GoUser user);
 
         Task AddResultToUsersCourses(UsersResultsViewModel model, GoUser user);
 
-        ICollection<CourceViewModel> GetMyCources(string id);
+        ICollection<CourseViewModel> GetMyCourses(string id);
 
         EditCourseViewModel FindCourse(string id);
 

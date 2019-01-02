@@ -12,9 +12,9 @@ namespace GoGo.Data.Seeder
     {
         public static async Task Seed(IServiceProvider provider, GoDbContext context)
         {
-            if (!context.CourcesUsers.Any())
+            if (!context.CoursesUsers.Any())
             {
-                var allCourses = context.Cources.ToList();
+                var allCourses = context.Courses.ToList();
 
                 foreach (var course in allCourses)
                 {
@@ -25,20 +25,20 @@ namespace GoGo.Data.Seeder
                         var statusUser = new Random().Next(1, 3);
                         var randomUser = context.Users.OrderBy(x => Guid.NewGuid()).First();
 
-                        var courseUser = new CourcesUsers
+                        var courseUser = new CoursesUsers
                         {
                             ParticipantId = randomUser.Id,
                             Participant = randomUser,
-                            CourceId = course.Id,
-                            Cource = course,
+                            CourseId = course.Id,
+                            Course = course,
                             StatusUser = (StatusParticitant)statusUser
                         };
-                        var userExist = context.CourcesUsers
-                            .FirstOrDefault(x => x.CourceId == course.Id && x.ParticipantId == randomUser.Id);
+                        var userExist = context.CoursesUsers
+                            .FirstOrDefault(x => x.CourseId == course.Id && x.ParticipantId == randomUser.Id);
 
                         if (userExist == null)
                         {
-                            await context.CourcesUsers.AddAsync(courseUser);
+                            await context.CoursesUsers.AddAsync(courseUser);
                             await context.SaveChangesAsync();
                         }
                     }

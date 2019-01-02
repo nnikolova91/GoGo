@@ -20,7 +20,7 @@ namespace GoGo.Data.Seeder.Courses
             var sb = new StringBuilder();
             var dataCourses = new List<string>();
 
-            if (!context.Cources.Any())
+            if (!context.Courses.Any())
             {
                 var owners = System.IO.File.ReadAllLines(CoursesFilePath);
 
@@ -39,7 +39,7 @@ namespace GoGo.Data.Seeder.Courses
                     }
                 }
 
-                var courses = new List<Cource>();
+                var courses = new List<Course>();
 
                 for (int i = 0; i < dataCourses.Count; i++)
                 {
@@ -92,7 +92,7 @@ namespace GoGo.Data.Seeder.Courses
                     var randomMaxCountParticipants = new Random().Next(3, 20);
 
 
-                    var course = new Cource
+                    var course = new Course
                     {
                         Title = title,
                         Description = description,
@@ -107,7 +107,7 @@ namespace GoGo.Data.Seeder.Courses
                         Category = (Category)randomCategory
                     };
 
-                    await context.Cources.AddAsync(course);
+                    await context.Courses.AddAsync(course);
                 }
 
                 //context.Destinations.AddRangeAsync;

@@ -18,14 +18,14 @@ namespace UnitTests.Comparers
                 return false;
             }
 
-            return x.CourceId == y.CourceId &&
+            return x.CourseId == y.CourseId &&
                 x.ParticipantId == y.ParticipantId &&
                 x.Result == y.Result;    
         }
 
         public int GetHashCode(UsersResultsViewModel obj)
         {
-            return obj.CourceId.GetHashCode() ^ obj.ParticipantId.GetHashCode();
+            return obj.CourseId.GetHashCode() ^ obj.ParticipantId.GetHashCode();
         }
     }
 }

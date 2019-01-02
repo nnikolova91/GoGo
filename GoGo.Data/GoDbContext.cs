@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GoGo.Models;
+﻿using GoGo.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +10,6 @@ namespace GoGo.Data
             : base(options)
         {
         }
-
 
         public DbSet<Comment> Comments { get; set; }
 
@@ -29,9 +25,9 @@ namespace GoGo.Data
 
         public DbSet<GameLevelParticipant> LevelsParticipants { get; set; }
 
-        public DbSet<Cource> Cources { get; set; }
+        public DbSet<Course> Courses { get; set; }
 
-        public DbSet<CourcesUsers> CourcesUsers { get; set; }
+        public DbSet<CoursesUsers> CoursesUsers { get; set; }
 
         public DbSet<Game> Games { get; set; }
 
@@ -51,17 +47,17 @@ namespace GoGo.Data
                 .HasMany<Comment>(s => s.Comments)
                 .WithOne(c => c.Destination);
 
-            modelBuilder.Entity<CourcesUsers>()
-               .HasKey(x => new { x.CourceId, x.ParticipantId });
+            modelBuilder.Entity<CoursesUsers>()
+               .HasKey(x => new { x.CourseId, x.ParticipantId });
 
-            modelBuilder.Entity<CourcesUsers>()
-                .HasOne(bc => bc.Cource)
+            modelBuilder.Entity<CoursesUsers>()
+                .HasOne(bc => bc.Course)
                 .WithMany(b => b.Participants)
-                .HasForeignKey(bc => bc.CourceId);
+                .HasForeignKey(bc => bc.CourseId);
 
-            modelBuilder.Entity<CourcesUsers>()
+            modelBuilder.Entity<CoursesUsers>()
                 .HasOne(bc => bc.Participant)
-                .WithMany(c => c.Cources)
+                .WithMany(c => c.Courses)
                 .HasForeignKey(bc => bc.ParticipantId);
             //-------------------------------------
             modelBuilder.Entity<GameLevelParticipant>()

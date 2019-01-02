@@ -23,7 +23,7 @@
                 <a class="card-text" style="padding-left:70px;">Max count participants: @Model.MaxCountParticipants</a>
                 <a class="card-text" style="padding-left:70px;">Free seats: @Model.FreeSeats</a>
                 <a class="card-text" style="padding-left:70px;">
-                    This cource was created from: <b>@Model.Creator.FirstName</b>
+                    This course was created from: <b>@Model.Creator.FirstName</b>
                     @*@{ var base61 = Convert.ToBase64String(Model.Creator.Image);
                         var imgSrr = String.Format("data:image/gif;base64,{0}", base61); }
                     <img src="@imgSrr" style="width:40px;height:20px; border-radius:30px 40px;">*@
@@ -37,7 +37,7 @@
     <div class="form-inline" style="justify-content:center; padding-top:20px;">
         @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == this.User.Identity.Name)
         {
-            <form method="get" asp-action="Delete" asp-controller="Cources" asp-route-id="@Model.Id">
+            <form method="get" asp-action="Delete" asp-controller="Courses" asp-route-id="@Model.Id">
                 <div class="text-center " style="padding-bottom:20px; padding-top:200px;">
                     <button class="class=" btn btn-primary"">Delete Course</button>
                 </div>
@@ -46,7 +46,7 @@
 
         @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == this.User.Identity.Name)
         {
-            <form method="get" asp-action="Edit" asp-controller="Cources" asp-route-id="@Model.Id">
+            <form method="get" asp-action="Edit" asp-controller="Courses" asp-route-id="@Model.Id">
                 <div class="text-center" style="padding-bottom:20px; padding-top:200px;">
                     <button class="btn btn-success">Edit Course</button>
                 </div>
@@ -55,7 +55,7 @@
 
         @*@if (this.User.Identity.IsAuthenticated && this.User.Identity.Name == Model.Creator.FirstName)
         {*@
-            <form asp-action="AddResults" asp-controller="Cources" asp-route-id="@Model.Id">
+            <form asp-action="AddResults" asp-controller="Courses" asp-route-id="@Model.Id">
                 <div class="text-center">
                     <button class="btn btn-danger">Add results</button>
                 </div>
@@ -66,7 +66,7 @@
         {
             if (Model.FreeSeats > 0)
             {
-                <form asp-action="SignIn" asp-controller="Cources" asp-route-id="@Model.Id">
+                <form asp-action="SignIn" asp-controller="Courses" asp-route-id="@Model.Id">
                     <div class="text-center">
                         <button class="btn btn-warning">Have Part</button>
                     </div>
@@ -91,9 +91,9 @@
             </div>
         }
         <hr />
-        <form asp-action="All" asp-controller="Cources">
+        <form asp-action="All" asp-controller="Courses">
             <div class="text-center">
-                <button asp-action="All" asp-controller="Cources" class="btn btn-secondary">Back To All</button>
+                <button asp-action="All" asp-controller="Courses" class="btn btn-secondary">Back To All</button>
 
             </div>
 

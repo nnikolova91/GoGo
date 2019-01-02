@@ -1,6 +1,6 @@
 @model ViewModels.UsersResultsViewModel
 
-<form class="mx-auto half-width wiy" method="post" asp-controller="Cources" asp-action="CreateResult" asp-route-courceId="@Model.CourceId" asp-route-participantId="@Model.ParticipantId" enctype="multipart/form-data">
+<form class="mx-auto half-width wiy" method="post" asp-controller="Courses" asp-action="CreateResult" asp-route-courseId="@Model.CourseId" asp-route-participantId="@Model.ParticipantId" enctype="multipart/form-data">
     <div style="align-content:center">
         @*<label asp-for="Result"><b>Result</b></label>*@
         <div style="align-content:center">
@@ -11,6 +11,6 @@
         </div>
     </div>
     <div class="text-center style="align-content:center"">
-        <button type="submit" @*asp-controller="Cources" asp-action="CreateResult" asp-route-id="@Model.CourceId" *@ class="btn chushka-bg-color text-center">Add result</button>
+        <button type="submit" @*asp-controller="Courses" asp-action="CreateResult" asp-route-id="@Model.CourseId" *@ class="btn chushka-bg-color text-center">Add result</button>
     </div>
 </form>

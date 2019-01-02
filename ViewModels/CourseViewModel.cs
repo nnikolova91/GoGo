@@ -8,9 +8,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ViewModels
 {
-    public class CourceViewModel
+    public class CourseViewModel
     {
-        public CourceViewModel()
+        public CourseViewModel()
         {
             this.Participants = new List<GoUserViewModel>();
         }

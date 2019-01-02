@@ -14,25 +14,25 @@ using X.PagedList;
 
 namespace GoGo.Services
 {
-    public class CourcesService : ICourcesService
+    public class CoursesService : ICoursesService
     {
-        private readonly IRepository<CourcesUsers> courcesUsersRepository;
-        private readonly IRepository<Cource> courcesRepository;
+        private readonly IRepository<CoursesUsers> coursesUsersRepository;
+        private readonly IRepository<Course> coursesRepository;
         private readonly IRepository<GoUser> usersRepository;
         private readonly IMapper mapper;
 
-        public CourcesService(IRepository<CourcesUsers> courcesUsersRepository,
-                                IRepository<Cource> courcesRepository,
+        public CoursesService(IRepository<CoursesUsers> coursesUsersRepository,
+                                IRepository<Course> coursesRepository,
                                 IRepository<GoUser> usersRepository,
                                 IMapper mapper)
         {
-            this.courcesUsersRepository = courcesUsersRepository;
-            this.courcesRepository = courcesRepository;
+            this.coursesUsersRepository = coursesUsersRepository;
+            this.coursesRepository = coursesRepository;
             this.usersRepository = usersRepository;
             this.mapper = mapper;
         }
 
-        public async Task AddCource(CreateCourceViewModel model, GoUser user)
+        public async Task AddCourse(CreateCourseViewModel model, GoUser user)
         {
             byte[] file = null;
             if (model.Image.Length > 0)
@@ -44,21 +44,21 @@ namespace GoGo.Services
                 }
             }
 
-            var course = mapper.Map<Cource>(model);
+            var course = mapper.Map<Course>(model);
             course.Creator = user;
             course.CreatorId = user.Id;
             course.Image = file;
 
-            await this.courcesRepository.AddAsync(course);
-            await this.courcesRepository.SaveChangesAsync();
+            await this.coursesRepository.AddAsync(course);
+            await this.coursesRepository.SaveChangesAsync();
         }
 
         public async Task AddResultToUsersCourses(UsersResultsViewModel model, GoUser user)
         {
-            var userCouse = this.courcesUsersRepository.All()
-                .FirstOrDefault(x => x.CourceId == model.CourceId && x.ParticipantId == model.ParticipantId);
+            var userCouse = this.coursesUsersRepository.All()
+                .FirstOrDefault(x => x.CourseId == model.CourseId && x.ParticipantId == model.ParticipantId);
 
-            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == model.CourceId);
+            var course = this.coursesRepository.All().FirstOrDefault(x => x.Id == model.CourseId);
             
             if (userCouse == null)
             {
@@ -71,38 +71,38 @@ namespace GoGo.Services
 
             userCouse.StatusUser = model.Result;
 
-            await this.courcesUsersRepository.SaveChangesAsync();
+            await this.coursesUsersRepository.SaveChangesAsync();
         }
 
-        public async Task AddUserToCource(string id, GoUser user)
+        public async Task AddUserToCourse(string id, GoUser user)
         {
-            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
+            var course = this.coursesRepository.All().FirstOrDefault(x => x.Id == id);
 
-            var userCource = new CourcesUsers
+            var userCourse = new CoursesUsers
             {
                 ParticipantId = user.Id,
                 Participant = user,
-                CourceId = course.Id,
-                Cource = course
+                CourseId = course.Id,
+                Course = course
             };
 
-            if (this.courcesUsersRepository.All().FirstOrDefault(x => x.ParticipantId == user.Id && x.CourceId == course.Id) == null
-                && course.MaxCountParticipants > this.courcesUsersRepository.All().Where(x => x.CourceId == course.Id).Count())
+            if (this.coursesUsersRepository.All().FirstOrDefault(x => x.ParticipantId == user.Id && x.CourseId == course.Id) == null
+                && course.MaxCountParticipants > this.coursesUsersRepository.All().Where(x => x.CourseId == course.Id).Count())
             {
-                await this.courcesUsersRepository.AddAsync(userCource);
-                await this.courcesUsersRepository.SaveChangesAsync();
+                await this.coursesUsersRepository.AddAsync(userCourse);
+                await this.coursesUsersRepository.SaveChangesAsync();
             }
         }
 
         public async Task DeleteCourse(string id, GoUser user)
         {
-            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
+            var course = this.coursesRepository.All().FirstOrDefault(x => x.Id == id);
 
             if (course != null && course.CreatorId == user.Id)
             {
-                this.courcesRepository.Delete(course);
+                this.coursesRepository.Delete(course);
 
-                await this.courcesRepository.SaveChangesAsync();
+                await this.coursesRepository.SaveChangesAsync();
             }
         }
 
@@ -118,7 +118,7 @@ namespace GoGo.Services
                 }
             }
 
-            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == model.Id);
+            var course = this.coursesRepository.All().FirstOrDefault(x => x.Id == model.Id);
 
             if (course != null && course.CreatorId == user.Id)
             {
@@ -132,13 +132,13 @@ namespace GoGo.Services
                 course.Category = model.Category;
                 course.Status = model.Status;
 
-                await this.courcesRepository.SaveChangesAsync();
+                await this.coursesRepository.SaveChangesAsync();
             }
         }
 
         public EditCourseViewModel FindCourse(string id)
         {
-            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
+            var course = this.coursesRepository.All().FirstOrDefault(x => x.Id == id);
 
             if (course == null)
             {
@@ -152,7 +152,7 @@ namespace GoGo.Services
 
         public DeleteCourseViewModel FindCourseForDelete(string id)
         {
-            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
+            var course = this.coursesRepository.All().FirstOrDefault(x => x.Id == id);
 
             if (course == null)
             {
@@ -164,31 +164,31 @@ namespace GoGo.Services
             return courseModel;
         }
 
-        public ICollection<CourceViewModel> GetAllCources()
+        public ICollection<CourseViewModel> GetAllCourses()
         {
-            var cources = this.courcesRepository.All().ToList();
+            var courses = this.coursesRepository.All().ToList();
 
-            var courceModels = cources.Select(x => mapper.Map<CourceViewModel>(x)).ToList();
+            var courseModels = courses.Select(x => mapper.Map<CourseViewModel>(x)).ToList();
 
-            return courceModels;
+            return courseModels;
         }
 
         public ICollection<UsersResultsViewModel> GetAllParticipants(string id, GoUser user)
         {
-            var users = this.courcesUsersRepository.All();
+            var users = this.coursesUsersRepository.All();
 
-            var course = this.courcesRepository.All().FirstOrDefault(x => x.Id == id);
+            var course = this.coursesRepository.All().FirstOrDefault(x => x.Id == id);
            
             if (course.CreatorId != user.Id)
             {
                 throw new ArgumentException("You can not add results!");
             }
 
-            var usersResult = users.Where(x => x.CourceId == id)
+            var usersResult = users.Where(x => x.CourseId == id)
                 .Select(x => mapper.Map<UsersResultsViewModel>(x)).ToList();
 
-            usersResult.ForEach(x => x.Course = mapper.Map<CourceViewModel>(this.courcesRepository.All()
-                .FirstOrDefault(c=>c.Id == x.CourceId)));
+            usersResult.ForEach(x => x.Course = mapper.Map<CourseViewModel>(this.coursesRepository.All()
+                .FirstOrDefault(c=>c.Id == x.CourseId)));
 
             usersResult.ForEach(x => x.Participant = mapper.Map<GoUserViewModel>(this.usersRepository.All()
                 .FirstOrDefault(u => u.Id == x.ParticipantId)));
@@ -198,25 +198,25 @@ namespace GoGo.Services
 
         public CourseDetailsViewModel GetDetails(int? page, string id)
         {
-            var cource = courcesRepository.All().FirstOrDefault(x => x.Id == id);
+            var course = coursesRepository.All().FirstOrDefault(x => x.Id == id);
 
-            if (cource == null)
+            if (course == null)
             {
                 throw new ArgumentException("Course not exist!");
             }
 
-            var creatorr = this.usersRepository.All().FirstOrDefault(x => x.Id == cource.CreatorId);
+            var creatorr = this.usersRepository.All().FirstOrDefault(x => x.Id == course.CreatorId);
 
             var creator = mapper.Map<GoUserViewModel>(creatorr);
 
-            var participents = this.courcesUsersRepository.All()
-                                            .Where(x => x.CourceId == id)
+            var participents = this.coursesUsersRepository.All()
+                                            .Where(x => x.CourseId == id)
                                             .Select(x => mapper.Map<GoUserViewModel>(x.Participant)).ToList();
 
             var nextPage = page ?? 1;
             var pageParticipantsViewModels = participents.ToPagedList(nextPage, 8);
 
-            var model = mapper.Map<CourseDetailsViewModel>(cource);
+            var model = mapper.Map<CourseDetailsViewModel>(course);
             
             model.Participants = pageParticipantsViewModels;
             model.FreeSeats = model.MaxCountParticipants - participents.Count();
@@ -225,12 +225,12 @@ namespace GoGo.Services
             return model;
         }
 
-        public ICollection<CourceViewModel> GetMyCources(string id)
+        public ICollection<CourseViewModel> GetMyCourses(string id)
         {
-            var courses = this.courcesUsersRepository.All().Where(x => x.ParticipantId == id)
-                .Select(x => this.courcesRepository.All().FirstOrDefault(c=>c.Id == x.CourceId)).ToList();
+            var courses = this.coursesUsersRepository.All().Where(x => x.ParticipantId == id)
+                .Select(x => this.coursesRepository.All().FirstOrDefault(c=>c.Id == x.CourseId)).ToList();
 
-            var coursess = courses.Select(x => mapper.Map<CourceViewModel>(x)).ToList();
+            var coursess = courses.Select(x => mapper.Map<CourseViewModel>(x)).ToList();
 
             return coursess;
         }

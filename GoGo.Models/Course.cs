@@ -5,11 +5,11 @@ using System.Text;
 
 namespace GoGo.Models
 {
-    public class Cource
+    public class Course
     {
-        public Cource()
+        public Course()
         {
-            this.Participants = new List<CourcesUsers>();
+            this.Participants = new List<CoursesUsers>();
         }
 
         public string Id { get; set; }
@@ -35,6 +35,6 @@ namespace GoGo.Models
 
         public Category Category { get; set; }
 
-        public ICollection<CourcesUsers> Participants { get; set; }
+        public ICollection<CoursesUsers> Participants { get; set; }
     }
 }

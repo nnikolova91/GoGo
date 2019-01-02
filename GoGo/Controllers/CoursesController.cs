@@ -1,28 +1,23 @@
 ﻿using GoGo.Models;
-using GoGo.Models.Enums;
 using GoGo.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ViewModels;
 using X.PagedList;
 
-
 namespace GoGo.Controllers
 {
-    public class CourcesController : Controller
+    public class CoursesController : Controller
     {
-        private ICourcesService courcesService;
+        private ICoursesService coursesService;
         private UserManager<GoUser> userManager;
         private SignInManager<GoUser> signInManager;
 
-        public CourcesController(ICourcesService courcesService, UserManager<GoUser> userManager, SignInManager<GoUser> signInManager)
+        public CoursesController(ICoursesService coursesService, UserManager<GoUser> userManager, SignInManager<GoUser> signInManager)
         {
-            this.courcesService = courcesService;
+            this.coursesService = coursesService;
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
@@ -33,7 +28,7 @@ namespace GoGo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateCourceViewModel model)
+        public async Task<IActionResult> Create(CreateCourseViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -41,15 +36,15 @@ namespace GoGo.Controllers
             }
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            await this.courcesService.AddCource(model, user);
+            await this.coursesService.AddCourse(model, user);
 
-            return Redirect("/Cources/All");
+            return Redirect("/Courses/All");
         }
 
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var dest = this.courcesService.FindCourse(id);
+            var dest = this.coursesService.FindCourse(id);
 
             return View(dest);
         }
@@ -58,16 +53,16 @@ namespace GoGo.Controllers
         public async Task<IActionResult> Edit(EditCourseViewModel model)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
-            
-            await this.courcesService.EditCourse(model, user);
 
-            return Redirect($"/Cources/Details/{model.Id}");
+            await this.coursesService.EditCourse(model, user);
+
+            return Redirect($"/Courses/Details/{model.Id}");
         }
 
         [HttpGet]
         public IActionResult Delete(string id)
         {
-            var curse = this.courcesService.FindCourseForDelete(id);
+            var curse = this.coursesService.FindCourseForDelete(id);
 
             return View(curse);
         }
@@ -77,17 +72,17 @@ namespace GoGo.Controllers
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            await this.courcesService.DeleteCourse(id, user);
+            await this.coursesService.DeleteCourse(id, user);
 
-            return Redirect($"/Cources/All");
+            return Redirect($"/Courses/All");
         }
 
         public IActionResult All(int? page)
         {
-            var cources = this.courcesService.GetAllCources();
+            var courses = this.coursesService.GetAllCourses();
 
             var nextPage = page ?? 1;
-            var pageViewModels = cources.ToPagedList(nextPage, 2);
+            var pageViewModels = courses.ToPagedList(nextPage, 2);
 
             return View(pageViewModels);
         }
@@ -96,40 +91,40 @@ namespace GoGo.Controllers
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            var cource = this.courcesService.GetDetails(page, id);
+            var course = this.coursesService.GetDetails(page, id);
 
-            if (cource == null)
+            if (course == null)
             {
                 ViewData["CurrentUser"] = user.Id;
             }
 
-            return View(cource);
+            return View(course);
         }
 
         public async Task<IActionResult> My()
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            var cources = this.courcesService.GetMyCources(user.Id);
+            var courses = this.coursesService.GetMyCourses(user.Id);
 
-            return View(cources);
+            return View(courses);
         }
 
-        public async Task<IActionResult> SignIn(string id) // id(courceId)
+        public async Task<IActionResult> SignIn(string id) // id(courseId)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            await this.courcesService.AddUserToCource(id, user);
+            await this.coursesService.AddUserToCourse(id, user);
 
-            return Redirect($"/Cources/Details/{id}");
+            return Redirect($"/Courses/Details/{id}");
         }
 
         [Authorize]
-        public async Task<IActionResult> AddResults(string id) // id(courceId)
+        public async Task<IActionResult> AddResults(string id) // id(courseId)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            var participants = this.courcesService.GetAllParticipants(id, user);
+            var participants = this.coursesService.GetAllParticipants(id, user);
 
             return View(participants);
         }
@@ -139,9 +134,9 @@ namespace GoGo.Controllers
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
-            await this.courcesService.AddResultToUsersCourses(model, user);
+            await this.coursesService.AddResultToUsersCourses(model, user);
 
-            return Redirect($"/Cources/AddResults/{model.CourceId}");
+            return Redirect($"/Courses/AddResults/{model.CourseId}");
         }
     }
 }

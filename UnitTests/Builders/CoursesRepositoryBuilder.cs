@@ -11,18 +11,18 @@ namespace UnitTests.Builders
 {
     internal class CoursesRepositoryBuilder
     {
-        public Mock<IRepository<Cource>> CoursesRepoMock { get; }
+        public Mock<IRepository<Course>> CoursesRepoMock { get; }
 
         public CoursesRepositoryBuilder()
         {
-            this.CoursesRepoMock = new Mock<IRepository<Cource>>();
+            this.CoursesRepoMock = new Mock<IRepository<Course>>();
         }
         
         internal CoursesRepositoryBuilder WithAll()
         {
-            var courses = new List<Cource>
+            var courses = new List<Course>
             {
-                new Cource
+                new Course
                 {
                     Id = "1",
                     Image = new byte[0],
@@ -35,7 +35,7 @@ namespace UnitTests.Builders
                     Status = Status.Practically,
                     Category = Category.Climbing
                 },
-                 new Cource
+                 new Course
                 {
                     Id = "2",
                     Image = new byte[0],
@@ -48,7 +48,7 @@ namespace UnitTests.Builders
                     Status = Status.Theoretical,
                     Category = Category.Cycling
                 },
-                new Cource
+                new Course
                 {
                     Id = "3",
                     Image = new byte[0],
@@ -68,7 +68,7 @@ namespace UnitTests.Builders
             return this;
         }
 
-        internal IRepository<Cource> Build()
+        internal IRepository<Course> Build()
         {
             return CoursesRepoMock.Object;
         }

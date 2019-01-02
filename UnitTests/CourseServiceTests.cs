@@ -28,9 +28,9 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
-            await sut.AddCource(new ViewModels.CreateCourceViewModel()
+            await sut.AddCourse(new ViewModels.CreateCourseViewModel()
             {
                 Title = "New course",
                 Image = SetupFileMock().Object,
@@ -41,7 +41,7 @@ namespace UnitTests
             },
             new GoUser { Id = "7" });
 
-            coursesRepoBuilder.CoursesRepoMock.Verify(r => r.AddAsync(It.IsAny<Cource>()), Times.Once);
+            coursesRepoBuilder.CoursesRepoMock.Verify(r => r.AddAsync(It.IsAny<Course>()), Times.Once);
             coursesRepoBuilder.CoursesRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
 
@@ -58,14 +58,14 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(courseUserRepo, courseRepo, null, Mapper);
+            var sut = new CoursesService(courseUserRepo, courseRepo, null, Mapper);
 
             var user = new GoUser { Id = "7" };
 
             var courseUser = new UsersResultsViewModel
             {
-                CourceId = "1",
-                Course = new CourceViewModel
+                CourseId = "1",
+                Course = new CourseViewModel
                 {
                     Id = "1",
                     Image = new byte[0],
@@ -85,7 +85,7 @@ namespace UnitTests
 
             await sut.AddResultToUsersCourses(courseUser, user);
 
-            coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.AddAsync(It.IsAny<CourcesUsers>()), Times.Exactly(0));
+            coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.AddAsync(It.IsAny<CoursesUsers>()), Times.Exactly(0));
             coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
 
@@ -102,14 +102,14 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(courseUserRepo, courseRepo, null, Mapper);
+            var sut = new CoursesService(courseUserRepo, courseRepo, null, Mapper);
 
             var user = new GoUser { Id = "7" };
 
             var courseUser = new UsersResultsViewModel
             {
-                CourceId = "7",
-                Course = new CourceViewModel
+                CourseId = "7",
+                Course = new CourseViewModel
                 {
                     Id = "7",
                     Image = new byte[0],
@@ -148,14 +148,14 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(courseUserRepo, courseRepo, null, Mapper);
+            var sut = new CoursesService(courseUserRepo, courseRepo, null, Mapper);
 
             var user = new GoUser { Id = "3" };
 
             var courseUser = new UsersResultsViewModel
             {
-                CourceId = "1",
-                Course = new CourceViewModel
+                CourseId = "1",
+                Course = new CourseViewModel
                 {
                     Id = "1",
                     Image = new byte[0],
@@ -182,7 +182,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public async Task AddUserToCource_ShouldAddNew_CourseUser()
+        public async Task AddUserToCourse_ShouldAddNew_CourseUser()
         {
             var coursesRepoBuilder = new CoursesRepositoryBuilder();
             var courseRepo = coursesRepoBuilder
@@ -194,18 +194,18 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(courseUserRepo, courseRepo, null, Mapper);
+            var sut = new CoursesService(courseUserRepo, courseRepo, null, Mapper);
 
             var user = new GoUser { Id = "7" };
 
-            await sut.AddUserToCource("1", user);
+            await sut.AddUserToCourse("1", user);
 
-            coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.AddAsync(It.IsAny<CourcesUsers>()), Times.Once);
+            coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.AddAsync(It.IsAny<CoursesUsers>()), Times.Once);
             coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
 
         [Fact]
-        public async Task AddUserToCource_ShouldNotAddNew_CourseUser_WhenMaxCountParticipantsIsFully()
+        public async Task AddUserToCourse_ShouldNotAddNew_CourseUser_WhenMaxCountParticipantsIsFully()
         {
             var coursesRepoBuilder = new CoursesRepositoryBuilder();
             var courseRepo = coursesRepoBuilder
@@ -217,32 +217,32 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(courseUserRepo, courseRepo, null, Mapper);
+            var sut = new CoursesService(courseUserRepo, courseRepo, null, Mapper);
 
             var user = new GoUser { Id = "7" };
             var user1 = new GoUser { Id = "8" };
 
-            await sut.AddUserToCource("1", user);
-            await sut.AddUserToCource("1", user1);
+            await sut.AddUserToCourse("1", user);
+            await sut.AddUserToCourse("1", user1);
 
-            coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.AddAsync(It.IsAny<CourcesUsers>()), Times.Exactly(1));
+            coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.AddAsync(It.IsAny<CoursesUsers>()), Times.Exactly(1));
             coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.SaveChangesAsync(), Times.Exactly(1));
         }
 
         [Fact]
         public async Task DeleteCourse_ShouldDeleteCourseCorrectly_IfCourseexist_AndUserIsCreator()
         {
-            Cource deletedCourse = null;
+            Course deletedCourse = null;
 
             var courseRepoBuilder = new CoursesRepositoryBuilder();
-            courseRepoBuilder.CoursesRepoMock.Setup(r => r.Delete(It.IsAny<Cource>()))
-                .Callback<Cource>(c => deletedCourse = c);
+            courseRepoBuilder.CoursesRepoMock.Setup(r => r.Delete(It.IsAny<Course>()))
+                .Callback<Course>(c => deletedCourse = c);
 
             var courseRepo = courseRepoBuilder
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
             var user = new GoUser { Id = "9" };
 
@@ -251,24 +251,24 @@ namespace UnitTests
             Assert.Equal("2", deletedCourse.Id);
             courseRepoBuilder.CoursesRepoMock.Verify();
 
-            courseRepoBuilder.CoursesRepoMock.Verify(d => d.Delete(It.IsAny<Cource>()), Times.Once);
+            courseRepoBuilder.CoursesRepoMock.Verify(d => d.Delete(It.IsAny<Course>()), Times.Once);
             courseRepoBuilder.CoursesRepoMock.Verify(d => d.SaveChangesAsync(), Times.Once);
         }
 
         [Fact]
         public async Task DeleteCourse_ShouldNotDeleteCourse_WhenCourseNotExist()
         {
-            Cource deletedCourse = null;
+            Course deletedCourse = null;
 
             var courseRepoBuilder = new CoursesRepositoryBuilder();
-            courseRepoBuilder.CoursesRepoMock.Setup(r => r.Delete(It.IsAny<Cource>()))
-                .Callback<Cource>(c => deletedCourse = c);
+            courseRepoBuilder.CoursesRepoMock.Setup(r => r.Delete(It.IsAny<Course>()))
+                .Callback<Course>(c => deletedCourse = c);
 
             var courseRepo = courseRepoBuilder
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
             var user = new GoUser { Id = "9" };
 
@@ -277,7 +277,7 @@ namespace UnitTests
             Assert.Null(deletedCourse);
             courseRepoBuilder.CoursesRepoMock.Verify();
 
-            courseRepoBuilder.CoursesRepoMock.Verify(d => d.Delete(It.IsAny<Cource>()), Times.Exactly(0));
+            courseRepoBuilder.CoursesRepoMock.Verify(d => d.Delete(It.IsAny<Course>()), Times.Exactly(0));
             courseRepoBuilder.CoursesRepoMock.Verify(d => d.SaveChangesAsync(), Times.Exactly(0));
         }
 
@@ -291,11 +291,11 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
             await sut.DeleteCourse("2", user);
 
-            coursesRepoBuilder.CoursesRepoMock.Verify(c => c.Delete(It.IsAny<Cource>()), Times.Exactly(0));
+            coursesRepoBuilder.CoursesRepoMock.Verify(c => c.Delete(It.IsAny<Course>()), Times.Exactly(0));
             coursesRepoBuilder.CoursesRepoMock.Verify(d => d.SaveChangesAsync(), Times.Exactly(0));
         }
 
@@ -307,7 +307,7 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
             var editCourseViewModel = new EditCourseViewModel
             {
@@ -345,7 +345,7 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
             var editCourseViewModel = new EditCourseViewModel
             {
@@ -375,7 +375,7 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
             var editCourseViewModel = new EditCourseViewModel
             {
@@ -403,7 +403,7 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
             var actual = sut.FindCourse("3");
 
@@ -420,7 +420,7 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
             var ex = Assert.Throws<ArgumentException>(() => sut.FindCourse("10"));
 
@@ -435,7 +435,7 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
             var actual = sut.FindCourseForDelete("3");
 
@@ -452,7 +452,7 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
             var ex = Assert.Throws<ArgumentException>(() => sut.FindCourseForDelete("10"));
 
@@ -460,19 +460,19 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ GetAllCources_ShouldReturn_All_CourceViewModels()
+        public void/*async Task*/ GetAllCourses_ShouldReturn_All_CourseViewModels()
         {
             var coursesRepoBuilder = new CoursesRepositoryBuilder();
             var courseRepo = coursesRepoBuilder
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
-            var actual = sut.GetAllCources();
-            var expected = new List<CourceViewModel>
+            var actual = sut.GetAllCourses();
+            var expected = new List<CourseViewModel>
             {
-                new CourceViewModel
+                new CourseViewModel
                 {
                     Id = "1",
                     Image = new byte[0],
@@ -484,7 +484,7 @@ namespace UnitTests
                     Status = Status.Practically,
                     Category = Category.Climbing
                 },
-                 new CourceViewModel
+                 new CourseViewModel
                 {
                     Id = "2",
                     Image = new byte[0],
@@ -497,7 +497,7 @@ namespace UnitTests
                     Status = Status.Theoretical,
                     Category = Category.Cycling
                 },
-                  new CourceViewModel
+                  new CourseViewModel
                 {
                     Id = "3",
                     Image = new byte[0],
@@ -514,28 +514,28 @@ namespace UnitTests
             Assert.Equal(expected, actual, new CourseViewModelComparer());
 
             coursesRepoBuilder.CoursesRepoMock.Verify();
-            coursesRepoBuilder.CoursesRepoMock.Verify(d => d.AddAsync(It.IsAny<Cource>()), Times.Never);
+            coursesRepoBuilder.CoursesRepoMock.Verify(d => d.AddAsync(It.IsAny<Course>()), Times.Never);
             coursesRepoBuilder.CoursesRepoMock.Verify(d => d.SaveChangesAsync(), Times.Never);
         }
 
         [Fact]
-        public void/*async Task*/ GetAllCources_ShouldReturn_EmptyCollection_IfIsEmpty()
+        public void/*async Task*/ GetAllCourses_ShouldReturn_EmptyCollection_IfIsEmpty()
         {
-            var courses = new List<Cource>().AsQueryable();
+            var courses = new List<Course>().AsQueryable();
 
-            var courseRepoMock = new Mock<IRepository<Cource>>();
+            var courseRepoMock = new Mock<IRepository<Course>>();
             courseRepoMock.Setup(d => d.All())
                 .Returns(courses).Verifiable();
 
-            var sut = new CourcesService(null, courseRepoMock.Object, null, Mapper);
+            var sut = new CoursesService(null, courseRepoMock.Object, null, Mapper);
 
-            var actual = sut.GetAllCources();
-            var expected = new List<CourceViewModel>().AsQueryable();
+            var actual = sut.GetAllCourses();
+            var expected = new List<CourseViewModel>().AsQueryable();
 
             Assert.Equal(expected, actual, new CourseViewModelComparer());
 
             courseRepoMock.Verify();
-            courseRepoMock.Verify(d => d.AddAsync(It.IsAny<Cource>()), Times.Never);
+            courseRepoMock.Verify(d => d.AddAsync(It.IsAny<Course>()), Times.Never);
             courseRepoMock.Verify(d => d.SaveChangesAsync(), Times.Never);
         }
 
@@ -557,7 +557,7 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(coursUserRepo, courseRepo, userRepo, Mapper);
+            var sut = new CoursesService(coursUserRepo, courseRepo, userRepo, Mapper);
 
             var user = new GoUser { Id = "7" };
 
@@ -567,21 +567,21 @@ namespace UnitTests
             {
                 new UsersResultsViewModel
                 {
-                    CourceId = "1",
+                    CourseId = "1",
                     ParticipantId = "8",
                     Participant = new GoUserViewModel { Id = "8", FirstName = "Niki", },
                     Result = StatusParticitant.Successfully
                 },
                  new UsersResultsViewModel
                 {
-                    CourceId = "1",
+                    CourseId = "1",
                     ParticipantId = "9",
                     Participant = new GoUserViewModel { Id = "9", FirstName = "Pelin"},
                     Result = StatusParticitant.Successfully
                 },
                  new UsersResultsViewModel
                 {
-                    CourceId = "1",
+                    CourseId = "1",
                     ParticipantId = "11",
                     Participant = new GoUserViewModel { Id = "11", FirstName = "Koni"},
                     Result = StatusParticitant.Unsuccessfully
@@ -612,7 +612,7 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(coursUserRepo, courseRepo, null, Mapper);
+            var sut = new CoursesService(coursUserRepo, courseRepo, null, Mapper);
 
             var user = new GoUser { Id = "9" };
 
@@ -642,7 +642,7 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(coursUserRepo, courseRepo, userRepo, Mapper);
+            var sut = new CoursesService(coursUserRepo, courseRepo, userRepo, Mapper);
 
             var actual = sut.GetDetails(1, "2");
 
@@ -678,7 +678,7 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(null, courseRepo, null, Mapper);
+            var sut = new CoursesService(null, courseRepo, null, Mapper);
 
             var ex = Assert.Throws<ArgumentException>(() => sut.GetDetails(1, "7"));
 
@@ -688,7 +688,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ GetMyCources_ShouldReturn_CorrectListOf_CourceViewModels()
+        public void/*async Task*/ GetMyCourses_ShouldReturn_CorrectListOf_CourseViewModels()
         {
             var coursesUsersRepoBuilder = new CoursesUsersRepositoryBuilder();
             var coursUserRepo = coursesUsersRepoBuilder
@@ -700,13 +700,13 @@ namespace UnitTests
                 .WithAll()
                 .Build();
 
-            var sut = new CourcesService(coursUserRepo, courseRepo, null, Mapper);
+            var sut = new CoursesService(coursUserRepo, courseRepo, null, Mapper);
 
-            var actual = sut.GetMyCources("8");
+            var actual = sut.GetMyCourses("8");
 
-            var expected = new List<CourceViewModel>
+            var expected = new List<CourseViewModel>
             {
-                new CourceViewModel
+                new CourseViewModel
                 {
                     Id = "1",
                     Image = new byte[0],

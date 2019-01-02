@@ -11,7 +11,7 @@ using System.Text;
 
 namespace ViewModels
 {
-    public class CreateCourceViewModel
+    public class CreateCourseViewModel
     {
         [Required]
         [Display(Name = "Image")]

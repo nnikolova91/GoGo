@@ -11,38 +11,38 @@ namespace UnitTests.Builders
 {
     internal class CoursesUsersRepositoryBuilder
     {
-        public Mock<IRepository<CourcesUsers>> CoursesUsersRepoMock { get; }
+        public Mock<IRepository<CoursesUsers>> CoursesUsersRepoMock { get; }
 
         public CoursesUsersRepositoryBuilder()
         {
-            this.CoursesUsersRepoMock = new Mock<IRepository<CourcesUsers>>();
+            this.CoursesUsersRepoMock = new Mock<IRepository<CoursesUsers>>();
         }
 
-        public static IQueryable<CourcesUsers> CreateCoursesUsers()
+        public static IQueryable<CoursesUsers> CreateCoursesUsers()
         {
-            return new List<CourcesUsers>
+            return new List<CoursesUsers>
             {
-                 new CourcesUsers
+                 new CoursesUsers
                 {
-                    CourceId = "1",
+                    CourseId = "1",
                     ParticipantId = "8",
                     StatusUser = StatusParticitant.Successfully
                 },
-                 new CourcesUsers
+                 new CoursesUsers
                 {
-                    CourceId = "1",
+                    CourseId = "1",
                     ParticipantId = "9",
                     StatusUser = StatusParticitant.Successfully
                 },
-                 new CourcesUsers
+                 new CoursesUsers
                 {
-                    CourceId = "1",
+                    CourseId = "1",
                     ParticipantId = "11",
                     StatusUser = StatusParticitant.Unsuccessfully
                 },
-                 new CourcesUsers
+                 new CoursesUsers
                 {
-                    CourceId = "2",
+                    CourseId = "2",
                     ParticipantId = "11",
                     StatusUser = StatusParticitant.Unsuccessfully
                 },
@@ -57,7 +57,7 @@ namespace UnitTests.Builders
             return this;
         }
 
-        internal IRepository<CourcesUsers> Build()
+        internal IRepository<CoursesUsers> Build()
         {
             return CoursesUsersRepoMock.Object;
         }

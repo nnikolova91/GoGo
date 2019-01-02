@@ -5,9 +5,9 @@ using ViewModels;
 
 namespace UnitTests.Comparers
 {
-    class CourseViewModelComparer : IEqualityComparer<CourceViewModel>
+    class CourseViewModelComparer : IEqualityComparer<CourseViewModel>
     {
-        public bool Equals(CourceViewModel x, CourceViewModel y)
+        public bool Equals(CourseViewModel x, CourseViewModel y)
         {
             if (x == null && y == null)
             {
@@ -26,7 +26,7 @@ namespace UnitTests.Comparers
                 x.Status == y.Status && x.Category == y.Category;
         }
 
-        public int GetHashCode(CourceViewModel obj)
+        public int GetHashCode(CourseViewModel obj)
         {
             return obj.Id.GetHashCode();
         }

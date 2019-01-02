@@ -18,15 +18,15 @@ namespace Mapping
             CreateMap<GoUserViewModel, GoUser>().ReverseMap();
             CreateMap<CurrentUserViewModel, GoUser>().ReverseMap();
             CreateMap<DestDetailsViewModel, Destination>().ReverseMap();
-            CreateMap<CourceViewModel, Cource>().ReverseMap();
-            CreateMap<CourseDetailsViewModel, Cource>().ReverseMap()
+            CreateMap<CourseViewModel, Course>().ReverseMap();
+            CreateMap<CourseDetailsViewModel, Course>().ReverseMap()
                 .ForMember(d => d.Participants, d => d.Ignore());
 
 
-            CreateMap<UsersResultsViewModel, CourcesUsers>().ReverseMap()
+            CreateMap<UsersResultsViewModel, CoursesUsers>().ReverseMap()
                 .ForMember(x => x.Result, x => x.MapFrom(d => d.StatusUser)); 
             
-            CreateMap<CreateCourceViewModel, Cource>()
+            CreateMap<CreateCourseViewModel, Course>()
                 .ForMember(d => d.Image, d => d.Ignore())
                 .ForMember(d => d.Creator, d => d.Ignore());
 
@@ -49,10 +49,10 @@ namespace Mapping
 
             CreateMap<Destination, DestUserViewModel>().ReverseMap();
             
-                CreateMap<Cource, EditCourseViewModel>()//.ReverseMap()
+                CreateMap<Course, EditCourseViewModel>()//.ReverseMap()
                 .ForMember(d => d.Image, d => d.Ignore());
 
-            CreateMap<Cource, DeleteCourseViewModel>();//.ReverseMap()
+            CreateMap<Course, DeleteCourseViewModel>();//.ReverseMap()
                 //.ForMember(d => d.Image, d => d.Ignore());
         }
         //private static byte[] ImageToByteArray(CreateDestinationViewModel model)

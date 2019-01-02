@@ -36,19 +36,19 @@
     <Content Update="Views\Chats\Chat.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Cources\AddResults.cshtml">
+    <Content Update="Views\Courses\AddResults.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Cources\My.cshtml">
+    <Content Update="Views\Courses\My.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Cources\All.cshtml">
+    <Content Update="Views\Courses\All.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Cources\Create.cshtml">
+    <Content Update="Views\Courses\Create.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Cources\Details.cshtml">
+    <Content Update="Views\Courses\Details.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Destinations\My.cshtml">

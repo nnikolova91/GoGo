@@ -5,10 +5,10 @@ using System.Text;
 
 namespace GoGo.Models
 {
-    public class CourcesUsers
+    public class CoursesUsers
     {
-        public string CourceId { get; set; }
-        public Cource Cource { get; set; }
+        public string CourseId { get; set; }
+        public Course Course { get; set; }
 
         public string ParticipantId { get; set; }
         public GoUser Participant { get; set; }
