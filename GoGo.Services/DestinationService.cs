@@ -192,7 +192,7 @@ namespace GoGo.Services
             var model = mapper.Map<DestDetailsViewModel>(dest);
             model.Creator = this.usersRepository.All().FirstOrDefault(x => x.Id == dest.CreatorId).FirstName;
             model.CurrentUser = goUserModel;
-            model.AllComments = allComments;
+            model.AllComments = allComments.OrderByDescending(x=>x.Date).ToList();
             model.Stories = allStories;
             model.ParticipantsKnowSomeone = usersKnowSomeone;
             model.ParticipantsNotKnowAnyone = usersNotKnowAnyone;

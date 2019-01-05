@@ -1,7 +1,7 @@
 @model ViewModels.UsersResultsViewModel
 
 <form class="mx-auto half-width wiy" method="post" asp-controller="Courses" asp-action="CreateResult" asp-route-courseId="@Model.CourseId" asp-route-participantId="@Model.ParticipantId" enctype="multipart/form-data">
-    <div style="align-content:center">
+    <div >
         @*<label asp-for="Result"><b>Result</b></label>*@
         <div style="align-content:center">
             <h5>Successfully <input type="radio" asp-for="Result" value="Successfully" /></h5>

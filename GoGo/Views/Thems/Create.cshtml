@@ -1,0 +1,24 @@
+﻿@model ViewModels.CreateThemViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<main class="mt-3">
+    <h1 class="text-center">Create Story</h1>
+    <hr class="wiy chushka-bg-color height: 7px" />
+    <form class="mx-auto half-width wiy" method="post" asp-controller="Thems" asp-action="Create">
+        
+        <div class="row">
+            <div class="form-group  inline col-sm-12  text-center">
+                <label asp-for="Description"><b>Description</b></label>
+                <textarea asp-for="Description" type="text" class="form-control" placeholder="Description..."></textarea>
+            </div>
+        </div>
+
+        <hr class="chushka-bg-color height: 7px" />
+        <div class="text-center">
+            <button type="submit" class="btn chushka-bg-color text-center">Add this them</button>
+        </div>
+    </form>
+
+</main>

@@ -4,14 +4,16 @@ using GoGo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GoGo.Data.Migrations
 {
     [DbContext(typeof(GoDbContext))]
-    partial class GoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190103074655_dateToComments")]
+    partial class dateToComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -348,46 +350,6 @@ namespace GoGo.Data.Migrations
                     b.ToTable("Stories");
                 });
 
-            modelBuilder.Entity("GoGo.Models.Them", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AuthorId");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<string>("Description");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.ToTable("Thems");
-                });
-
-            modelBuilder.Entity("GoGo.Models.ThemComment", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AuthorId");
-
-                    b.Property<string>("Content");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<string>("ThemId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("ThemId");
-
-                    b.ToTable("ThemComments");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -597,24 +559,6 @@ namespace GoGo.Data.Migrations
                         .WithMany("Stories")
                         .HasForeignKey("DestinationId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("GoGo.Models.Them", b =>
-                {
-                    b.HasOne("GoGo.Models.GoUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-                });
-
-            modelBuilder.Entity("GoGo.Models.ThemComment", b =>
-                {
-                    b.HasOne("GoGo.Models.GoUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-
-                    b.HasOne("GoGo.Models.Them", "Them")
-                        .WithMany("ThemComments")
-                        .HasForeignKey("ThemId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

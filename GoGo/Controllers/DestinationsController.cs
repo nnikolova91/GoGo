@@ -54,12 +54,13 @@ namespace GoGo.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             var dest = this.destinationService.FindEditDestination(id, user);
+            //ViewBag["destId"] = id;
 
             if (dest == null)
             {
                 throw new ArgumentException("You can not edit this page");  
             }
-            return View();
+            return View(dest);
         }
 
         [HttpPost]

@@ -59,7 +59,7 @@ namespace GoGo.Services
                 .FirstOrDefault(x => x.CourseId == model.CourseId && x.ParticipantId == model.ParticipantId);
 
             var course = this.coursesRepository.All().FirstOrDefault(x => x.Id == model.CourseId);
-            
+
             if (userCouse == null)
             {
                 throw new ArgumentException("This userCourse not exist!");
@@ -87,7 +87,8 @@ namespace GoGo.Services
             };
 
             if (this.coursesUsersRepository.All().FirstOrDefault(x => x.ParticipantId == user.Id && x.CourseId == course.Id) == null
-                && course.MaxCountParticipants > this.coursesUsersRepository.All().Where(x => x.CourseId == course.Id).Count())
+                && course.MaxCountParticipants > this.coursesUsersRepository.All().Where(x => x.CourseId == course.Id).Count()
+                && DateTime.Now < course.StartDate)
             {
                 await this.coursesUsersRepository.AddAsync(userCourse);
                 await this.coursesUsersRepository.SaveChangesAsync();
@@ -178,7 +179,7 @@ namespace GoGo.Services
             var users = this.coursesUsersRepository.All();
 
             var course = this.coursesRepository.All().FirstOrDefault(x => x.Id == id);
-           
+
             if (course.CreatorId != user.Id)
             {
                 throw new ArgumentException("You can not add results!");
@@ -188,7 +189,7 @@ namespace GoGo.Services
                 .Select(x => mapper.Map<UsersResultsViewModel>(x)).ToList();
 
             usersResult.ForEach(x => x.Course = mapper.Map<CourseViewModel>(this.coursesRepository.All()
-                .FirstOrDefault(c=>c.Id == x.CourseId)));
+                .FirstOrDefault(c => c.Id == x.CourseId)));
 
             usersResult.ForEach(x => x.Participant = mapper.Map<GoUserViewModel>(this.usersRepository.All()
                 .FirstOrDefault(u => u.Id == x.ParticipantId)));
@@ -210,14 +211,20 @@ namespace GoGo.Services
             var creator = mapper.Map<GoUserViewModel>(creatorr);
 
             var participents = this.coursesUsersRepository.All()
-                                            .Where(x => x.CourseId == id)
-                                            .Select(x => mapper.Map<GoUserViewModel>(x.Participant)).ToList();
+                                            .Where(x => x.CourseId == id).Select(x => x).ToList();
+
+            participents.ForEach(x => x.Participant = this.usersRepository.All().FirstOrDefault(u => u.Id == x.ParticipantId));
+
+            var part = participents.Select(x => mapper.Map<GoUserViewModel>(x.Participant)).ToList();
+
+            part.ForEach(x => x.StatusParticitant = this.coursesUsersRepository
+                                            .All().FirstOrDefault(c => c.CourseId == id && c.ParticipantId == x.Id).StatusUser);
 
             var nextPage = page ?? 1;
-            var pageParticipantsViewModels = participents.ToPagedList(nextPage, 8);
+            var pageParticipantsViewModels = part.ToPagedList(nextPage, 8);
 
             var model = mapper.Map<CourseDetailsViewModel>(course);
-            
+
             model.Participants = pageParticipantsViewModels;
             model.FreeSeats = model.MaxCountParticipants - participents.Count();
             model.Creator = creator;
@@ -228,7 +235,7 @@ namespace GoGo.Services
         public ICollection<CourseViewModel> GetMyCourses(string id)
         {
             var courses = this.coursesUsersRepository.All().Where(x => x.ParticipantId == id)
-                .Select(x => this.coursesRepository.All().FirstOrDefault(c=>c.Id == x.CourseId)).ToList();
+                .Select(x => this.coursesRepository.All().FirstOrDefault(c => c.Id == x.CourseId)).ToList();
 
             var coursess = courses.Select(x => mapper.Map<CourseViewModel>(x)).ToList();
 

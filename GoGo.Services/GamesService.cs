@@ -108,7 +108,7 @@ namespace GoGo.Services
         public ICollection<GameViewModel> GetAllGames()
         {
             var gamesModels = this.gamesRepository.All()
-                .Select(x => new GameViewModel { Id = x.Id, Name = x.Name, Image = x.Image }).ToList();
+                .Select(x => mapper.Map<GameViewModel>(x)).ToList();
 
             return gamesModels;
         }
@@ -128,37 +128,28 @@ namespace GoGo.Services
                 .OrderBy(x => x.NumberInGame).ToList();
 
             var gameParticipantsLevel1 = this.levelsParticipantRepository.All()
-                .Where(l => l.GameId == id && l.LevelId == levels[0].Id && l.StatusLevel == StatusLevel.NotPassed).Select(x => new GameLevelParticipantViewModel
-                {
-                    GameId = x.GameId,
-                    LevelId = x.LevelId,
-                    ParticipantId = x.ParticipantId,
-                    Participant = x.Participant.FirstName + " " + x.Participant.LastName,
-                    CorrespondingImage = x.CorrespondingImage,
-                    StatusLevel = x.StatusLevel
-                }).ToList();
+                .Where(l => l.GameId == id && l.LevelId == levels[0].Id && l.StatusLevel == StatusLevel.NotPassed)
+                .Select(x => mapper.Map<GameLevelParticipantViewModel>(x)).ToList();
+
+            gameParticipantsLevel1.ForEach(x => x.Participant = this.usersRepository
+                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).FirstName + " " + this.usersRepository
+                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).LastName);
 
             var gameParticipantsLevel2 = this.levelsParticipantRepository.All()
-                .Where(l => l.GameId == id && l.LevelId == levels[1].Id && l.StatusLevel == StatusLevel.NotPassed).Select(x => new GameLevelParticipantViewModel
-                {
-                    GameId = x.GameId,
-                    LevelId = x.LevelId,
-                    ParticipantId = x.ParticipantId,
-                    Participant = x.Participant.FirstName + " " + x.Participant.LastName,
-                    CorrespondingImage = x.CorrespondingImage,
-                    StatusLevel = x.StatusLevel
-                }).ToList();
+                                            .Where(l => l.GameId == id && l.LevelId == levels[1].Id && l.StatusLevel == StatusLevel.NotPassed)
+                                            .Select(x => mapper.Map<GameLevelParticipantViewModel>(x)).ToList();
+
+            gameParticipantsLevel2.ForEach(x => x.Participant = this.usersRepository
+                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).FirstName + " " + this.usersRepository
+                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).LastName);
 
             var gameParticipantsLevel3 = this.levelsParticipantRepository.All()
-                .Where(l => l.GameId == id && l.LevelId == levels[2].Id && l.StatusLevel == StatusLevel.NotPassed).Select(x => new GameLevelParticipantViewModel
-                {
-                    GameId = x.GameId,
-                    LevelId = x.LevelId,
-                    ParticipantId = x.ParticipantId,
-                    Participant = x.Participant.FirstName + " " + x.Participant.LastName,
-                    CorrespondingImage = x.CorrespondingImage,
-                    StatusLevel = x.StatusLevel
-                }).ToList();
+                                            .Where(l => l.GameId == id && l.LevelId == levels[2].Id && l.StatusLevel == StatusLevel.NotPassed)
+                                            .Select(x => mapper.Map<GameLevelParticipantViewModel>(x)).ToList();
+
+            gameParticipantsLevel3.ForEach(x => x.Participant = this.usersRepository
+                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).FirstName + " " + this.usersRepository
+                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).LastName);
 
             var gameModel = new GameDetailsViewModel
             {
@@ -229,6 +220,11 @@ namespace GoGo.Services
             var gameLevelParticipant = this.levelsParticipantRepository.All()
                 .FirstOrDefault(x => x.GameId == model.GameId && x.LevelId == model.LevelId
                 && x.ParticipantId == model.ParticipantId);
+
+            if (gameLevelParticipant == null)
+            {
+                throw new ArgumentException("This GameLeveelParticipant not exist!");
+            }
 
             gameLevelParticipant.StatusLevel = model.StatusLevel;
 

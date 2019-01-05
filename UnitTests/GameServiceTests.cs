@@ -373,47 +373,89 @@ namespace UnitTests
             levelsParticipantsRepoBuilder.LevelParticipantRepoMock.Verify(r => r.SaveChangesAsync(), Times.Never);
         }
 
-        //[Fact]
-        //public async Task AddLevelResult_ShouldAddResultToGameLevelUserCorrect()
-        //{
-        //    var userRepoBuilder = new GoUserRepositoryBuilder();
-        //    var userRepo = userRepoBuilder
-        //        .WithAll()
-        //        .Build();
+        [Fact]
+        public async Task AddLevelResult_ShouldAddResultToGameLevelUserCorrect()
+        {
+            var userRepoBuilder = new GoUserRepositoryBuilder();
+            var userRepo = userRepoBuilder
+                .WithAll()
+                .Build();
 
-        //    var levelsRepoBuilder = new LevelRepositoryBuilder();
-        //    var levelRepo = levelsRepoBuilder
-        //        .WithAll()
-        //        .Build();
+            var levelsRepoBuilder = new LevelRepositoryBuilder();
+            var levelRepo = levelsRepoBuilder
+                .WithAll()
+                .Build();
 
-        //    var levelsParticipantsRepoBuilder = new GameLevelParticipantRepositoryBuilder();
-        //    var levelsParticipantsRepo = levelsParticipantsRepoBuilder
-        //        .WithAll()
-        //        .Build();
+            var levelsParticipantsRepoBuilder = new GameLevelParticipantRepositoryBuilder();
+            var levelsParticipantsRepo = levelsParticipantsRepoBuilder
+                .WithAll()
+                .Build();
 
-        //    var sut = new GamesService(null, levelRepo, levelsParticipantsRepo, userRepo, Mapper);
+            var sut = new GamesService(null, levelRepo, levelsParticipantsRepo, userRepo, Mapper);
 
-        //    var user = new GoUser { Id = "1" };
+            var user = new GoUser { Id = "1" };
 
-        //    var gameLevelUserViewModel = new GameLevelParticipantViewModel
-        //    {
-        //        GameId = "7",
-        //        LevelId = "3",
-        //        ParticipantId = "10",
-        //        Participant = "Saso",
-        //        CorrespondingImage = ConvertImageToByteArray(SetupFileMock().Object),
-        //        StatusLevel = StatusLevel.NotPassed
-        //    };
+            var gameLevelUserViewModel = new GameLevelParticipantViewModel
+            {
+                GameId = "7",
+                LevelId = "3",
+                ParticipantId = "10",
+                Participant = "Saso",
+                CorrespondingImage = ConvertImageToByteArray(SetupFileMock().Object),
+                StatusLevel = StatusLevel.SuccessfullyPassed
+            };
 
-        //    await sut.AddLevelResult(gameLevelUserViewModel, user);
+            await sut.AddLevelResult(gameLevelUserViewModel, user);
 
-        //    userRepoBuilder.UsersRepoMock.Verify();
-        //    levelsRepoBuilder.LevelsRepoMock.Verify();
-        //    levelsParticipantsRepoBuilder.LevelParticipantRepoMock.Verify();
+            userRepoBuilder.UsersRepoMock.Verify();
+            levelsRepoBuilder.LevelsRepoMock.Verify();
+            levelsParticipantsRepoBuilder.LevelParticipantRepoMock.Verify();
 
-        //    userRepoBuilder.UsersRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
-        //    levelsParticipantsRepoBuilder.LevelParticipantRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
-        //}
+            userRepoBuilder.UsersRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
+            levelsParticipantsRepoBuilder.LevelParticipantRepoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task AddLevelResult_ShouldThrow_IfGameLevelParticipantNotExist()
+        {
+            var userRepoBuilder = new GoUserRepositoryBuilder();
+            var userRepo = userRepoBuilder
+                .WithAll()
+                .Build();
+
+            var levelsRepoBuilder = new LevelRepositoryBuilder();
+            var levelRepo = levelsRepoBuilder
+                .WithAll()
+                .Build();
+
+            var levelsParticipantsRepoBuilder = new GameLevelParticipantRepositoryBuilder();
+            var levelsParticipantsRepo = levelsParticipantsRepoBuilder
+                .WithAll()
+                .Build();
+
+            var sut = new GamesService(null, levelRepo, levelsParticipantsRepo, userRepo, Mapper);
+
+            var user = new GoUser { Id = "1" };
+
+            var gameLevelUserViewModel = new GameLevelParticipantViewModel
+            {
+                GameId = "7",
+                LevelId = "6",
+                ParticipantId = "10",
+                Participant = "Saso",
+                CorrespondingImage = ConvertImageToByteArray(SetupFileMock().Object),
+                StatusLevel = StatusLevel.SuccessfullyPassed
+            };
+            
+            var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await sut.AddLevelResult(gameLevelUserViewModel, user));
+
+            Assert.Equal("This GameLeveelParticipant not exist!", ex.Message);
+            
+            levelsParticipantsRepoBuilder.LevelParticipantRepoMock.Verify();
+
+            userRepoBuilder.UsersRepoMock.Verify(r => r.SaveChangesAsync(), Times.Never);
+            levelsParticipantsRepoBuilder.LevelParticipantRepoMock.Verify(r => r.SaveChangesAsync(), Times.Never);
+        }
 
         private static byte[] ConvertImageToByteArray(IFormFile image)
         {

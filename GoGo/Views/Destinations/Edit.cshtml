@@ -6,11 +6,11 @@
 
 <h2>Edit</h2>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<div @*class="row"*@>
+    <div @*class="col-md-4"*@>
         <form asp-action="Edit" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="All" class="text-danger"></div>
-
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
             <div class="form-group">
                 <label asp-for="Naame" class="control-label"></label>
                 <input asp-for="Naame" class="form-control" />
@@ -49,18 +49,22 @@
                 <span asp-validation-for="Image" class="text-danger"></span>
                 <img id="blah" src="#" alt="your image" />
             </div>
+            @*<div class="form-group">
+            <button type="submit" value="Save">Edit destination</button>
+        </div>*@
             <div class="form-group">
-                @*<input type="submit" value="Save" class="btn btn-default" />*@
-                @*<button type="submit" value="Save" asp-action="Edit" asp-controller="Destinations" asp-route-id="@Model.Id" />*@
-                <button type="submit" value="Save">Edit destination</button>
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </form>
     </div>
+    @*<form method="get">
+        <div>
+            <button asp-action="Details" asp-controller="Destinations" class="btn btn-outline-danger">Back To Destination</button>
+        </div>
+    </form>*@
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

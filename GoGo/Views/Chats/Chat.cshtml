@@ -6,14 +6,12 @@
 <br />
 <br />
 <br />
-
 @foreach (var user in Model)
 {
     <label>@user.Username</label>
     <input id="@(user.Id + "inputMessage")" type="text" />
     <button onclick="SendMessage('@user.Id')">Send Message</button>
 }
-
 <div class="row">
     <div class="col-12">
         <hr />

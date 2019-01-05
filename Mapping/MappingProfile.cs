@@ -14,18 +14,30 @@ namespace Mapping
         public MappingProfile()
         {
             // Add as many of these lines as you need to map your objects
-            CreateMap<DestViewModel, Destination >().ReverseMap();
-            CreateMap<GoUserViewModel, GoUser>().ReverseMap();
+            CreateMap<DestViewModel, Destination>().ReverseMap();
+            CreateMap<GoUserViewModel, GoUser>().ReverseMap()
+                .ForMember(u => u.StatusParticitant, u => u.Ignore());
+
             CreateMap<CurrentUserViewModel, GoUser>().ReverseMap();
             CreateMap<DestDetailsViewModel, Destination>().ReverseMap();
             CreateMap<CourseViewModel, Course>().ReverseMap();
             CreateMap<CourseDetailsViewModel, Course>().ReverseMap()
                 .ForMember(d => d.Participants, d => d.Ignore());
 
+            CreateMap<GameViewModel, Game>().ReverseMap();
+
+            CreateMap<GameLevelParticipantViewModel, GameLevelParticipant>().ReverseMap()
+            .ForMember(x => x.Participant, x => x.MapFrom(t => t.Participant.FirstName + " " + t.Participant.LastName));
+
+            CreateMap<ThemDetailsViewModel, Theme>().ReverseMap()
+            .ForMember(x => x.Author, x => x.MapFrom(t => t.Author.FirstName + " " + t.Author.LastName));
+
+            CreateMap<ThemCommentViewModel, ThemComment>().ReverseMap()
+            .ForMember(x => x.Author, x => x.MapFrom(t => t.Author.FirstName + " " + t.Author.LastName));
 
             CreateMap<UsersResultsViewModel, CoursesUsers>().ReverseMap()
-                .ForMember(x => x.Result, x => x.MapFrom(d => d.StatusUser)); 
-            
+                .ForMember(x => x.Result, x => x.MapFrom(d => d.StatusUser));
+
             CreateMap<CreateCourseViewModel, Course>()
                 .ForMember(d => d.Image, d => d.Ignore())
                 .ForMember(d => d.Creator, d => d.Ignore());
@@ -33,7 +45,7 @@ namespace Mapping
             CreateMap<CommentViewModel, Comment>().ReverseMap();
 
             CreateMap<LevelViewModel, Level>().ReverseMap();
-                //.ForMember(d => d.Image, d => d.Ignore());
+            //.ForMember(d => d.Image, d => d.Ignore());
 
             CreateMap<CreateDestinationViewModel, Destination>()
                 .ForMember(d => d.Image, d => d.Ignore());
@@ -48,12 +60,12 @@ namespace Mapping
                 .ForMember(d => d.Image, d => d.Ignore());
 
             CreateMap<Destination, DestUserViewModel>().ReverseMap();
-            
-                CreateMap<Course, EditCourseViewModel>()//.ReverseMap()
-                .ForMember(d => d.Image, d => d.Ignore());
+
+            CreateMap<Course, EditCourseViewModel>()//.ReverseMap()
+            .ForMember(d => d.Image, d => d.Ignore());
 
             CreateMap<Course, DeleteCourseViewModel>();//.ReverseMap()
-                //.ForMember(d => d.Image, d => d.Ignore());
+                                                       //.ForMember(d => d.Image, d => d.Ignore());
         }
         //private static byte[] ImageToByteArray(CreateDestinationViewModel model)
         //{
@@ -70,5 +82,5 @@ namespace Mapping
         //    return file;
         //}
     }
-    
+
 }

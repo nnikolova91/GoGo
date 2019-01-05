@@ -191,7 +191,16 @@
                 <li class="nav-item active">
                     <a asp-area="" asp-controller="Chats" asp-action="Chat" class="navbar-brand">Chat</a>
                 </li>
-
+                <li class=" nav-item active nav-item dropdown">
+                    <a class="nav-link dropdown-toggle  navbar-brand" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Thems
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" asp-controller="Thems" asp-action="All">All Thems</a>
+                        @if (this.User.Identity.IsAuthenticated)
+                        {<a class="dropdown-item" asp-controller="Thems" asp-action="Create">Create Them</a>}
+                    </div>
+                </li>
                 <li class=" nav-item active nav-item dropdown">
                     <a class="nav-link dropdown-toggle  navbar-brand" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Destinations
@@ -218,12 +227,14 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" asp-controller="Games" asp-action="All">All Games</a>
-                        <a class="dropdown-item" asp-controller="Games" asp-action="Create">Create Game</a>
+                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                        {<a class="dropdown-item" asp-controller="Games" asp-action="Create">Create Game</a>}
                     </div>
                 </li>
                 <li class="nav-item active">
                     <a asp-area="" asp-controller="Stories" asp-action="All" class="navbar-brand">Stories</a>
                 </li>
+
             </ul>
             <ul class="navbar-right mr-auto">
                 <partial name="_LoginPartial" />

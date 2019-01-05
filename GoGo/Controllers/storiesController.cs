@@ -62,7 +62,7 @@ namespace GoGo.Controllers
 
             var nextPage = page ?? 1;
             var pageViewModels = myStories.ToPagedList(nextPage, 7);
-
+            
             return View(pageViewModels);
         }
 
@@ -79,8 +79,18 @@ namespace GoGo.Controllers
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             await this.storiesService.LikeStory(id, user);
-
+            
             return Redirect($"/Stories/Details/{id}");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> LikeFromAll(string id) //id(storyId)
+        {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
+            await this.storiesService.LikeStory(id, user);
+
+            return Redirect($"/Stories/All");
         }
     }
 }

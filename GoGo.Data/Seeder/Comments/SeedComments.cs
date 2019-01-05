@@ -32,6 +32,7 @@ namespace GoGo.Data.Seeder.Comments
                         {
                             Comentator = randomUser,
                             ComentatorId = randomUser.Id,
+                            Date = DateTime.Now.AddSeconds(-k),
                             Destination = dest,
                             DestinationId = dest.Id,
                             Content = comments.OrderBy(x => Guid.NewGuid()).First()

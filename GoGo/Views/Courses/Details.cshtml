@@ -7,6 +7,7 @@
     ViewData["Title"] = "Create";
 }
 
+@{var user = await UserManager.GetUserAsync(this.User);}
 <main class="mt-3">
 
     <div class="card-group">
@@ -17,54 +18,60 @@
             <div class="card-body" style="text-align:left">
                 <p class="card-title">@Model.Title</p>
                 <p class="card-text">@Model.Description</p>
-                <a class="card-text">End date to join: @Model.StartDate</a>
-                <a class="card-text" style="padding-left:70px;">Start date: @Model.DurationOfDays</a>
+                <a class="card-text">Start date: @Model.StartDate</a>
+                <a class="card-text" style="padding-left:70px;">Duration of days: @Model.DurationOfDays</a>
                 <a class="card-text" style="padding-left:70px;">Count of hours: @Model.CountOfHours</a>
                 <a class="card-text" style="padding-left:70px;">Max count participants: @Model.MaxCountParticipants</a>
                 <a class="card-text" style="padding-left:70px;">Free seats: @Model.FreeSeats</a>
                 <a class="card-text" style="padding-left:70px;">
                     This course was created from: <b>@Model.Creator.FirstName</b>
                     @*@{ var base61 = Convert.ToBase64String(Model.Creator.Image);
-                        var imgSrr = String.Format("data:image/gif;base64,{0}", base61); }
-                    <img src="@imgSrr" style="width:40px;height:20px; border-radius:30px 40px;">*@
+                            var imgSrr = String.Format("data:image/gif;base64,{0}", base61); }
+                        <img src="@imgSrr" style="width:40px;height:20px; border-radius:30px 40px;">*@
                 </a>
             </div>
         </div>
     </div>
+    @if (this.User.Identity.IsAuthenticated && Model.Participants.FirstOrDefault(x => x.Id == user.Id) != null)
+    {
+        var userr = Model.Participants.FirstOrDefault(x => x.Id == user.Id);
+        if (userr.StatusParticitant == GoGo.Models.Enums.StatusParticitant.Successfully)
+        {
+            <h6 style="color:green">You are Successfully passed this course!</h6>
+        }
 
-
-
+    }
     <div class="form-inline" style="justify-content:center; padding-top:20px;">
-        @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == this.User.Identity.Name)
+        @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == user.FirstName)
         {
             <form method="get" asp-action="Delete" asp-controller="Courses" asp-route-id="@Model.Id">
-                <div class="text-center " style="padding-bottom:20px; padding-top:200px;">
-                    <button class="class=" btn btn-primary"">Delete Course</button>
+                <div class="text-center " style="padding-bottom:20px; padding-top:20px;">
+                    <button class=" btn btn-primary">Delete Course</button>
                 </div>
             </form>
         }
 
-        @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == this.User.Identity.Name)
+        @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == user.FirstName)
         {
             <form method="get" asp-action="Edit" asp-controller="Courses" asp-route-id="@Model.Id">
-                <div class="text-center" style="padding-bottom:20px; padding-top:200px;">
+                <div class="text-center" style="padding-bottom:20px; padding-top:20px;">
                     <button class="btn btn-success">Edit Course</button>
                 </div>
             </form>
         }
 
-        @*@if (this.User.Identity.IsAuthenticated && this.User.Identity.Name == Model.Creator.FirstName)
-        {*@
+        @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == user.FirstName)
+        {
             <form asp-action="AddResults" asp-controller="Courses" asp-route-id="@Model.Id">
                 <div class="text-center">
                     <button class="btn btn-danger">Add results</button>
                 </div>
 
             </form>
-        @*}*@
+        }
         @if (this.User.Identity.IsAuthenticated)
         {
-            if (Model.FreeSeats > 0)
+            if (Model.FreeSeats > 0 && Model.Participants.FirstOrDefault(x => x.Id == user.Id) == null && DateTime.Now < Model.StartDate)
             {
                 <form asp-action="SignIn" asp-controller="Courses" asp-route-id="@Model.Id">
                     <div class="text-center">
@@ -72,15 +79,6 @@
                     </div>
                 </form>
             }
-            else
-            {
-                <div class="text-center">
-                    <div class="alert alert-primary" role="alert">
-                        <button class="btn btn-info" onclick="myFunction1()">Have Part</button>
-                    </div>
-                </div>
-            }
-
         }
         else
         {
@@ -116,7 +114,7 @@
                 </div>
             } }
     </div>
-    <div @*style="padding-left:800px; padding-top:200px;"*@>
+    <div @*style="padding-left:800px; padding-top:200px;" *@>
         @Html.PagedListPager((IPagedList)Model.Participants, page => Url.Action("Details", new { page }))
     </div>
 

@@ -5,7 +5,37 @@
 <main class="mt-10 mb-5">
     <h1 class="text-center">All Participants</h1>
     <hr class="hr-2 bg-dark" />
-    <table class="table w-75 mx-auto table-hover">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th class="col-md-3">Participant</th>
+                <th class="col-md-6">Result</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int counter = 1;}
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@counter</th>
+                    <td>
+                        @{ var base65 = Convert.ToBase64String(@item.Participant.Image);
+                            var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
+                            <img src="@imgSrcc" style=" text-align:left">
+                        }
+                        @item.Participant.FirstName
+                    </td>
+                    <td>
+                        @{
+                            await Html.RenderPartialAsync("_ResultsPartial", @item);
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @*<table class="table w-75 mx-auto table-hover">
         <thead>
             <tr class="row">
                 <th class="col-md-1">#</th>
@@ -44,7 +74,7 @@
             }
 
         </tbody>
-    </table>
+    </table>*@
 </main>
 
 

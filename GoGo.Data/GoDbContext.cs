@@ -33,6 +33,10 @@ namespace GoGo.Data
 
         public DbSet<Level> Levels { get; set; }
 
+        public DbSet<Theme> Thems { get; set; }
+
+        public DbSet<ThemComment> ThemComments { get; set; }
+
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    optionsBuilder.UseSqlServer("server=DESKTOP-JVV1OQ7\\SQLEXPRESS;database=GoGo;Integrated Security=true").UseLazyLoadingProxies();
@@ -42,6 +46,11 @@ namespace GoGo.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ThemComment>()
+                .HasOne(s => s.Them)
+                .WithMany(c => c.ThemComments)
+                .HasForeignKey(t => t.ThemId); ;
 
             modelBuilder.Entity<Destination>()
                 .HasMany<Comment>(s => s.Comments)

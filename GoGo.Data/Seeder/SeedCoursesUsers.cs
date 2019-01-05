@@ -18,7 +18,7 @@ namespace GoGo.Data.Seeder
 
                 foreach (var course in allCourses)
                 {
-                    var countParticipans = new Random().Next(1, 20);
+                    var countParticipans = new Random().Next(1, course.MaxCountParticipants);
 
                     for (int k = 0; k < countParticipans; k++)
                     {

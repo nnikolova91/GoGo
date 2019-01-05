@@ -47,7 +47,7 @@ namespace GoGo
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            
+
             services.AddScoped(typeof(IDestinationService), typeof(DestinationService));
             services.AddScoped(typeof(ICommentsService), typeof(CommentsService));
             services.AddScoped(typeof(IStoriesService), typeof(StoriesService));
@@ -55,6 +55,7 @@ namespace GoGo
             services.AddScoped(typeof(ICoursesService), typeof(CoursesService));
             services.AddScoped(typeof(IGamesService), typeof(GamesService));
             services.AddScoped(typeof(IChatService), typeof(ChatService));
+            services.AddScoped(typeof(IThemService), typeof(ThemService));
 
             services.AddDbContext<GoDbContext>(options =>
             {
@@ -69,7 +70,7 @@ namespace GoGo
                 .AddEntityFrameworkStores<GoDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
-            
+
             services.AddAuthentication().AddCookie();//--------
 
             // Auto Mapper Configurations
@@ -81,7 +82,7 @@ namespace GoGo
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
             services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
-            
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSignalR();
@@ -105,23 +106,23 @@ namespace GoGo
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            
+
             app.UseAuthentication();
-            
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-                
+
             });
 
-           DummyData.Initialize(context, userManager, roleManager, serviceProvider).Wait(); //seed here
-           
+            DummyData.Initialize(context, userManager, roleManager, serviceProvider).Wait(); //seed here
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chatHub");

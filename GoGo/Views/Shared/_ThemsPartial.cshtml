@@ -1,0 +1,48 @@
+@model System.Collections.Generic.IEnumerable<ViewModels.ThemDetailsViewModel>
+
+@if (Model == null)
+{
+    <h1></h1>
+}
+else
+{
+
+    @foreach (var item in Model.OrderByDescending(x=>x.Date))
+    {
+        <div class="card" style="text-align:left">
+            <p class="card-header">
+                Author: @item.Author ________
+                <a style="text-align:end !important" class="card-title">@item.Date</a>
+            </p>
+            <div class="card-body">
+
+                <p class="card-title">@item.Description</p>
+                
+                    <form style="text-align:left !important" asp-action="Details" asp-controller="Thems" asp-route-themId="@item.Id">
+                        @if (this.User.Identity.IsAuthenticated)
+                        {
+                            <div>
+                                <button  class="btn btn-primary">Read more</button>
+                            </div>
+                        }
+                    </form>
+                
+                @*@if (this.User.Identity.IsAuthenticated)
+                    {
+                        <div style="align-content:flex-start">
+                            <form mothod="post" asp-action="AddComment" asp-controller="Thems" asp-route-id="@item.Id">
+                                <div class="form-group" style="width: 38rem; text-align:left;">
+                                    <label asp-for="@item.CurrentComment"><b>Add Comment</b></label>
+                                    <textarea asp-for="@item.CurrentComment" class="form-control"></textarea>
+                                    <span asp-validation-for="@item.CurrentComment" class="text-danger"></span>
+                                    <div style="text-align:end">
+                                        <button type="submit" class="btn ">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    }*@
+            </div>
+        </div>
+    }
+}

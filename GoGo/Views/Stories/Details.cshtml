@@ -8,43 +8,23 @@
 
 <main class="mt-3">
 
-    
-    <h6>------------------------------------------------------------------------------------------</h6>
-    <div style="margin-left:300px; margin-right:300px;">
-        <h4> @Model.Title</h4>
-        <h6>------------------------------------------------------------------------------------------</h6>
-        <h5> @Model.Content</h5>
-        <h6>Author: @Model.Author</h6>
-        <h5>@Model.PeopleWhosLikeThis peole like this</h5>
-    </div>
-
-        <h6>------------------------------------------------------------------------------------------</h6>
-        
-    <hr />
-    <form>
-        @*@if (ViewData["Controller"] == "Destinations")
-        {*@
-            <div class="text-center">
-                <button asp-action="Details" asp-controller="Destinations" asp-route-id="@Model.DestinationId" class="btn chushka-bg-color text-center">Back</button>
-                <h6>-------------------------------------------------------------------------------------------</h6>
-            </div>
-        @*}
-        else if (ViewData["Controller"] == "Stories")
-        {
-        <div class="text-center">
-            <button asp-action="My" asp-controller="Stories" asp-route-id="@Model.AuthorId" class="btn chushka-bg-color text-center">Back</button>
-            <h6>-------------------------------------------------------------------------------------------</h6>
+    <div class="card">
+        <h5 class="card-header">@Model.Title</h5>
+        <div class="card-body">
+            <a class="card-title">Author: @Model.Author</a>
+            <p class="card-title">@Model.PeopleWhosLikeThis peole like this</p>
+            <p class="card-text">@Model.Content</p>
+            <form style="text-align:center !important">
+                @*<div class="text-center">*@
+                <button asp-action="Details" asp-controller="Destinations" asp-route-id="@Model.DestinationId" class="btn btn-primary">Back</button>
+                @*</div>*@
+                @if (this.User.Identity.IsAuthenticated)
+                {
+                    @*<div class="text-center">*@
+                    <button asp-action="Like" asp-controller="Stories" asp-route-id="@Model.Id" class="btn btn-primary">Like</button>
+                    @*</div>*@
+                }
+            </form>
         </div>
-        }*@
-
-
-        @if (this.User.Identity.IsAuthenticated)
-        {
-            <div class="text-center">
-                <button asp-action="Like" asp-controller="Stories" asp-route-id="@Model.Id" class="btn chushka-bg-color text-center">Like</button>
-                <h6>-------------------------------------------------------------------------------------------</h6>
-            </div>
-        }
-    </form>
-
+    </div>
 </main>

@@ -3,6 +3,7 @@ using GoGo.Services.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
 using GoGo.Data.Common;
+using System;
 
 namespace GoGo.Services
 {
@@ -24,6 +25,7 @@ namespace GoGo.Services
             {
                 Comentator = user,
                 ComentatorId = user.Id,
+                Date = DateTime.Now,
                 Destination = this.destinationsRepository.All().FirstOrDefault(x => x.Id == destinationId),
                 DestinationId = destinationId,
                 Content = comment
