@@ -31,7 +31,7 @@ namespace GoGo.Data.Seeder
                             Participant = randomUser,
                             CourseId = course.Id,
                             Course = course,
-                            StatusUser = (StatusParticitant)statusUser
+                            StatusUser = StatusParticitant.Unsuccessfully
                         };
                         var userExist = context.CoursesUsers
                             .FirstOrDefault(x => x.CourseId == course.Id && x.ParticipantId == randomUser.Id);

@@ -26,6 +26,7 @@ namespace GoGo.Controllers
             this._userManager = userManager;
         }
 
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -37,7 +38,7 @@ namespace GoGo.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return this.View();
+                return this.View(model);
             }
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
@@ -54,12 +55,11 @@ namespace GoGo.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             var dest = this.destinationService.FindEditDestination(id, user);
-            //ViewBag["destId"] = id;
 
-            if (dest == null)
-            {
-                throw new ArgumentException("You can not edit this page");  
-            }
+            //if (dest == null)
+            //{
+            //    throw new ArgumentException("You can not edit this page");  
+            //}
             return View(dest);
         }
 
@@ -67,6 +67,11 @@ namespace GoGo.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(EditDestinationViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
             await this.destinationService.EditDestination(model);
 
             return Redirect($"/Destinations/Details/{model.Id}");
@@ -87,8 +92,6 @@ namespace GoGo.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(string id, DestViewModel model)
         {
-            //await this.destinationService.DeleteCommentsUsers(id);
-
             await this.destinationService.DeleteComments(id);
 
             await this.destinationService.DeleteDestinationsUsers(id);
@@ -100,6 +103,7 @@ namespace GoGo.Controllers
             return Redirect($"/Destinations/All");
         }
 
+        [Authorize]
         public async Task<IActionResult> My()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
@@ -122,24 +126,22 @@ namespace GoGo.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var destination = this.destinationService.GetDetails(id, user);//user);
-
-            ViewData["Message"] = "Register - if you dont or Login if you have an account";
-            ViewData["Controller"] = "Destinations";
-
+            var destination = this.destinationService.GetDetails(id, user);
+            
             return View(destination);
         }
 
         [Authorize]
-        public async Task<IActionResult> HavePart(string id)
+        public async Task<IActionResult> HavePart(string id) //id(destinationId)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             var destUserModel = await this.destinationService.AddUserToDestination(user, id);
             
-            return View(destUserModel); //id(destinationId)
+            return View(destUserModel);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Socialize(string socialization, string id) //destinationId
         {

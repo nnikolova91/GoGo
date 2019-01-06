@@ -1,7 +1,9 @@
 ﻿using GoGo.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
+using ViewModels.Constants;
 
 namespace ViewModels
 {
@@ -20,6 +22,8 @@ namespace ViewModels
 
         public string Name { get; set; }
 
+        [Required]
+        [StringLength(ModelsConstants.DescriptionMaxLength, MinimumLength = ModelsConstants.DescriptionMinLength)]
         public string Description { get; set; }
 
         public string GameId { get; set; }

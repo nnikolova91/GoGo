@@ -58,7 +58,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ GetAllGames_ShouldReturn_All_GameViewModels()
+        public void GetAllGames_ShouldReturn_All_GameViewModels()
         {
             var gameRepoBuilder = new GameRepositoryBuilder();
             var gameRepo = gameRepoBuilder
@@ -92,11 +92,10 @@ namespace UnitTests
             Assert.Equal(expected, actual, new GameViewModelComparer());
 
             gameRepoBuilder.GamesRepoMock.Verify();
-            //destRepoMock.Verify();
         }
 
         [Fact]
-        public void/*async Task*/ GetDetails_ShouldReturn_GameDetailsViewModel()
+        public void GetDetails_ShouldReturn_GameDetailsViewModel()
         {
             var gameRepoBuilder = new GameRepositoryBuilder();
             var gameRepo = gameRepoBuilder
@@ -190,7 +189,6 @@ namespace UnitTests
                         StatusLevel = StatusLevel.NotPassed
                     }
                 }
-
             };
 
             Assert.Equal(expected, actual, new GameDetailsViewModelComparer());
@@ -205,7 +203,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ GetDetails_ShouldThrow_IfGameNotExist()
+        public void GetDetails_ShouldThrow_IfGameNotExist()
         {
             var gameRepoBuilder = new GameRepositoryBuilder();
             var gameRepo = gameRepoBuilder
@@ -449,7 +447,7 @@ namespace UnitTests
             
             var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await sut.AddLevelResult(gameLevelUserViewModel, user));
 
-            Assert.Equal("This GameLeveelParticipant not exist!", ex.Message);
+            Assert.Equal("This GameLevelParticipant not exist!", ex.Message);
             
             levelsParticipantsRepoBuilder.LevelParticipantRepoMock.Verify();
 

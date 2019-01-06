@@ -128,7 +128,7 @@ namespace UnitTests
 
             var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await sut.AddUserToDestination(new GoUser() { Id = "2" }, "5"));
 
-            ex.Message.ShouldBe("Destination not found.");
+            ex.Message.ShouldBe("Destination not exist");
             destRepoMock.Verify();
         }
 
@@ -149,15 +149,37 @@ namespace UnitTests
 
             var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await sut.AddUserToDestination(new GoUser() { Id = "3" }, "1"));
 
-            ex.Message.ShouldBe("You are in this group.");
+            ex.Message.ShouldBe("You are auready in this group.");
             destUsersRepoBuilder.DestUsersRepoMock.Verify();
             destUsersRepoBuilder.DestUsersRepoMock.Verify(d => d.AddAsync(It.IsAny<DestinationsUsers>()), Times.Never);
             destUsersRepoBuilder.DestUsersRepoMock.Verify(d => d.SaveChangesAsync(), Times.Never);
-            //destRepoMock.Verify();
         }
 
         [Fact]
-        public void/*async Task*/ GetAllDestinations_ShouldReturn_All_DestViewModels()
+        public async Task AddUserToDestination_ShouldThrowIfEnddateToJoinIsPassed()
+        {
+            var destRepoBuilder = new DestinationsRepositoryBuilder();
+            var destRepo = destRepoBuilder
+                .WithAll()
+                .Build();
+
+            var destUsersRepoBuilder = new DestinationsUsersRepositoryBuilder();
+            var destUserRepo = destUsersRepoBuilder
+                .WithAll()
+                .Build();
+
+            var sut = new DestinationService(destRepo, destUserRepo, null, null, null, null, null, null);
+
+            var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await sut.AddUserToDestination(new GoUser() { Id = "3" }, "3"));
+
+            ex.Message.ShouldBe("The end date to join is passed");
+            destUsersRepoBuilder.DestUsersRepoMock.Verify();
+            destUsersRepoBuilder.DestUsersRepoMock.Verify(d => d.AddAsync(It.IsAny<DestinationsUsers>()), Times.Never);
+            destUsersRepoBuilder.DestUsersRepoMock.Verify(d => d.SaveChangesAsync(), Times.Never);
+        }
+
+        [Fact]
+        public void GetAllDestinations_ShouldReturn_All_DestViewModels()
         {
             var destRepoBuilder = new DestinationsRepositoryBuilder();
             var destRepo = destRepoBuilder
@@ -178,11 +200,10 @@ namespace UnitTests
             destRepoBuilder.DestRepoMock.Verify();
             destRepoBuilder.DestRepoMock.Verify(d => d.AddAsync(It.IsAny<Destination>()), Times.Never);
             destRepoBuilder.DestRepoMock.Verify(d => d.SaveChangesAsync(), Times.Never);
-            //destRepoMock.Verify();
         }
 
         [Fact]
-        public void/*async Task*/ FindMyDestinations_ShouldReturn_CorrectCountOf_DestViewModels()
+        public void FindMyDestinations_ShouldReturn_CorrectCountOf_DestViewModels()
         {
             var user = new GoUser { Id = "1" };
 
@@ -200,7 +221,7 @@ namespace UnitTests
                 new DestViewModel {Id = "1" }
             }.AsQueryable();
 
-            Assert.Equal(expected.Count(), actual.Count()/*, new DestViewModelComparer()*/);
+            Assert.Equal(expected.Count(), actual.Count());
 
             destUserRepoBuilder.DestUsersRepoMock.Verify();
             destUserRepoBuilder.DestUsersRepoMock.Verify(d => d.AddAsync(It.IsAny<DestinationsUsers>()), Times.Never);
@@ -208,7 +229,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ GetAllDestinations_ShouldReturn_EmptyCollection_IfIsEmpty()
+        public void GetAllDestinations_ShouldReturn_EmptyCollection_IfIsEmpty()
         {
             var destinations = new List<Destination>().AsQueryable();
 
@@ -226,7 +247,6 @@ namespace UnitTests
             destRepoMock.Verify();
             destRepoMock.Verify(d => d.AddAsync(It.IsAny<Destination>()), Times.Never);
             destRepoMock.Verify(d => d.SaveChangesAsync(), Times.Never);
-            //destRepoMock.Verify();
         }
 
         [Fact]
@@ -234,7 +254,8 @@ namespace UnitTests
         {
             var dest = new Destination
             {
-                Id = "1"
+                Id = "1",
+                EndDateToJoin = DateTime.Now.AddDays(3)
             };
 
             var destination = new List<Destination>
@@ -266,6 +287,7 @@ namespace UnitTests
             };
 
             destRepoMock.Verify();
+
             Assert.Equal(expected, actual, new DestUserViewModelComparer());
         }
 

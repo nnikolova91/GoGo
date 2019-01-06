@@ -3,11 +3,8 @@
 @{
     ViewData["Title"] = "Photo";
 }
-<div class="text-center"><h2>All Stories</h2><hr /></div>
+<div class="text-center"><h2>All Themes</h2><hr /></div>
 @{
-                await Html.RenderPartialAsync("_ThemsPartial");
+    await Html.RenderPartialAsync("_ThemsPartial");
 }
 
-@*<div style="padding-left:800px; padding-top:200px;">
-    @Html.PagedListPager((IPagedList)Model, page => Url.Action("All", new { page }))
-</div>*@

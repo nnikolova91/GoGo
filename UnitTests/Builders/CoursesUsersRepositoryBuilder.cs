@@ -46,6 +46,12 @@ namespace UnitTests.Builders
                     ParticipantId = "11",
                     StatusUser = StatusParticitant.Unsuccessfully
                 },
+                  new CoursesUsers
+                {
+                    CourseId = "4",
+                    ParticipantId = "7",
+                    StatusUser = StatusParticitant.Unsuccessfully
+                },
             }.AsQueryable();
         }
 

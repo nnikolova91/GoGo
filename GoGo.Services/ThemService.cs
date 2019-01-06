@@ -13,6 +13,9 @@ namespace GoGo.Services
 {
     public class ThemService : IThemService
     {
+        public const string ThemeNotExist = "Theme not exist!";
+        public const string SpaceSeparetedUsersFirstAndLastName = " ";
+
         private readonly IRepository<GoUser> usersRepository;
         private readonly IRepository<Theme> themsRepository;
         private readonly IRepository<ThemComment> themCommentsRepository;
@@ -35,12 +38,12 @@ namespace GoGo.Services
 
             if (them == null)
             {
-                throw new ArgumentException("Them not exist!"); 
+                throw new ArgumentException(ThemeNotExist);
             }
 
             var comment = new ThemComment
             {
-                Content = currentComment /*model.Content*/,
+                Content = currentComment,
                 Date = DateTime.Now,
                 ThemId = themId,
                 Author = user,
@@ -82,17 +85,21 @@ namespace GoGo.Services
 
             if (them == null)
             {
-                throw new ArgumentException("Them not exist!");
+                throw new ArgumentException(ThemeNotExist);
             }
 
             var themModel = mapper.Map<ThemDetailsViewModel>(them);
+
             var author = this.usersRepository.All().FirstOrDefault(x => x.Id == them.AuthorId);
-            themModel.Author = author.FirstName + " " + author.LastName;
+
+            themModel.Author = author.FirstName + SpaceSeparetedUsersFirstAndLastName + author.LastName;
 
             var themComments = this.themCommentsRepository.All().Where(x => x.ThemId == themId)
-                                .Select(x => mapper.Map<ThemCommentViewModel>(x)).ToList();
-            themComments.ForEach(x => x.Author = this.usersRepository.All().FirstOrDefault(u => u.Id == x.AuthorId).FirstName + " " +
-                                this.usersRepository.All().FirstOrDefault(u => u.Id == x.AuthorId).LastName);
+                                     .Select(x => mapper.Map<ThemCommentViewModel>(x)).ToList();
+
+            themComments.ForEach(x => x.Author = this.usersRepository.All().FirstOrDefault(u => u.Id == x.AuthorId).FirstName +
+                                     SpaceSeparetedUsersFirstAndLastName + this.usersRepository.All()
+                                    .FirstOrDefault(u => u.Id == x.AuthorId).LastName);
 
             themModel.Comments = themComments;
 

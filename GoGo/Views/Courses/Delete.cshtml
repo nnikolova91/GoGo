@@ -3,8 +3,6 @@
 @{
     ViewData["Title"] = "Delete";
 }
-
-
 <div style="text-align:left">
     <h2>Delete</h2>
 
@@ -28,8 +26,16 @@
         </ul>
         <div class="card-body">
             <form asp-action="Delete">
-                <input type="submit" value="Delete" class="btn btn-danger" /> 
+                <input type="submit" value="Delete" class="btn btn-danger" />
                 <a asp-action="Index"></a>
+            </form>
+            
+        </div>
+        <div>
+            <form method="get" asp-action="Details" asp-controller="Courses" asp-route-id="@Model.Id">
+                <div >
+                    <button class=" btn btn-success">Back to course</button>
+                </div>
             </form>
         </div>
     </div>

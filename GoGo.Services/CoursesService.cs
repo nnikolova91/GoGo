@@ -16,6 +16,13 @@ namespace GoGo.Services
 {
     public class CoursesService : ICoursesService
     {
+        public const string CourseNotExistException = "This course not exist!";
+        public const string UserCourseNotExistException = "This userCourse not exist!";
+        public const string YouCanNotAddResultsException = "You can not add results!";
+        public const string YouCanNotEditException = "You can not edit this page";
+        public const string YouCanNotDeleteException = "You can not delete this page";
+        public const string CourseIsNotFinished = "Course is not finished!";
+        
         private readonly IRepository<CoursesUsers> coursesUsersRepository;
         private readonly IRepository<Course> coursesRepository;
         private readonly IRepository<GoUser> usersRepository;
@@ -62,14 +69,19 @@ namespace GoGo.Services
 
             if (userCouse == null)
             {
-                throw new ArgumentException("This userCourse not exist!");
+                throw new ArgumentException(UserCourseNotExistException);
             }
             if (course.CreatorId != user.Id)
             {
-                throw new ArgumentException("You can do not add results!");
+                throw new ArgumentException(YouCanNotAddResultsException);
             }
 
             userCouse.StatusUser = model.Result;
+
+            if (course.StartDate.AddDays(course.DurationOfDays) > DateTime.Now)
+            {
+                throw new ArgumentException(CourseIsNotFinished);
+            }
 
             await this.coursesUsersRepository.SaveChangesAsync();
         }
@@ -143,7 +155,7 @@ namespace GoGo.Services
 
             if (course == null)
             {
-                throw new ArgumentException("You can not edit this page");
+                throw new ArgumentException(YouCanNotEditException);
             }
 
             var courseModel = mapper.Map<EditCourseViewModel>(course);
@@ -157,7 +169,7 @@ namespace GoGo.Services
 
             if (course == null)
             {
-                throw new ArgumentException("You can not delete this page");
+                throw new ArgumentException(YouCanNotDeleteException);
             }
 
             var courseModel = mapper.Map<DeleteCourseViewModel>(course);
@@ -182,7 +194,7 @@ namespace GoGo.Services
 
             if (course.CreatorId != user.Id)
             {
-                throw new ArgumentException("You can not add results!");
+                throw new ArgumentException(YouCanNotAddResultsException);
             }
 
             var usersResult = users.Where(x => x.CourseId == id)
@@ -203,7 +215,7 @@ namespace GoGo.Services
 
             if (course == null)
             {
-                throw new ArgumentException("Course not exist!");
+                throw new ArgumentException(CourseNotExistException);
             }
 
             var creatorr = this.usersRepository.All().FirstOrDefault(x => x.Id == course.CreatorId);

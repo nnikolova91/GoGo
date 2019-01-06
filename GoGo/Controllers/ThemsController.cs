@@ -32,6 +32,11 @@ namespace GoGo.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateThemViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             await this.themService.AddThem(model, user);
@@ -47,7 +52,7 @@ namespace GoGo.Controllers
 
             await this.themService.AddCommentToThem(themId, currentComment, user);
 
-            
+
             this.TempData.Add("id", themId);
 
             return Redirect($"../Thems/Details/{themId}");
@@ -71,9 +76,8 @@ namespace GoGo.Controllers
 
             return View(model);
         }
-        
-        [Authorize]
-        public IActionResult All() 
+
+        public IActionResult All()
         {
             var thems = this.themService.GetAllThems();
 

@@ -11,7 +11,7 @@ namespace GoGo.Services.Contracts
     {
         Task AddThem(CreateThemViewModel model, GoUser user);
 
-        Task AddCommentToThem(string themId, /*ThemCommentViewModel*/string currentComment, GoUser user);
+        Task AddCommentToThem(string themId, string currentComment, GoUser user);
 
         ICollection<ThemDetailsViewModel> GetAllThems();
 

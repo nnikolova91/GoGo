@@ -89,7 +89,7 @@ namespace UnitTests
 
             var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await sut.AddCommentToThem("5", "New themComment", user));
 
-            Assert.Equal("Them not exist!", ex.Message);
+            Assert.Equal("Theme not exist!", ex.Message);
 
             themCommentRepoBuilder.ThemCommentsRepoMock.Verify(r => r.AddAsync(It.IsAny<ThemComment>()), Times.Never);
             themCommentRepoBuilder.ThemCommentsRepoMock.Verify(r => r.SaveChangesAsync(), Times.Never);
@@ -181,7 +181,7 @@ namespace UnitTests
             
             var ex = Assert.Throws<ArgumentException>(() => sut.GetDetails("7", user));
             
-            Assert.Equal("Them not exist!", ex.Message);
+            Assert.Equal("Theme not exist!", ex.Message);
             
             themsRepoBuilder.ThemsRepoMock.Verify();
         }

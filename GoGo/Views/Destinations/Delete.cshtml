@@ -29,5 +29,12 @@
                 <a asp-action="Index"></a>
             </form>
         </div>
+        <div>
+            <form method="get" asp-action="Details" asp-controller="Destinations" asp-route-id="@Model.Id">
+                <div>
+                    <button class=" btn btn-success">Back to destination</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

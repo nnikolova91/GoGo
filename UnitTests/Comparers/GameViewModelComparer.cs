@@ -18,7 +18,7 @@ namespace UnitTests.Comparers
                 return false;
             }
 
-            return x.Id == y.Id && x.Name == y.Name /*&& x.Image == y.Image*/;
+            return x.Id == y.Id && x.Name == y.Name;
         }
 
         public int GetHashCode(GameViewModel obj)

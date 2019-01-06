@@ -15,6 +15,9 @@ namespace GoGo.Data.Seeder.Games
 
         public static async Task Seed(IServiceProvider provider, GoDbContext context)
         {
+            var rolAdminid = context.Roles.FirstOrDefault(r => r.Name == "Admin").Id;
+            var adminId = context.UserRoles.FirstOrDefault(u => u.RoleId == rolAdminid).UserId;
+            
             if (!context.LevelsParticipants.Any())
             {
                 var allGamess = context.Games.ToList();
@@ -28,7 +31,7 @@ namespace GoGo.Data.Seeder.Games
                     var levelsGame = context.Levels.Where(x => x.GameId == game.Id).ToList();
                     for (int k = 0; k < countParticipans; k++)
                     {
-                        var randomUser = context.Users.OrderBy(x => Guid.NewGuid()).First();
+                        var randomUser = context.Users.Where(x => x.Id != adminId).OrderBy(x => Guid.NewGuid()).First();
 
                         foreach (var level in levelsGame.OrderBy(x => x.NumberInGame))
                         {

@@ -11,9 +11,7 @@ namespace GoGo.Services.Contracts
     public interface IGamesService
     {
         Task<string> AddGame(CreateGameViewModel model, GoUser user);
-
-        //Task AddLevelsToGame(string gameId, CreateGameViewModel model);
-
+        
         ICollection<GameViewModel> GetAllGames();
 
         GameDetailsViewModel GetDetails(string id);

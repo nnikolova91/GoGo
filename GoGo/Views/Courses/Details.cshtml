@@ -25,9 +25,6 @@
                 <a class="card-text" style="padding-left:70px;">Free seats: @Model.FreeSeats</a>
                 <a class="card-text" style="padding-left:70px;">
                     This course was created from: <b>@Model.Creator.FirstName</b>
-                    @*@{ var base61 = Convert.ToBase64String(Model.Creator.Image);
-                            var imgSrr = String.Format("data:image/gif;base64,{0}", base61); }
-                        <img src="@imgSrr" style="width:40px;height:20px; border-radius:30px 40px;">*@
                 </a>
             </div>
         </div>
@@ -60,13 +57,12 @@
             </form>
         }
 
-        @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == user.FirstName)
+        @if (this.User.Identity.IsAuthenticated && @Model.Creator.FirstName == user.FirstName && @Model.StartDate.AddDays(@Model.DurationOfDays) < DateTime.Now)
         {
             <form asp-action="AddResults" asp-controller="Courses" asp-route-id="@Model.Id">
                 <div class="text-center">
                     <button class="btn btn-danger">Add results</button>
                 </div>
-
             </form>
         }
         @if (this.User.Identity.IsAuthenticated)
@@ -94,7 +90,6 @@
                 <button asp-action="All" asp-controller="Courses" class="btn btn-secondary">Back To All</button>
 
             </div>
-
         </form>
     </div>
 
@@ -117,7 +112,4 @@
     <div @*style="padding-left:800px; padding-top:200px;" *@>
         @Html.PagedListPager((IPagedList)Model.Participants, page => Url.Action("Details", new { page }))
     </div>
-
-
-
 </main>

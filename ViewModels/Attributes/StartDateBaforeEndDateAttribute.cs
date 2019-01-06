@@ -8,6 +8,8 @@ namespace ViewModels.Attributes
     [AttributeUsage(AttributeTargets.Property)]
     public class StartDateBaforeEndDateAttribute : ValidationAttribute
     {
+        public const string PropertyWithThisNameNotFound = "Property with this name not found";
+
         private readonly string startDateProperty;
 
         public StartDateBaforeEndDateAttribute(string startDateProperty)
@@ -24,7 +26,7 @@ namespace ViewModels.Attributes
             var property = validationContext.ObjectType.GetProperty(this.startDateProperty);
 
             if (property == null)
-                throw new ArgumentException("Property with this name not found");
+                throw new ArgumentException(PropertyWithThisNameNotFound);
 
             var comparisonValue = (DateTime)property.GetValue(validationContext.ObjectInstance);
 

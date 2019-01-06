@@ -15,15 +15,12 @@ namespace GoGo.Controllers
     public class StoriesController : Controller
     {
         private IStoriesService storiesService;
-        private IUserStoriesService usersStoriesService;
         private UserManager<GoUser> userManager;
 
         public StoriesController(IStoriesService storiesService,
-                                    IUserStoriesService usersStoriesService,
                                     UserManager<GoUser> userManager)
         {
             this.storiesService = storiesService;
-            this.usersStoriesService = usersStoriesService;
             this.userManager = userManager;
         }
         
@@ -33,9 +30,15 @@ namespace GoGo.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create(CreateStoryViewModel model /*string title, string content, string id*/, string id)
+        public async Task<IActionResult> Create(CreateStoryViewModel model, string id)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             model.DestinationId = id;
@@ -55,7 +58,7 @@ namespace GoGo.Controllers
             return View(myStories);
         }
 
-        public /*async Task<*/IActionResult/*>*/ All(int? page)
+        public IActionResult All(int? page)
         {
             //var user = await userManager.GetUserAsync(HttpContext.User);
             var myStories = this.storiesService.AllStories();

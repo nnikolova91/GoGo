@@ -16,6 +16,11 @@ namespace GoGo.Services
 {
     public class GamesService : IGamesService
     {
+        public const string GameDoNotExist = "Game do not exist!";
+        public const string YouAreAureadyPassSuccessfullyThisLevel = "You are auready pass successfully this level!";
+        public const string ThisGameLevelParticipantNotExist = "This GameLevelParticipant not exist!";
+        public const string SpaceSeparetedUsersFirstAndLastName = " ";
+
         private readonly IMapper mapper;
         private readonly IRepository<Game> gamesRepository;
         private readonly IRepository<Level> levelsRepository;
@@ -37,7 +42,6 @@ namespace GoGo.Services
 
         public async Task<string> AddGame(CreateGameViewModel model, GoUser user)
         {
-
             byte[] imageLevel1 = ImageAsBytes(model.Level1.Image);
             byte[] imageLevel2 = ImageAsBytes(model.Level2.Image);
             byte[] imageLevel3 = ImageAsBytes(model.Level3.Image);
@@ -119,7 +123,7 @@ namespace GoGo.Services
 
             if (game == null)
             {
-                throw new ArgumentException("Game do not exist!");
+                throw new ArgumentException(GameDoNotExist);
             }
 
             var levels = levelsRepository.All().Where(x => x.GameId == id).OrderBy(x => x.NumberInGame).ToList();
@@ -132,7 +136,8 @@ namespace GoGo.Services
                 .Select(x => mapper.Map<GameLevelParticipantViewModel>(x)).ToList();
 
             gameParticipantsLevel1.ForEach(x => x.Participant = this.usersRepository
-                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).FirstName + " " + this.usersRepository
+                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).FirstName +
+                                                SpaceSeparetedUsersFirstAndLastName + this.usersRepository
                                             .All().FirstOrDefault(u => u.Id == x.ParticipantId).LastName);
 
             var gameParticipantsLevel2 = this.levelsParticipantRepository.All()
@@ -140,7 +145,8 @@ namespace GoGo.Services
                                             .Select(x => mapper.Map<GameLevelParticipantViewModel>(x)).ToList();
 
             gameParticipantsLevel2.ForEach(x => x.Participant = this.usersRepository
-                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).FirstName + " " + this.usersRepository
+                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).FirstName +
+                                                SpaceSeparetedUsersFirstAndLastName + this.usersRepository
                                             .All().FirstOrDefault(u => u.Id == x.ParticipantId).LastName);
 
             var gameParticipantsLevel3 = this.levelsParticipantRepository.All()
@@ -148,7 +154,8 @@ namespace GoGo.Services
                                             .Select(x => mapper.Map<GameLevelParticipantViewModel>(x)).ToList();
 
             gameParticipantsLevel3.ForEach(x => x.Participant = this.usersRepository
-                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).FirstName + " " + this.usersRepository
+                                            .All().FirstOrDefault(u => u.Id == x.ParticipantId).FirstName +
+                                                SpaceSeparetedUsersFirstAndLastName + this.usersRepository
                                             .All().FirstOrDefault(u => u.Id == x.ParticipantId).LastName);
 
             var gameModel = new GameDetailsViewModel
@@ -166,7 +173,6 @@ namespace GoGo.Services
             };
 
             return gameModel;
-            //.Select(x => new LevelViewModel { Description = x.Description, Points = x.Points, Image = ImageAsBytes(x.Image), GameId = x.GameId });
         }
 
         public async Task UserStartGame(string id, GoUser user)
@@ -176,7 +182,7 @@ namespace GoGo.Services
 
             if (game == null)
             {
-                throw new ArgumentException("Game do not exist!");
+                throw new ArgumentException(GameDoNotExist);
             }
 
             else if (this.levelsParticipantRepository.All().FirstOrDefault(x => x.ParticipantId == user.Id && x.GameId == game.Id) == null)
@@ -204,7 +210,7 @@ namespace GoGo.Services
 
             if (levelPartisipant != null && levelPartisipant.StatusLevel == StatusLevel.SuccessfullyPassed)
             {
-                throw new ArgumentException("You are auready pass successfully this level!");
+                throw new ArgumentException(YouAreAureadyPassSuccessfullyThisLevel);
             }
 
             if (levelPartisipant != null)
@@ -223,7 +229,7 @@ namespace GoGo.Services
 
             if (gameLevelParticipant == null)
             {
-                throw new ArgumentException("This GameLeveelParticipant not exist!");
+                throw new ArgumentException(ThisGameLevelParticipantNotExist);
             }
 
             gameLevelParticipant.StatusLevel = model.StatusLevel;
@@ -237,8 +243,6 @@ namespace GoGo.Services
                 participant.Points += level.Points;
 
                 await this.usersRepository.SaveChangesAsync();
-
-                //this.levelsParticipantRepository.Delete(gameLevelParticipant);
             }
 
             await this.levelsParticipantRepository.SaveChangesAsync();

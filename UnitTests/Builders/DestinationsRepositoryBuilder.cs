@@ -41,7 +41,8 @@ namespace UnitTests.Builders
                 {
                     Id = "3",
                     Description = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                    CreatorId = "7"
+                    CreatorId = "7",
+                    EndDateToJoin = DateTime.Now.AddDays(-1)
                 },
                 new Destination
                 {

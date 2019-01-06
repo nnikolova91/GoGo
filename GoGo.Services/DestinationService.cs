@@ -17,6 +17,13 @@ namespace GoGo.Services
 {
     public class DestinationService : IDestinationService
     {
+        public const string YouAreNotInThisGroup = "You are not in this group.";
+        public const string DestinationNotExist = "Destination not exist";
+        public const string YouAreAureadyInThisGroup = "You are auready in this group.";
+        public const string YoucanNotEditThisPage = "You can not edit this page";
+        public const string YoucanNotDeleteThisPage = "You can not delete this page";
+        public const string TheEndDateToJoinIsPassed = "The end date to join is passed";
+
         private readonly IRepository<Destination> destRepository;
         private readonly IRepository<DestinationsUsers> destUsersRepository;
         private readonly IRepository<PeopleStories> peopleStoriesRepository;
@@ -80,7 +87,7 @@ namespace GoGo.Services
 
             if (dest == null)
             {
-                throw new ArgumentException("You are not in this group.");
+                throw new ArgumentException(YouAreNotInThisGroup);
             }
 
             dest.Socialization = Enum.Parse<Socialization>(socialization);
@@ -93,7 +100,7 @@ namespace GoGo.Services
             var destination = this.destRepository.All().FirstOrDefault(x => x.Id == id);
             if (destination == null)
             {
-                throw new ArgumentException("Destination not found.");
+                throw new ArgumentException(DestinationNotExist);
             }
             var destUserModel = new DestUserViewModel
             {
@@ -114,30 +121,19 @@ namespace GoGo.Services
             if (this.destUsersRepository.All().FirstOrDefault(x => x.DestinationId == destinationUser.DestinationId &&
                     x.ParticipantId == destinationUser.ParticipantId) != null)
             {
-                throw new ArgumentException("You are in this group.");
+                throw new ArgumentException(YouAreAureadyInThisGroup);
             }
-            // var destUsModel = mapper.Map<DestUserViewModel>(destinationUser);
+
+            if (destination.EndDateToJoin < DateTime.Now)
+            {
+                throw new ArgumentException(TheEndDateToJoinIsPassed);
+            }
 
             await this.destUsersRepository.AddAsync(destinationUser);
             await this.destUsersRepository.SaveChangesAsync();
 
             return destUserModel;
         }
-
-        //public ICollection<GoUserViewModel> AllUsersFodSocialization(GoUser user, string id, string socialization)
-        //{
-        //    var usersNotKnowAnyone = this.destUsersRepository.All()
-        //                                    .Where(x => x.DestinationId == id && x.Socialization.ToString() == "NotKnowAnyone")
-        //                                    .Select(x => mapper.Map<GoUserViewModel>(user)).ToList();
-
-        //    //if (socialization == "NotKnowAnyone")
-        //    //{
-        //    //    var notIncludeYourself = usersNotKnowAnyone.FirstOrDefault(x => x.Id == user.Id);
-        //    //    usersNotKnowAnyone.Remove(notIncludeYourself);
-        //    //}
-
-        //    return usersNotKnowAnyone;
-        //}
 
         public ICollection<DestViewModel> GetAllDestinations()
         {
@@ -151,25 +147,23 @@ namespace GoGo.Services
             return destinationsModels;
         }
 
-        public DestDetailsViewModel GetDetails(string id, GoUser user) //GoUser user)
+        public DestDetailsViewModel GetDetails(string id, GoUser user)
         {
-            //var user = this.usersRepository.All().FirstOrDefault(x => x.Id == userr.Id);
-
             var dest = this.destRepository.All().FirstOrDefault(x => x.Id == id);
 
             if (dest == null)
             {
-                throw new ArgumentException("Destination not exist");
+                throw new ArgumentException(DestinationNotExist);
             }
 
             var usersNotKnowAnyone = this.destUsersRepository.All()
                                             .Where(x => x.DestinationId == id &&
-                                             x.Socialization.ToString() == "NotKnowAnyone"/* && x.ParticipantId != user.Id*/)
+                                             x.Socialization == Socialization.NotKnowAnyone)
                                             .Select(x => mapper.Map<GoUserViewModel>(x.Participant)).ToList();
 
             var usersKnowSomeone = this.destUsersRepository.All()
                                             .Where(x => x.DestinationId == id &&
-                                             x.Socialization.ToString() == "KnowSomeone" /*&& x.ParticipantId != user.Id*/)
+                                             x.Socialization == Socialization.KnowSomeone)
                                             .Select(x => mapper.Map<GoUserViewModel>(x.Participant)).ToList();
 
             var goUserModel = mapper.Map<CurrentUserViewModel>(user);
@@ -192,7 +186,7 @@ namespace GoGo.Services
             var model = mapper.Map<DestDetailsViewModel>(dest);
             model.Creator = this.usersRepository.All().FirstOrDefault(x => x.Id == dest.CreatorId).FirstName;
             model.CurrentUser = goUserModel;
-            model.AllComments = allComments.OrderByDescending(x=>x.Date).ToList();
+            model.AllComments = allComments.OrderByDescending(x => x.Date).ToList();
             model.Stories = allStories;
             model.ParticipantsKnowSomeone = usersKnowSomeone;
             model.ParticipantsNotKnowAnyone = usersNotKnowAnyone;
@@ -220,7 +214,7 @@ namespace GoGo.Services
             }
             else
             {
-                throw new ArgumentException("You can not edit this page");
+                throw new ArgumentException(YoucanNotEditThisPage);
             }
         }
 
@@ -250,7 +244,6 @@ namespace GoGo.Services
 
                 await this.destRepository.SaveChangesAsync();
             }
-
         }
 
         public DestViewModel FindToDeleteDestination(string id, GoUser user)
@@ -259,7 +252,7 @@ namespace GoGo.Services
 
             if (dest.CreatorId != user.Id)
             {
-                throw new ArgumentException("You can not delete this page");
+                throw new ArgumentException(YoucanNotDeleteThisPage);
             }
 
             var destination = mapper.Map<DestViewModel>(dest);
@@ -305,6 +298,19 @@ namespace GoGo.Services
             this.destRepository.Delete(dest);
 
             await this.destRepository.SaveChangesAsync();
+        }
+
+        public ICollection<DestViewModel> GetDestinationsForHomePage()
+        {
+            //var destinations = this.destRepository.All().Take(3).Select(x => mapper.Map<DestViewModel>(x)).ToList();
+            var destinationsModels = this.destRepository.All().Take(3).Select(x => mapper.Map<DestViewModel>(x)).ToList();
+            foreach (var item in destinationsModels)
+            {
+                string firstChars = new string(item.Description.Take(270).ToArray());
+                item.Description = firstChars + " ...";
+            }
+
+            return destinationsModels;
         }
     }
 }

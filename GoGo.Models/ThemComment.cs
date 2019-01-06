@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace GoGo.Models
@@ -7,7 +8,7 @@ namespace GoGo.Models
     public class ThemComment
     {
         public string Id { get; set; }
-
+        
         public string Content { get; set; }
 
         public DateTime Date { get; set; }

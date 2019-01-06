@@ -4,6 +4,7 @@ using GoGo.Models.Enums;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace ViewModels
@@ -12,6 +13,7 @@ namespace ViewModels
     {
         public Socialization Socialization { get; set; }
 
+        [Required]
         public string DestinationId { get; set; }
         public Destination Destination { get; set; }
 

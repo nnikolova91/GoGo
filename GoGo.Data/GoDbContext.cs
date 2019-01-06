@@ -33,9 +33,9 @@ namespace GoGo.Data
 
         public DbSet<Level> Levels { get; set; }
 
-        public DbSet<Theme> Thems { get; set; }
+        public DbSet<Theme> Themes { get; set; }
 
-        public DbSet<ThemComment> ThemComments { get; set; }
+        public DbSet<ThemComment> ThemeComments { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{

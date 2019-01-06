@@ -19,7 +19,7 @@ namespace UnitTests.Comparers
             }
 
             return x.Id == y.Id &&
-               /* x.Image == y.Image &&*/ x.Description == y.Description && x.Status == y.Status && x.Category == y.Category
+                x.Description == y.Description && x.Status == y.Status && x.Category == y.Category
                 && x.StartDate == y.StartDate && x.Title == y.Title && x.MaxCountParticipants == y.MaxCountParticipants &&
                 x.DurationOfDays == y.DurationOfDays; ;
         }

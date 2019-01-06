@@ -20,9 +20,10 @@ else
                     <p style="text-align:left">
                         <a><b>Level: @destination.Level</b></a>
                         <a asp-action="Details" asp-controller="Destinations" asp-route-id="@destination.Id">
-                            <btn class="btn" style="padding-left:400px;">Details</btn>
+                            <btn class="btn" style="padding-left:10px;">Details</btn>
                         </a>
-                        <a style="padding-left:300px;"><b>Start date: @destination.StartDate</b></a>
+                        <a style="padding-left:10px;"><b>End date to join: @destination.EndDateToJoin</b></a>
+                        <a style="padding-left:10px;"><b>Start date: @destination.StartDate</b></a>
                     </p>
                 </div>
             </div>

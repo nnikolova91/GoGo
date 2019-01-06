@@ -6,14 +6,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GoGo.Models;
 using Microsoft.AspNetCore.Authorization;
+using GoGo.Services.Contracts;
 
 namespace GoGo.Controllers
 {
     public class HomeController : Controller
     {
+        private IDestinationService destinationService;
+
+        public HomeController(IDestinationService destinationService)
+        {
+            this.destinationService = destinationService;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            var destinationModels = this.destinationService.GetDestinationsForHomePage().ToList();
+
+            return View(destinationModels);
         }
 
         public IActionResult About()

@@ -19,7 +19,7 @@ namespace UnitTests.Comparers
             }
 
             return x.Id == y.Id && x.Description == y.Description
-                /*&& x.Image == y.Image */&& x.NumberInGame == y.NumberInGame && x.Points == y.Points;
+                && x.NumberInGame == y.NumberInGame && x.Points == y.Points;
         }
 
         public int GetHashCode(LevelViewModel obj)

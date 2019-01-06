@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using ViewModels.Constants;
 using X.PagedList;
 
 namespace ViewModels
@@ -18,30 +19,29 @@ namespace ViewModels
         public byte[] Image { get; set; }
 
         [Required]
-        [Display(Name = "Title")]
         public string Title { get; set; }
 
         [Required]
-        [StringLength(10, MinimumLength = 700)]
+        [StringLength(ModelsConstants.DescriptionMaxLength, MinimumLength = ModelsConstants.DescriptionMinLength)]
         public string Description { get; set; }
 
         [Required]
-        [Range((int)1, int.MaxValue)]
+        [Range((int)ModelsConstants.MinValue, ModelsConstants.MaxValue)]
         public int MaxCountParticipants { get; set; }
 
         public int FreeSeats { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
-        [CompareWithToday(ErrorMessage = "This date is passed enter new date:)")]
+        [CompareWithToday(ErrorMessage = ModelsConstants.PassedDate)]
         public DateTime StartDate { get; set; }
 
         [Required]
-        [Range((int)1, int.MaxValue)]
+        [Range((int)ModelsConstants.MinValue, ModelsConstants.MaxValue)]
         public int DurationOfDays { get; set; }
 
         [Required]
-        [Range((int)1, int.MaxValue)]
+        [Range((int)ModelsConstants.MinValue, ModelsConstants.MaxValue)]
         public int CountOfHours { get; set; }
 
         public Status Status { get; set; }

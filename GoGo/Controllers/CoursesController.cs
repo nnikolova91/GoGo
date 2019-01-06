@@ -22,18 +22,21 @@ namespace GoGo.Controllers
             this.signInManager = signInManager;
         }
 
+        [Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreateCourseViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return this.View();
+                return this.View(model);
             }
+
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             await this.coursesService.AddCourse(model, user);
@@ -41,6 +44,7 @@ namespace GoGo.Controllers
             return Redirect("/Courses/All");
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Edit(string id)
         {
@@ -49,9 +53,15 @@ namespace GoGo.Controllers
             return View(dest);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(EditCourseViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             await this.coursesService.EditCourse(model, user);
@@ -59,6 +69,7 @@ namespace GoGo.Controllers
             return Redirect($"/Courses/Details/{model.Id}");
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Delete(string id)
         {
@@ -67,9 +78,15 @@ namespace GoGo.Controllers
             return View(curse);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Delete(string id, DeleteCourseViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             await this.coursesService.DeleteCourse(id, user);
@@ -101,6 +118,7 @@ namespace GoGo.Controllers
             return View(course);
         }
 
+        [Authorize]
         public async Task<IActionResult> My()
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
@@ -110,6 +128,7 @@ namespace GoGo.Controllers
             return View(courses);
         }
 
+        [Authorize]
         public async Task<IActionResult> SignIn(string id) // id(courseId)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
@@ -129,9 +148,15 @@ namespace GoGo.Controllers
             return View(participants);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateResult(UsersResultsViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             await this.coursesService.AddResultToUsersCourses(model, user);

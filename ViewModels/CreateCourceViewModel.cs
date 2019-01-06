@@ -8,40 +8,39 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using ViewModels.Constants;
 
 namespace ViewModels
 {
     public class CreateCourseViewModel
     {
         [Required]
-        [Display(Name = "Image")]
         [DataType(DataType.Upload)]
         [BindProperty]
         public IFormFile Image { get; set; }
 
         [Required]
-        [Display(Name = "Title")]
         public string Title { get; set; }
 
         [Required]
-        [StringLength(700, MinimumLength = 10)]
+        [StringLength(ModelsConstants.DescriptionMaxLength, MinimumLength = ModelsConstants.DescriptionMinLength)]
         public string Description { get; set; }
 
         [Required]
-        [Range((int)1, int.MaxValue)]
+        [Range((int)ModelsConstants.MinValue, ModelsConstants.MaxValue)]
         public int MaxCountParticipants { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
-        [CompareWithToday(ErrorMessage = "This date is passed enter new date:)")]
+        [CompareWithToday(ErrorMessage = ModelsConstants.PassedDate)]
         public DateTime StartDate { get; set; }
 
         [Required]
-        [Range((int)1, int.MaxValue)]
+        [Range((int)ModelsConstants.MinValue, ModelsConstants.MaxValue)]
         public int DurationOfDays { get; set; }
 
         [Required]
-        [Range((int)1, int.MaxValue)]
+        [Range((int)ModelsConstants.MinValue, ModelsConstants.MaxValue)]
         public int CountOfHours { get; set; }
         
         public GoUserViewModel Creator { get; set; }

@@ -19,11 +19,8 @@
                 <input asp-for="StartDate" type="date" class="form-control" placeholder="Start Date...">
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
-
         </div>
-
         <div class="row">
-
             <div class="form-group inline col-sm-6  text-center">
                 <label asp-for="EndDate"><b>End Date</b></label>
                 <input asp-for="EndDate" type="date" class="form-control" placeholder="End Date...">
@@ -44,26 +41,21 @@
         </div>
         <div class="text-center">
             <label asp-for="Level"><b>Level</b></label>
-
             <div>
                 <h5>Easy <input type="radio" asp-for="Level" value="Easy" /></h5>
 
                 <h5>Advanced <input type="radio" asp-for="Level" value="Advanced" /></h5>
             </div>
-
         </div>
-
         <div class="form-group">
             <label asp-for="@Model.Image"></label>
             <input asp-for="@Model.Image" type="file" onchange="readURL(this);" />
             <span asp-validation-for="Image" class="text-danger"></span>
             <img id="blah" src="#" alt="your image" />
         </div>
-
         <hr class=height: 7px" />
         <div class="text-center">
             <button type="submit" @*class="btn chushka-bg-color text-center"*@>Create Destination</button>
         </div>
     </form>
-    
 </main>

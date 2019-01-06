@@ -25,6 +25,7 @@ namespace GoGo.Controllers
             this.userManager = userManager;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -32,37 +33,48 @@ namespace GoGo.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateGameViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             string gameId = await this.gamesService.AddGame(model, user);
-            //await this.gamesService.AddLevelsToGame(gameId, model);
-            
+
             return Redirect($"/Games/All");
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddImage(string id, string levelId, IFormFile correspondingImage) //gameId
         {
             var image = HttpContext.Request.Form.Files[0];
-            
+
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             await this.gamesService.UserAddImageToLevel(id, user, levelId, image);
-            
+
             return Redirect($"/Games/Details/{id}");
         }
-        
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddResult(GameLevelParticipantViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             await this.gamesService.AddLevelResult(model, user);
-            
+
             return Redirect($"/Games/Details/{model.GameId}");
         }
 
@@ -71,10 +83,11 @@ namespace GoGo.Controllers
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             var game = this.gamesService.GetDetails(id);
-            
+
             return View(game);
         }
 
+        [Authorize(Roles = "User")]
         [HttpPost]
         public async Task<IActionResult> Start(string id) // id(gameId)
         {

@@ -11,17 +11,19 @@
     <h1 class="text-center">Create Game</h1>
     <hr class="wiy chushka-bg-color height: 7px" />
     <form class="mx-auto half-width wiy" method="post" asp-controller="Games" asp-action="Create" enctype="multipart/form-data">
+        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="row">
             <div class="form-group inline col-sm-6  text-center">
                 <label asp-for="Name"><b>Title</b></label>
                 <input asp-for="Name" type="text" class="form-control" placeholder="Name...">
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
         </div>
-
         <div class="row">
             <div class="form-group  inline col-sm-12  text-center">
                 <label asp-for="Description"><b>Description and recommendations</b></label>
                 <textarea asp-for="Description" type="text" class="form-control" placeholder="Description..."></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
         </div>
         <div style="padding-top:70px;">
@@ -29,64 +31,76 @@
                 <div class=" inline col-sm-1" style="padding-top:30px;"><h4>Level</h4></div>
                 <div class="form-group inline col-sm-1  ">
                     <label asp-for="@Model.Level1.NumberInGame"><b></b></label>
-                    <input asp-for="@Model.Level1.NumberInGame" type="number" class="form-control" placeholder="Number in game"/>
+                    <input asp-for="@Model.Level1.NumberInGame" type="number" class="form-control" placeholder="Number in game" />
+                    <span asp-validation-for="@Model.Level1.NumberInGame" class="text-danger"></span>
                 </div>
                 <div class="form-group inline col-sm-6  ">
                     <label asp-for="@Model.Level1.Description"><b>Description</b></label>
                     <textarea asp-for="@Model.Level1.Description" type="text" class="form-control" placeholder="Description..."></textarea>
+                    <span asp-validation-for="@Model.Level1.Description" class="text-danger"></span>
                 </div>
                 <div class="form-group inline col-sm-1  text-center">
                     <label asp-for="@Model.Level1.Points"><b>points</b></label>
                     <input asp-for="@Model.Level1.Points" type="number" class="form-control" placeholder="Points...">
+                    <span asp-validation-for="@Model.Level1.Points" class="text-danger"></span>
                 </div>
                 <div class="form-group inline col-sm-1">
                     <label asp-for="@Model.Level1.Image"></label>
                     <input asp-for="@Model.Level1.Image" type="file" onchange="readURL(this);" />
                     <img id="blah" src="#" alt="your image" />
+                    <span asp-validation-for="@Model.Level1.Image" class="text-danger"></span>
                 </div>
             </div>
         </div>
-        <div style="padding-top:70px;">
-            <div class="row" @*style="padding-top:70px;" *@>
-                <div class="inline col-sm-1" style="padding-top:30px;"><h4>Level</h4></div>
+        <div>
+            <div class="row">
+                <div class="inline col-sm-1" @*style="padding-top:30px;"*@><h4>Level</h4></div>
                 <div class="form-group inline col-sm-1  ">
                     <label asp-for="@Model.Level2.NumberInGame"><b></b></label>
                     <input asp-for="@Model.Level2.NumberInGame" type="number" class="form-control" placeholder="Number in game" />
+                    <span asp-validation-for="@Model.Level2.NumberInGame" class="text-danger"></span>
                 </div>
                 <div class="form-group inline col-sm-6  ">
                     <label asp-for="@Model.Level2.Description"><b>Description</b></label>
                     <textarea asp-for="@Model.Level2.Description" type="text" class="form-control" placeholder="Description..."></textarea>
+                    <span asp-validation-for="@Model.Level2.Description" class="text-danger"></span>
                 </div>
                 <div class="form-group inline col-sm-1  text-center">
                     <label asp-for="@Model.Level2.Points"><b>points</b></label>
                     <input asp-for="@Model.Level2.Points" type="number" class="form-control" placeholder="Points...">
+                    <span asp-validation-for="@Model.Level2.Points" class="text-danger"></span>
                 </div>
                 <div class="form-group inline col-sm-1">
                     <label asp-for="@Model.Level2.Image"></label>
                     <input asp-for="@Model.Level2.Image" type="file" onchange="readURL(this);" />
                     <img id="blah" src="#" alt="your image2" />
+                    <span asp-validation-for="@Model.Level2.Image" class="text-danger"></span>
                 </div>
             </div>
         </div>
-        <div style="padding-top:70px;">
-            <div class="row" @*style="padding-top:70px;" *@>
-                <div class="inline col-sm-1" style="padding-top:30px;"><h4>Level</h4></div>
+        <div >
+            <div class="row" >
+                <div class="inline col-sm-1" @*style="padding-top:30px;*@"><h4>Level</h4></div>
                 <div class="form-group inline col-sm-1  ">
                     <label asp-for="@Model.Level3.NumberInGame"><b></b></label>
                     <input asp-for="@Model.Level3.NumberInGame" type="number" class="form-control" placeholder="Number in game" />
+                    <span asp-validation-for="@Model.Level3.NumberInGame" class="text-danger"></span>
                 </div>
                 <div class="form-group inline col-sm-6  ">
                     <label asp-for="@Model.Level3.Description"><b>Description</b></label>
                     <textarea asp-for="@Model.Level3.Description" type="text" class="form-control" placeholder="Description..."></textarea>
+                    <span asp-validation-for="@Model.Level3.Description" class="text-danger"></span>
                 </div>
                 <div class="form-group inline col-sm-1  text-center">
                     <label asp-for="@Model.Level3.Points"><b>points</b></label>
                     <input asp-for="@Model.Level3.Points" type="number" class="form-control" placeholder="Points...">
+                    <span asp-validation-for="@Model.Level3.Points" class="text-danger"></span>
                 </div>
                 <div class="form-group inline col-sm-1">
                     <label asp-for="@Model.Level3.Image"></label>
                     <input asp-for="@Model.Level3.Image" type="file" onchange="readURL(this);" />
                     <img id="blah" src="#" alt="your image2" />
+                    <span asp-validation-for="@Model.Level3.Image" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -94,12 +108,7 @@
             <button type="submit">Create game</button>
         </div>
     </form>
-    @*<div style="padding-left:800px; padding-top:200px;">
-            @Html.PagedListPager((IPagedList)Model, page => Url.Action("All", new { page }))
-        </div>*@
-
-
-
+    
     @*<script>
             function openForm() {
                 var number = document.getElementById("countOfLevels").value;

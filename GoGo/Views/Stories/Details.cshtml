@@ -15,14 +15,12 @@
             <p class="card-title">@Model.PeopleWhosLikeThis peole like this</p>
             <p class="card-text">@Model.Content</p>
             <form style="text-align:center !important">
-                @*<div class="text-center">*@
                 <button asp-action="Details" asp-controller="Destinations" asp-route-id="@Model.DestinationId" class="btn btn-primary">Back</button>
-                @*</div>*@
+                
                 @if (this.User.Identity.IsAuthenticated)
                 {
-                    @*<div class="text-center">*@
                     <button asp-action="Like" asp-controller="Stories" asp-route-id="@Model.Id" class="btn btn-primary">Like</button>
-                    @*</div>*@
+                    
                 }
             </form>
         </div>

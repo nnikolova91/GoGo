@@ -81,13 +81,13 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ AllMyStories_ShouldReturnCorrectListStoryViewModels()
+        public void AllMyStories_ShouldReturnCorrectListStoryViewModels()
         {
             var userRepoBuilder = new GoUserRepositoryBuilder();
             var userRepo = userRepoBuilder
                 .WithAll()
                 .Build();
-            
+
             var storiesRepoBuilder = new StoriesRepositoryBuilder();
             var storiesRepo = storiesRepoBuilder
                 .WithAll()
@@ -168,7 +168,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ AllStories_ShouldReturnCorrectListOfAllStoryViewModels()
+        public void AllStories_ShouldReturnCorrectListOfAllStoryViewModels()
         {
             var userRepoBuilder = new GoUserRepositoryBuilder();
             var userRepo = userRepoBuilder
@@ -186,7 +186,7 @@ namespace UnitTests
                 .Build();
 
             var sut = new StoriesService(storiesRepo, null, userStoriesRepo, userRepo, Mapper);
-            
+
             var actual = sut.AllStories();
 
             var expected = new List<StoryViewModel>
@@ -264,9 +264,9 @@ namespace UnitTests
                     Author = "Pelin ",
                     Title = "Drun"
                 },
-                
+
             }.AsQueryable();
-            
+
             Assert.Equal(expected, actual, new StoriesViewModelComparer());
         }
 
@@ -289,7 +289,7 @@ namespace UnitTests
                 .Build();
 
             var sut = new StoriesService(storiesRepo, null, userStoriesRepo, userRepo, Mapper);
-            
+
             var ex = Assert.Throws<ArgumentException>(() => sut.GetDetails("17"));
 
             Assert.Equal("Story not exist!", ex.Message);
@@ -354,7 +354,7 @@ namespace UnitTests
             await sut.LikeStory("2", user);
 
             userStoriesRepoBuilder.PeopleStoriesRepoMock.Verify(r => r.AddAsync(It.IsAny<PeopleStories>()), Times.Once);
-            
+
             userStoriesRepoBuilder.PeopleStoriesRepoMock.Verify(r => r.AddAsync(It.IsAny<PeopleStories>()), Times.Once);
         }
 
@@ -374,11 +374,11 @@ namespace UnitTests
             var sut = new StoriesService(storiesRepo, null, userStoriesRepo, null, Mapper);
 
             var user = new GoUser { Id = "7" };
-            
+
             var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await sut.LikeStory("17", user));
-            
+
             Assert.Equal("Story not exist!", ex.Message);
-            
+
             storiesRepoBuilder.StoriesRepoMock.Verify();
 
             userStoriesRepoBuilder.PeopleStoriesRepoMock.Verify(d => d.AddAsync(It.IsAny<PeopleStories>()), Times.Never);
@@ -404,13 +404,10 @@ namespace UnitTests
 
             await sut.LikeStory("7", user);
 
-            //Assert.Equal("Story not exist!", ex.Message);
-
             storiesRepoBuilder.StoriesRepoMock.Verify();
 
             userStoriesRepoBuilder.PeopleStoriesRepoMock.Verify(d => d.AddAsync(It.IsAny<PeopleStories>()), Times.Never);
             userStoriesRepoBuilder.PeopleStoriesRepoMock.Verify(d => d.SaveChangesAsync(), Times.Never);
         }
     }
-
 }

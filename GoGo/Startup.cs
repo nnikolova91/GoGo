@@ -37,10 +37,6 @@ namespace GoGo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //AutoMapperConfig.RegisterMappings(
-            //    typeof(DestViewModel).Assembly);
-
-
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -51,7 +47,6 @@ namespace GoGo
             services.AddScoped(typeof(IDestinationService), typeof(DestinationService));
             services.AddScoped(typeof(ICommentsService), typeof(CommentsService));
             services.AddScoped(typeof(IStoriesService), typeof(StoriesService));
-            services.AddScoped(typeof(IUserStoriesService), typeof(UserStoriesService));
             services.AddScoped(typeof(ICoursesService), typeof(CoursesService));
             services.AddScoped(typeof(IGamesService), typeof(GamesService));
             services.AddScoped(typeof(IChatService), typeof(ChatService));

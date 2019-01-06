@@ -99,13 +99,24 @@ namespace GoGo.Data.Seeder.Courses
                         Image = File.ReadAllBytes(imgPath),
                         Creator = creator,
                         CreatorId = creator.Id,
-                        StartDate = startDate,
+                        StartDate = DateTime.Now,//startDate,
                         DurationOfDays = random,
                         CountOfHours = random1,
                         MaxCountParticipants = randomMaxCountParticipants,
                         Status = (Status)randomStatus,
                         Category = (Category)randomCategory
                     };
+
+                    if (i == 0)
+                    {
+                        course.StartDate = DateTime.Now.AddDays(-3);
+                        course.DurationOfDays = 2;
+                    }
+                    else if (i == 1)
+                    {
+                        course.StartDate = DateTime.Now.AddDays(1);
+                        course.DurationOfDays = 2;
+                    }
 
                     await context.Courses.AddAsync(course);
                 }

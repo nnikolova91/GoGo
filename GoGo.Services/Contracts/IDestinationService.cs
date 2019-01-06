@@ -20,6 +20,8 @@ namespace GoGo.Services.Contracts
 
         Task AddSocialization(GoUser user, string id, string socialization);
 
+        ICollection<DestViewModel> GetDestinationsForHomePage();
+
         //ICollection<GoUserViewModel> AllUsersFodSocialization(GoUser user, string id, string socialization);
 
         ICollection<DestViewModel> FindMyDestinations(GoUser user);

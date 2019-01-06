@@ -7,21 +7,21 @@
     <h1 class="text-center">Create Story</h1>
     <hr class="wiy chushka-bg-color height: 7px" />
     <form class="mx-auto half-width wiy" method="post" asp-controller="Stories" asp-action="Create" @*asp-route-DestinationId="@Model.Id"*@  @*enctype="multipart/form-data" *@>
+        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="row">
             <div class="form-group inline col-sm-6  text-center">
                 <label asp-for="Title"><b>Title</b></label>
                 <input asp-for="Title" type="text" class="form-control" placeholder="Title...">
-
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="form-group  inline col-sm-12  text-center">
                 <label asp-for="Content"><b>Content</b></label>
                 <input asp-for="Content" type="text" class="form-control" placeholder="Content...">
+                <span asp-validation-for="Content" class="text-danger"></span>
             </div>
         </div>
-
-        
         <hr class="chushka-bg-color height: 7px" />
         <div class="text-center">
             <button type="submit" class="btn chushka-bg-color text-center">Create Story</button>
@@ -29,28 +29,3 @@
     </form>
 
 </main>
-
-@*<main class="mt-3">
-    <h1 class="text-center">Create Destination</h1>
-    <hr class="wiy chushka-bg-color height: 7px" />
-    <form asp-controller="Stories" asp-action="Create"  asp-route="@Model.Idenctype="multipart/form-data">
-
-        <div class="tab-content">
-            <label asp-for="Title"><b>Tytle</b></label>
-            <input asp-for="Title" type="text" class="form-control" placeholder="Tytle...">
-
-        </div>
-        <div class="tab-content">
-            <label asp-for="Content"><b>Content</b></label>
-            <input asp-for="Content" type="text" class="form-control" placeholder="Content...">
-        </div>
-
-        <hr class="chushka-bg-color height: 7px" />
-    </form>
-    <div class="text-center">
-        <form method="post" asp-controller="Stories" asp-action="Created"  asp-route="@Model.Id" enctype="multipart/form-data" >
-            <button >Create</button>
-            </form>
-    </div>
-
-</main>*@

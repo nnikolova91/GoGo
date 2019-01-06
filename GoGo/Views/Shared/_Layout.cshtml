@@ -120,6 +120,10 @@
             background: #2d2d2d;
         }
 
+        .purple {
+            color: mediumpurple
+        }
+
         .grad {
             background-image: linear-gradient(lightskyblue, aliceblue);
         }
@@ -159,16 +163,16 @@
             z-index: 1;
         }
 
-            .dropdown-content a {
-                color: black;
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
-            }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
 
-                .dropdown-content a:hover {
-                    background-color: #f1f1f1;
-                }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
 
         .dropdown:hover .dropdown-content {
             display: block;
@@ -185,7 +189,6 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
@@ -193,7 +196,7 @@
                 </li>
                 <li class=" nav-item active nav-item dropdown">
                     <a class="nav-link dropdown-toggle  navbar-brand" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Thems
+                        Themes
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" asp-controller="Thems" asp-action="All">All Thems</a>
@@ -244,41 +247,18 @@
 
     <partial name="_CookieConsentPartial" />
 
-    @*<div class="container-fluid text-center container">
-            <div class="col-sm-10 text-left">
-            @RenderBody()
-            </div>
-        </div>*@
-
-
-    @*<footer class="container-fluid text-center">
-            <p>&copy; 2018 - GoGo</p>
-        </footer>*@
-
     <div id="wrap">
         <div id="main" class="container-fluid text-center container clear-top">
             <div class="clear-top">
                 @RenderBody()
-                    </div>
             </div>
+        </div>
     </div>
 
     <footer class="footer">
         <p>&copy; 2018 - GoGo</p>
     </footer>
 
-
-    @*<footer class="page-footer font-small blue foo">
-
-            <!-- Copyright -->
-            <div class="container-fluid footer-copyright text-center py-3 ">
-                © 2018 Copyright:
-                <a>&copy; 2018 - GoGo</a>
-            </div>
-            <!-- Copyright -->
-
-        </footer>*@
-    @*</div>*@
 
     <environment include="Development">
         @*<script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>*@

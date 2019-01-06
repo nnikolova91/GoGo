@@ -4,12 +4,20 @@ using GoGo.Models.Enums;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
+using ViewModels.Attributes;
+using ViewModels.Constants;
 
 namespace ViewModels
 {
-    public class DestDetailsViewModel //: IMapFrom<Destination>//, IHaveCustomMappings
+    public class DestDetailsViewModel 
     {
+        public const string EndDateToJoinPropertyName = "EndDateToJoin";
+        public const string StartDatePropertyName = "StartDate";
+        public const string EndDateToJoinBeforeStartDateErrorMessage = "End date to join must by before Start date";
+        public const string StartDateBeforeEndDateErrorMessage = "Start date must by before End date";
+
         public DestDetailsViewModel()
         {
             this.AllComments = new List<CommentViewModel>();
@@ -29,12 +37,19 @@ namespace ViewModels
 
         public string Naame { get; set; }
 
+        [Required]
+        [StringLength(ModelsConstants.DescriptionMaxLength, MinimumLength = ModelsConstants.DescriptionMinLength)]
         public string Description { get; set; }
 
+        [Required]
+        [StartDateBaforeEndDate(EndDateToJoinPropertyName, ErrorMessage = EndDateToJoinBeforeStartDateErrorMessage)]
+        [CompareWithToday(ErrorMessage = ModelsConstants.PassedDate)]
         public DateTime StartDate { get; set; }
 
+        [Required]
+        [StartDateBaforeEndDate(StartDatePropertyName, ErrorMessage = StartDateBeforeEndDateErrorMessage)]
         public DateTime EndDate { get; set; }
-
+        
         public DateTime EndDateToJoin { get; set; }
 
         public string Creator { get; set; }

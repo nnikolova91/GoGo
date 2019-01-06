@@ -64,22 +64,22 @@ namespace UnitTests
 
             var courseUser = new UsersResultsViewModel
             {
-                CourseId = "1",
+                CourseId = "4",
                 Course = new CourseViewModel
                 {
-                    Id = "1",
+                    Id = "4",
                     Image = new byte[0],
                     Title = "Drun",
                     Description = "Drunnnnnnnnnnnnnnnnnn",
                     MaxCountParticipants = 4,
-                    StartDate = DateTime.Now.AddDays(3),
+                    StartDate = DateTime.Now.AddDays(-3),
                     DurationOfDays = 3,
                     CreatorId = "7",
                     Creator = new GoUserViewModel { Id = "7" },
                     Status = Status.Practically,
                     Category = Category.Climbing
                 },
-                ParticipantId = "8",
+                ParticipantId = "7",
                 Result = StatusParticitant.Successfully
             };
 
@@ -175,7 +175,7 @@ namespace UnitTests
 
             var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await sut.AddResultToUsersCourses(courseUser, user));
 
-            ex.Message.ShouldBe("You can do not add results!");
+            ex.Message.ShouldBe("You can not add results!");
             coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify();
             coursesRepoBuilder.CoursesRepoMock.Verify();
             coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(d => d.SaveChangesAsync(), Times.Never);
@@ -227,6 +227,52 @@ namespace UnitTests
 
             coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.AddAsync(It.IsAny<CoursesUsers>()), Times.Exactly(1));
             coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.SaveChangesAsync(), Times.Exactly(1));
+        }
+
+        [Fact]
+        public async Task AddUserToCourse_ShouldNotAddNew_CourseUser_WhenCourseUserAureadyExist()
+        {
+            var coursesRepoBuilder = new CoursesRepositoryBuilder();
+            var courseRepo = coursesRepoBuilder
+                .WithAll()
+                .Build();
+
+            var coursesUsersRepoBuilder = new CoursesUsersRepositoryBuilder();
+            var courseUserRepo = coursesUsersRepoBuilder
+                .WithAll()
+                .Build();
+
+            var sut = new CoursesService(courseUserRepo, courseRepo, null, Mapper);
+
+            var user = new GoUser { Id = "11" };
+            
+            await sut.AddUserToCourse("1", user);
+
+            coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.AddAsync(It.IsAny<CoursesUsers>()), Times.Never);
+            coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.SaveChangesAsync(), Times.Never);
+        }
+
+        [Fact]
+        public async Task AddUserToCourse_ShouldNotAddNew_CourseUser_WhenStartDateIsBeforeToday()
+        {
+            var coursesRepoBuilder = new CoursesRepositoryBuilder();
+            var courseRepo = coursesRepoBuilder
+                .WithAll()
+                .Build();
+
+            var coursesUsersRepoBuilder = new CoursesUsersRepositoryBuilder();
+            var courseUserRepo = coursesUsersRepoBuilder
+                .WithAll()
+                .Build();
+
+            var sut = new CoursesService(courseUserRepo, courseRepo, null, Mapper);
+
+            var user = new GoUser { Id = "12" };
+
+            await sut.AddUserToCourse("4", user);
+
+            coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.AddAsync(It.IsAny<CoursesUsers>()), Times.Never);
+            coursesUsersRepoBuilder.CoursesUsersRepoMock.Verify(r => r.SaveChangesAsync(), Times.Never);
         }
 
         [Fact]
@@ -460,7 +506,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ GetAllCourses_ShouldReturn_All_CourseViewModels()
+        public void GetAllCourses_ShouldReturn_All_CourseViewModels()
         {
             var coursesRepoBuilder = new CoursesRepositoryBuilder();
             var courseRepo = coursesRepoBuilder
@@ -493,7 +539,6 @@ namespace UnitTests
                     MaxCountParticipants = 10,
                     StartDate = DateTime.Now.AddDays(2),
                     DurationOfDays = 5,
-                    //Creator = "9",
                     Status = Status.Theoretical,
                     Category = Category.Cycling
                 },
@@ -508,6 +553,19 @@ namespace UnitTests
                     DurationOfDays = 7,
                     Status = Status.Practically,
                     Category = Category.Skiing
+                },
+                new CourseViewModel
+                {
+                    Id = "4",
+                    Image = new byte[0],
+                    Title = "Drun",
+                    Description = "Drunnnnnnnnnnnnnnnnnn",
+                    MaxCountParticipants = 4,
+                    StartDate = DateTime.Now.AddDays(-3),
+                    DurationOfDays = 3,
+                    CreatorId = "7",
+                    Status = Status.Practically,
+                    Category = Category.Climbing
                 }
             }.AsQueryable();
 
@@ -519,7 +577,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ GetAllCourses_ShouldReturn_EmptyCollection_IfIsEmpty()
+        public void GetAllCourses_ShouldReturn_EmptyCollection_IfIsEmpty()
         {
             var courses = new List<Course>().AsQueryable();
 
@@ -540,7 +598,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ GetAllParticipants_ShouldReturn_All_UsersResultsViewModels()
+        public void GetAllParticipants_ShouldReturn_All_UsersResultsViewModels()
         {
             var coursesRepoBuilder = new CoursesRepositoryBuilder();
             var courseRepo = coursesRepoBuilder
@@ -600,7 +658,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ GetAllParticipants_ShouldThrow_IfUserIsNotCreator()
+        public void GetAllParticipants_ShouldThrow_IfUserIsNotCreator()
         {
             var coursesRepoBuilder = new CoursesRepositoryBuilder();
             var courseRepo = coursesRepoBuilder
@@ -625,7 +683,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/  GetDetails_ShouldReturn_CourseDetailsViewModel()
+        public void GetDetails_ShouldReturn_CourseDetailsViewModel()
         {
             var coursesRepoBuilder = new CoursesRepositoryBuilder();
             var courseRepo = coursesRepoBuilder
@@ -671,7 +729,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void/*async Task*/ GetDetails_ShouldThrow_IfCourseNotExist()
+        public void GetDetails_ShouldThrow_IfCourseNotExist()
         {
             var coursesRepoBuilder = new CoursesRepositoryBuilder();
             var courseRepo = coursesRepoBuilder
@@ -682,13 +740,13 @@ namespace UnitTests
 
             var ex = Assert.Throws<ArgumentException>(() => sut.GetDetails(1, "7"));
 
-            Assert.Equal("Course not exist!", ex.Message);
+            Assert.Equal("This course not exist!", ex.Message);
 
             coursesRepoBuilder.CoursesRepoMock.Verify();
         }
 
         [Fact]
-        public void/*async Task*/ GetMyCourses_ShouldReturn_CorrectListOf_CourseViewModels()
+        public void GetMyCourses_ShouldReturn_CorrectListOf_CourseViewModels()
         {
             var coursesUsersRepoBuilder = new CoursesUsersRepositoryBuilder();
             var coursUserRepo = coursesUsersRepoBuilder

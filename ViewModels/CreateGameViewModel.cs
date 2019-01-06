@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
+using ViewModels.Constants;
 
 namespace ViewModels
 {
@@ -14,10 +16,10 @@ namespace ViewModels
 
         public string Name { get; set; }
 
+        [Required]
+        [StringLength(ModelsConstants.DescriptionMaxLength, MinimumLength = ModelsConstants.DescriptionMinLength)]
         public string Description { get; set; }
-
-        public int LevelsCount { get; set; }
-
+        
         public string Level1Id { get; set; }
         public CreateLevelViewModel Level1 { get; set; }
 

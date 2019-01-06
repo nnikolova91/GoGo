@@ -5,6 +5,13 @@
 <main class="mt-10 mb-5">
     <h1 class="text-center">All Participants</h1>
     <hr class="hr-2 bg-dark" />
+    <div>
+        <form method="get" asp-action="Details" asp-controller="Courses" asp-route-id="@Model.ToList()[0].CourseId">
+            <div>
+                <button class=" btn btn-success">Back to course</button>
+            </div>
+        </form>
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -35,46 +42,6 @@
             }
         </tbody>
     </table>
-    @*<table class="table w-75 mx-auto table-hover">
-        <thead>
-            <tr class="row">
-                <th class="col-md-1">#</th>
-                <th class="col-md-3">Participant</th>
-                <th class="col-md-6">Result</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @{int counter = 1;}
-            @foreach (var item in Model)
-            {
-                <tr class="row">
-                    <th class="col-md-1">@counter</th>
-                    <td class="col-md-1">
-                        <div>
-                            @{ var base65 = Convert.ToBase64String(@item.Participant.Image);
-                                var imgSrcc = String.Format("data:image/gif;base64,{0}", base65);
-                                <img src="@imgSrcc" style="width:40px;height:40px;">
-                            }
-                            @item.Participant.FirstName
-                        </div>
-                    </td>
-
-                    <td class="col-md-1">
-                        <div style="align-content:center">
-                            @{
-                                await Html.RenderPartialAsync("_ResultsPartial", @item);
-                            }
-
-                        </div>
-
-                    </td>
-                </tr>
-                counter += 1;
-            }
-
-        </tbody>
-    </table>*@
 </main>
 
 

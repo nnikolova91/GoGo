@@ -13,6 +13,10 @@ namespace GoGo.Services
 {
     public class StoriesService : IStoriesService
     {
+        public const string DestinationNotExist = "Destination not exist!";
+        public const string StoryNotExist = "Story not exist!";
+        public const string SpaceSeparetedUsersFirstAndLastName = " ";
+
         private readonly IRepository<Story> storiesRepository;
         private readonly IRepository<Destination> destinationsRepository;
         private readonly IRepository<PeopleStories> peopleStoriesRepository;
@@ -37,14 +41,14 @@ namespace GoGo.Services
             var destination = this.destinationsRepository.All().FirstOrDefault(x => x.Id == id);
             if (destination == null)
             {
-                throw new ArgumentException("Destination not exist!");
+                throw new ArgumentException(DestinationNotExist);
             }
 
             model.AuthorId = user.Id;
-            
+
             var story = mapper.Map<Story>(model);
             story.Author = user;
-            
+
             await this.storiesRepository.AddAsync(story);
             await this.storiesRepository.SaveChangesAsync();
         }
@@ -59,7 +63,7 @@ namespace GoGo.Services
                 item.PeopleWhosLikeThis = this.peopleStoriesRepository.All().Where(x => x.StoryId == item.Id).Count();
                 var name = this.usersRepository.All()
                     .FirstOrDefault(x => x.Id == item.AuthorId);
-                item.Author = name.FirstName + " " + name.LastName;
+                item.Author = name.FirstName + SpaceSeparetedUsersFirstAndLastName + name.LastName;
             }
 
             return myStories;
@@ -75,7 +79,7 @@ namespace GoGo.Services
                 item.PeopleWhosLikeThis = this.peopleStoriesRepository.All().Where(x => x.StoryId == item.Id).Count();
                 var name = this.usersRepository.All()
                     .FirstOrDefault(x => x.Id == item.AuthorId);
-                item.Author = name.FirstName + " " + name.LastName;
+                item.Author = name.FirstName + SpaceSeparetedUsersFirstAndLastName + name.LastName;
             }
 
             return allStories.OrderByDescending(x => x.PeopleWhosLikeThis).ToList();
@@ -87,15 +91,15 @@ namespace GoGo.Services
 
             if (story == null)
             {
-                throw new ArgumentException("Story not exist!");
+                throw new ArgumentException(StoryNotExist);
             }
-            
+
             story.PeopleWhosLikeThis = this.peopleStoriesRepository.All().Where(x => x.StoryId == id).ToList();
 
             var mod = mapper.Map<StoryViewModel>(story);
 
             mod.Author = this.usersRepository.All().FirstOrDefault(u => u.Id == story.AuthorId).FirstName;
-            
+
             return mod;
         }
 
@@ -105,7 +109,7 @@ namespace GoGo.Services
 
             if (story == null)
             {
-                throw new ArgumentException("Story not exist!");
+                throw new ArgumentException(StoryNotExist);
             }
             var userStory = new PeopleStories
             {
@@ -113,12 +117,12 @@ namespace GoGo.Services
                 StoryId = story.Id,
                 User = user,
                 UserId = user.Id
-                
+
             };
 
             story.PeopleWhosLikeThis.Add(userStory);
 
-            if (peopleStoriesRepository.All().FirstOrDefault(x=>x.StoryId == userStory.StoryId && x.UserId == userStory.UserId) == null)
+            if (peopleStoriesRepository.All().FirstOrDefault(x => x.StoryId == userStory.StoryId && x.UserId == userStory.UserId) == null)
             {
                 await this.peopleStoriesRepository.AddAsync(userStory);
 
@@ -126,6 +130,5 @@ namespace GoGo.Services
                 await this.storiesRepository.SaveChangesAsync();
             }
         }
-
     }
 }

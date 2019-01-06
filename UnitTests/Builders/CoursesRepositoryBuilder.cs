@@ -59,6 +59,19 @@ namespace UnitTests.Builders
                     DurationOfDays = 7,
                     Status = Status.Practically,
                     Category = Category.Skiing
+                },
+                new Course
+                {
+                    Id = "4",
+                    Image = new byte[0],
+                    Title = "Drun",
+                    Description = "Drunnnnnnnnnnnnnnnnnn",
+                    MaxCountParticipants = 4,
+                    StartDate = DateTime.Now.AddDays(-3),
+                    DurationOfDays = 3,
+                    CreatorId = "7",
+                    Status = Status.Practically,
+                    Category = Category.Climbing
                 }
             }.AsQueryable();
 

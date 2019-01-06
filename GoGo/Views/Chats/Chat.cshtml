@@ -4,23 +4,24 @@
     SignalR Chat Room
 </div>
 <br />
-<br />
-<br />
-@foreach (var user in Model)
-{
-    <label>@user.Username</label>
-    <input id="@(user.Id + "inputMessage")" type="text" />
-    <button onclick="SendMessage('@user.Id')">Send Message</button>
-}
-<div class="row">
-    <div class="col-12">
-        <hr />
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-6">&nbsp;</div>
-    <div class="col-6">
-        <ul id="messagesList"></ul>
+<main>
+    @foreach (var user in Model)
+    {
+        <label>@user.Username</label>
+        <input id="@(user.Id + "inputMessage")" type="text" />
+        <button onclick="SendMessage('@user.Id')">Send Message</button>
+    }
+    <div class="row">
+        <div class="col-12">
+            <hr />
+        </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-6">&nbsp;</div>
+        <div class="col-6">
+            <ul id="messagesList"></ul>
+        </div>
+    </div>
+</main>
