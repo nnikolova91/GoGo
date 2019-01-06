@@ -16,9 +16,7 @@ namespace GoGo.Data
         public DbSet<Destination> Destinations { get; set; }
 
         public DbSet<Story> Stories { get; set; }
-
-        public DbSet<DestinationPhoto> DestinationPhotos { get; set; }
-
+        
         public DbSet<DestinationsUsers> DestinationsUsers { get; set; }
 
         public DbSet<PeopleStories> PeopleStories { get; set; }
@@ -117,12 +115,7 @@ namespace GoGo.Data
                 .HasOne(bc => bc.Story)
                 .WithMany(c => c.PeopleWhosLikeThis)
                 .HasForeignKey(bc => bc.StoryId).OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<DestinationPhoto>().ToTable("DestinationPhoto")
-              .HasOne(bc => bc.Destination)
-              .WithMany(c => c.Photos)
-              .HasForeignKey(x => x.DestinationId);
-
+            
             modelBuilder.Entity<Comment>()
                .HasOne(bc => bc.Comentator)
                .WithMany(c => c.Comments)

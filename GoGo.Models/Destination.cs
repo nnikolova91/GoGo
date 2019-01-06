@@ -14,7 +14,6 @@ namespace GoGo.Models
         {
             this.Comments = new List<Comment>();
             this.Participants = new List<DestinationsUsers>();
-            this.Photos = new List<DestinationPhoto>();
             this.Stories = new List<Story>();
         }
         [Key]
@@ -40,8 +39,6 @@ namespace GoGo.Models
         public ICollection<Comment> Comments { get; set; }
 
         public ICollection<DestinationsUsers> Participants { get; set; }
-
-        public ICollection<DestinationPhoto> Photos { get; set; }
 
         public ICollection<Story> Stories { get; set; }
     }

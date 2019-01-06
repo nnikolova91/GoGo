@@ -11,6 +11,9 @@ namespace GoGo.Data.Seeder.Courses
 {
     public class SeedCourses
     {
+        private const string CourseName1 = "Курс по скално катерене";
+        private const string CourseName2 = "Курс Лавинна безопасност";
+        
         private const string CoursesFilePath = @"..\GoGo.Data\Seeder\Courses\DataSeed\Courses.txt";
         private const string CoursesImagesPath = @"..\GoGo.Data\Seeder\Courses\ImagesSeed\";
         //private readonly IServiceProvider provider;
@@ -66,11 +69,11 @@ namespace GoGo.Data.Seeder.Courses
 
                     var description = string.Join(Environment.NewLine, titleAndContent.Skip(1));
 
-                    if (title == "Курс по скално катерене")
+                    if (title == CourseName1)
                     {
                         image = 3;
                     }
-                    else if (title == "Курс Лавинна безопасност")
+                    else if (title == CourseName2)
                     {
                         image = 2;
                     }
@@ -78,7 +81,7 @@ namespace GoGo.Data.Seeder.Courses
                     {
                         image = 1;
                     }
-                    var imgPath = CoursesImagesPath +image.ToString()/*titleImg.ToString()*/ + ".jpg";
+                    var imgPath = CoursesImagesPath +image.ToString() + ".jpg";
 
                     var creator = context.Users.OrderBy(x => Guid.NewGuid()).First();
 
@@ -120,8 +123,7 @@ namespace GoGo.Data.Seeder.Courses
 
                     await context.Courses.AddAsync(course);
                 }
-
-                //context.Destinations.AddRangeAsync;
+                
                 await context.SaveChangesAsync();
             }
         }

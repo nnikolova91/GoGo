@@ -73,7 +73,7 @@ namespace GoGo.Data.Seeder.Destinations
                     var random1 = new Random().Next(1, 7);
                     var random2 = new Random().Next(1, 6);
 
-                    var endDateToJoin = DateTime.Now.AddDays(random - random1); //.ToString(CultureInfo.InvariantCulture)
+                    var endDateToJoin = DateTime.Now.AddDays(random - random1);
                     var startDate = DateTime.Now.AddDays(random);
                     var endDate = DateTime.Now.AddDays(random + random2);
 
@@ -94,8 +94,7 @@ namespace GoGo.Data.Seeder.Destinations
 
                     await context.Destinations.AddAsync(destination);
                 }
-
-                //context.Destinations.AddRangeAsync;
+                
                 await context.SaveChangesAsync();
             }
         }
